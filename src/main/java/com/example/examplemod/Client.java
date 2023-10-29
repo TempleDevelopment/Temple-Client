@@ -42,6 +42,7 @@ public class Client {
         modules.add(new HitBox());
         modules.add(new ChestESP());
         modules.add(new ItemsESP());
+        modules.add(new AttackTrace());
 
         clickGui = new ClickGuiScreen();
     }
