@@ -1,13 +1,8 @@
 <h1 align="center"><code>Temple Client - 1.12.2</code></h1>
 
 <p align="center">
-  <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/images/logo.png">
+  <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/logo.jpg">
 </p>
-
-<h2 align="center">
-  <a href="https://securos.org">Website</a> | <a href="https://templeenterprise.com">Our Company</a> | <a href="https://securos.org">Install</a>
-</h2>
-
 -----
 
 
