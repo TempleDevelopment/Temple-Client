@@ -5,7 +5,7 @@ import org.lwjgl.input.Keyboard;
 
 public class Fly extends Module {
     public Fly() {
-        super("Fly", Keyboard.KEY_F, Category.MOVMENT);
+        super("Fly", Keyboard.KEY_F, Category.MOVEMENT);
     }
 
     @Override

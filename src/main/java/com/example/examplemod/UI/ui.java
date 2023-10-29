@@ -10,6 +10,9 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.awt.*;
+import java.util.Objects;
+
+import static net.minecraft.client.gui.Gui.drawRect;
 
 public class ui {
     @SubscribeEvent
@@ -24,8 +27,8 @@ public class ui {
                 FontRenderer fr = mc.fontRenderer;
                 ScaledResolution sr = new ScaledResolution(mc);
 
-                fr.drawString("Temple Client", 5, 5, -1);
-                fr.drawString("FPS: ", 5, 15, -1);
+                fr.drawString("Temple Client - 1.2", 5, 5, -1);
+                fr.drawString("FPS: " + Minecraft.getDebugFPS(), 5, 15, -1);
 
                 for (Module module : Client.modules) {
                     if (module.toggled) {

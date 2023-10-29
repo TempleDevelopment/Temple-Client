@@ -47,7 +47,7 @@ public class Module {
 
     public enum Category {
         COMBAT,
-        MOVMENT,
+        MOVEMENT,
         PLAYER,
         RENDER,
         MISC,

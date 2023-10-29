@@ -13,6 +13,6 @@ public class ViewModel extends Module {
 
     @SubscribeEvent
     public void onRender(RenderSpecificHandEvent e) {
-        GL11.glTranslated(0, 0, -7);
+        GL11.glTranslated(0, 0, -3);
     }
 }
