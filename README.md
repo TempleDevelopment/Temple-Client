@@ -5,7 +5,6 @@
 </p>
 
 ![GitHub all releases](https://img.shields.io/github/downloads/PhilipPanda/Temple-Client/total?color=seagreen)
-![CodeFactor grade](https://img.shields.io/codefactor/grade/github/PhilipPanda/Temple-Client?color=royalblue)
 ![GitHub workflow status](https://img.shields.io/github/actions/workflow/status/PhilipPanda/Temple-Client/nightly_build.yml?branch=master&logo=gradle)
 ![GitHub repo size](https://img.shields.io/github/repo-size/PhilipPanda/Temple-Client)
 ![Lines of code](https://img.shields.io/tokei/lines/github/PhilipPanda/Temple-Client?color=lightcoral&label=lines%20of%20code)
