@@ -1,7 +1,7 @@
 <h1 align="center"><code>Temple Client - 1.12.2</code></h1>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/PhilipPanda/Temple-Client/main/imgages/logo.png">
+  <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/images/logo.png">
 </p>
 
 <h2 align="center">
