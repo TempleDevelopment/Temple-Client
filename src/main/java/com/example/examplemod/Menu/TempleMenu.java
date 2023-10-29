@@ -1,5 +1,6 @@
 package com.example.examplemod.Menu;
 
+import com.example.examplemod.Menu.Tools.changeUser;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -40,6 +41,8 @@ public class TempleMenu extends GuiScreen {
             mc.displayGuiScreen(new GuiOptions(this, mc.gameSettings));
         } if (button.id == 1) {
             mc.shutdown();
+        } if (button.id == 2) {
+            mc.displayGuiScreen(new changeUser());
         } if (button.id == 3) {
             try {
                 Desktop desktop = Desktop.getDesktop();

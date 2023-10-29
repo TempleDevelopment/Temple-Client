@@ -1,6 +1,7 @@
 package com.example.examplemod.Module;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.Session;
 import net.minecraftforge.common.MinecraftForge;
 
 public class Module {
