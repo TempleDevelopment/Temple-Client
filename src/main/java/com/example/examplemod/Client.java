@@ -1,8 +1,8 @@
 package com.example.examplemod;
 
-import com.example.examplemod.Module.COMBAT.KillAura;
+import com.example.examplemod.Module.COMBAT.*;
+import com.example.examplemod.Module.MISC.Panic;
 import com.example.examplemod.Module.MISC.Particles;
-import com.example.examplemod.Module.COMBAT.TriggerBot;
 import com.example.examplemod.Module.MOVEMENT.*;
 import com.example.examplemod.Module.Module;
 import clickgui.ClickGuiScreen;
@@ -37,6 +37,11 @@ public class Client {
         modules.add(new ViewModel());
         modules.add(new Tracers());
         modules.add(new KillAura());
+        modules.add(new AimBot());
+        modules.add(new Panic());
+        modules.add(new HitBox());
+        modules.add(new ChestESP());
+        modules.add(new ItemsESP());
 
         clickGui = new ClickGuiScreen();
     }
