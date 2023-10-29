@@ -33,3 +33,8 @@ It is a free and open-source client.
 
 </details>
 
+### Clone Repository
+```
+git clone https://github.com/PhilipPanda/Temple-Client
+```
+
