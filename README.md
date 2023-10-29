@@ -4,13 +4,14 @@
   <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/logo.png">
 </p>
 
-### How to download.
-Download the .jar file from the release section and place it into your Minecraft mods folder.
-You need Forge installed for Minecraft 1.12.2. The mods folder is located in,
-```%appdata%/.minecraft/mods```.
-Alternativly you can compile the mod yourself from the source code.
+![GitHub all releases](https://img.shields.io/github/downloads/lambda-client/lambda/total?color=seagreen)
+![CodeFactor grade](https://img.shields.io/codefactor/grade/github/lambda-client/lambda?color=royalblue)
+![GitHub workflow status](https://img.shields.io/github/actions/workflow/status/lambda-client/lambda/nightly_build.yml?branch=master&logo=gradle)
+[![Discord](https://img.shields.io/discord/834570721070022687?color=skyblue&logo=discord&logoColor=white)](https://discord.gg/QjfBxJzE5x)
+![GitHub repo size](https://img.shields.io/github/repo-size/lambda-client/lambda)
+![Lines of code](https://img.shields.io/tokei/lines/github/lambda-client/lambda?color=lightcoral&label=lines%20of%20code)
 
-### How to activate in game.
-Default keybind to open the menu is ```r-shift```.
+Temple Client is a Minecraft 1.12.2 forge mod that enhances the anarchy server experience. 
+It is a free and open-source client.
 
 
