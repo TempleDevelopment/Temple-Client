@@ -1,4 +1,4 @@
-<h1 align="center"><code>Temple Client</code> for 1.12.2 Minecrfat</h1>
+<h1 align="center"><code>Temple Client</code> for 1.12.2</h1>
 
 <p align="center">
   <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/logo.png">
