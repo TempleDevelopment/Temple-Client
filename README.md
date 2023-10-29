@@ -10,4 +10,7 @@ You need Forge installed for Minecraft 1.12.2. The mods folder is located in,
 ```%appdata%/.minecraft/mods```.
 Alternativly you can compile the mod yourself from the source code.
 
+### How to activate in game.
+Default keybind to open the menu is ```r-shift```.
+
 
