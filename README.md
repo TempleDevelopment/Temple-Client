@@ -36,4 +36,7 @@ It is a free and open-source client.
 ```
 git clone https://github.com/PhilipPanda/Temple-Client
 ```
-
+### Showcase
+<p align="center">
+  <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/showcase.png">
+</p>
