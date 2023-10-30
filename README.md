@@ -26,7 +26,7 @@ It is a free and open-source client.
 <details>
   <summary>How do i install plugins.</summary>
 
-> Find the plugins you like and put them in the same mods folder oyu put the client in.
+> Find the plugins you like and put them in the same mods folder you put the client in.
 
 > CAUTION: Third party plugins can contain dangerous code! Only use plugins from trusted sources!
 
