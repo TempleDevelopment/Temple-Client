@@ -38,5 +38,10 @@ git clone https://github.com/PhilipPanda/Temple-Client
 ```
 ### Showcase
 <p align="center">
-  <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/showcase.png">
+  <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/clickGui.png">
 </p>
+---------------------
+<p align="center">
+  <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/ViewModel.png">
+</p>
+
