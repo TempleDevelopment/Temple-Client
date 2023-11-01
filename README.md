@@ -19,7 +19,7 @@ It is a free and open-source client.
 <details>
   <summary>How do i open the GUI.</summary>
 
-> Press `r-shift`.
+> Press `r-shift` &
 > Right click to expand the panels.
 
 </details>
