@@ -37,7 +37,11 @@ It is a free and open-source client.
 ```
 git clone https://github.com/PhilipPanda/Temple-Client
 ```
-### 1.7.0 - Showcase
+### 1.7.1 - Showcase
 <p align="center">
-  <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/ClickGui.png">
+  <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/click-gui.png">
+</p>
+
+<p align="center">
+  <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/viewmodel.png">
 </p>
