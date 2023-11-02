@@ -25,7 +25,7 @@ public class Button {
 
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         // Gui.drawRect(x, y, x + width, y + height, new Color(0xD81C1B1B, true).hashCode());
-        Gui.drawRect(x + 10, y, x + width - 10, y + height, new Color(0x181818, true).hashCode());
+        Gui.drawRect(x + 10, y, x + width - 10, y + height, new Color(0xD81C1B1B, true).hashCode());
         mc.fontRenderer.drawStringWithShadow(!binding ? module.name : "< PRESS KEY >", x + width / 2 - mc.fontRenderer.getStringWidth(!binding ? module.name : "< PRESS KEY >") / 2, y + height / 2 - 9 / 2, module.toggled && !binding ? new Color(0xDF00FF).hashCode() : -1);
     }
 
