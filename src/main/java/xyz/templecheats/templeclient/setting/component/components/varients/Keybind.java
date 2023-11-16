@@ -32,8 +32,8 @@ public class Keybind extends Component {
 	public void renderComponent() {
 		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset, parent.parent.getX() + (parent.parent.getWidth() * 1), parent.parent.getY() + offset + 12, this.hovered ? 0xFF222222 : 0xFF111111);
 		GL11.glPushMatrix();
-		GL11.glScalef(0.5f, 0.5f, 0.5f);
-		Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(binding ? "< PRESS KEY >" : ("Key: " + Keyboard.getKeyName(this.parent.mod.getKey())), (int) ((parent.parent.getX() + 7) * 2 * 1.4), (int) ((parent.parent.getY() + offset + 2) * 2 * 1.4 + 5), -1);
+		GL11.glScalef(0.5f,0.5f, 0.5f);
+		Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(binding ? "< PRESS KEY >" : ("Key: " + Keyboard.getKeyName(this.parent.mod.getKey())), (parent.parent.getX() + 7) * 2, (parent.parent.getY() + offset + 2) * 2 + 5, -1);
 		GL11.glPopMatrix();
 	}
 
