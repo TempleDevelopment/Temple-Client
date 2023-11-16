@@ -39,7 +39,7 @@ git clone https://github.com/PhilipPanda/Temple-Client
 ```
 ### 1.7.3 - Showcase
 <p align="center">
-  <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/clickgui-1.7.3.png">
+  <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/clickgui-1.7.4.png">
 </p>
 
 ### Contributors
