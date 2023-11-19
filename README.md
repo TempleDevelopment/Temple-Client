@@ -37,9 +37,9 @@ It is a free and open-source utility mod.
 ```
 git clone https://github.com/PhilipPanda/Temple-Client
 ```
-### 1.7.3 - Showcase
+### 1.7.5 - Showcase
 <p align="center">
-  <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/clickgui-1.7.4.png">
+  <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/clickgui-1.7.5.png">
 </p>
 
 ### Contributors
