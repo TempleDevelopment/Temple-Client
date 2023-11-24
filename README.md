@@ -3,7 +3,7 @@
 </p>
 
 ![GitHub all releases](https://img.shields.io/github/downloads/PhilipPanda/Temple-Client/total?color=seagreen)
-[https://dcbadge.vercel.app/api/server/INVITEID](https://dcbadge.vercel.app/api/server/https://discord.gg/XZUGTpGCe8)
+![Discord](https://dcbadge.vercel.app/api/server/https://discord.gg/XZUGTpGCe8)
 ![GitHub repo size](https://img.shields.io/github/repo-size/PhilipPanda/Temple-Client)
 
 Temple Client is a Minecraft 1.12.2 forge mod that enhances the anarchy server experience. 
