@@ -45,4 +45,4 @@ git clone https://github.com/PhilipPanda/Temple-Client
 
 ### Contributors
 
-[![GitHub contributors](https://contrib.rocks/image?repo=PhilipPanda/Temple-Client)](https://github.com/PhilipPanda/TempleClient/graphs/contributors)
+<img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/templeterry.png"> <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/xeonlyfe.png">
