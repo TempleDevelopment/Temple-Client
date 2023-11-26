@@ -45,4 +45,5 @@ git clone https://github.com/PhilipPanda/Temple-Client
 
 ### Contributors
 
-[![GitHub contributors](https://contrib.rocks/image?repo=PhilipPanda/Temple-Client)](https://github.com/PhilipPanda/TempleClient/graphs/contributors)
+[![GitHub contributors](https://contrib.rocks/image?repo=PhilipPanda/Temple-Client)](https://github.com/PhilipPanda/TempleClient/graphs/contributors) <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/68747470733a2f2f636f6e747269622e726f636b732f696d6167653f7265706f3d5068696c697050616e64612f54656d706c652d436c69656e74.jpg">
+
