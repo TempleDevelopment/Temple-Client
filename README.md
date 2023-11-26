@@ -13,7 +13,7 @@ It is a free and open-source utility mod.
 1. Install Minecraft 1.12.2
 2. Install the latest Forge for 1.12.2 [(download)](https://files.minecraftforge.net/net/minecraftforge/forge/index_1.12.2.html)
 3. Get the latest Temple CLient version in the release tab.
-4. Put the file in your `.minecraft/mods` folder
+4. Put the file in your `.minecraft/mods` folder.
 
 ## FAQ
 
@@ -26,7 +26,7 @@ It is a free and open-source utility mod.
 </details>
 
 <details>
-  <summary>How do i install plugins.</summary>
+  <summary>How do I install plugins.</summary>
 
 > Find the plugins you like and put them in the same mods folder you put the client in.
 
