@@ -5,6 +5,7 @@ import java.awt.Color;
 import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import xyz.templecheats.templeclient.features.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.gui.clickgui.setting.Setting;
 import xyz.templecheats.templeclient.gui.clickgui.setting.component.Component;
 import xyz.templecheats.templeclient.gui.clickgui.Button;
@@ -29,7 +30,7 @@ public class Checkbox extends Component {
 	@Override
 	public void renderComponent() {
 		// Cyan border on sides
-		Gui.drawRect(parent.parent.getX() - 1, parent.parent.getY() + offset - 1, parent.parent.getX() + parent.parent.getWidth() + 1, parent.parent.getY() + offset + 13, new Color(0xFFADD8E6).getRGB());
+		Gui.drawRect(parent.parent.getX() - 1, parent.parent.getY() + offset - 1, parent.parent.getX() + parent.parent.getWidth() + 1, parent.parent.getY() + offset + 13, ClickGUI.RGBColor.getRGB());
 
 		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset, parent.parent.getX() + (parent.parent.getWidth() * 1), parent.parent.getY() + offset + 12, this.hovered ? 0xFF222222 : 0xFF111111);
 		GL11.glPushMatrix();
@@ -37,9 +38,9 @@ public class Checkbox extends Component {
 		Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(this.op.getName(), (int) ((parent.parent.getX() + 10 + 4 - 1) / 0.7f) + 5, (int) ((parent.parent.getY() + offset + 2 - 1) / 0.7f) + 4, -1);
 		GL11.glPopMatrix();
 		if (this.op.getValBoolean()) {
-			Gui.drawRect(parent.parent.getX() + 4 + 4, parent.parent.getY() + offset + 4, parent.parent.getX() + 8 + 4, parent.parent.getY() + offset + 8, new Color(0xADD8E6).hashCode());
+			Gui.drawRect(parent.parent.getX() + 4 + 4, parent.parent.getY() + offset + 4, parent.parent.getX() + 8 + 4, parent.parent.getY() + offset + 8, ClickGUI.RGBColor.hashCode());
 		} else {
-			Gui.drawRect(parent.parent.getX() + 4 + 4, parent.parent.getY() + offset + 4, parent.parent.getX() + 8 + 4, parent.parent.getY() + offset + 8, new Color(0xADD8E6).hashCode());
+			Gui.drawRect(parent.parent.getX() + 4 + 4, parent.parent.getY() + offset + 4, parent.parent.getX() + 8 + 4, parent.parent.getY() + offset + 8, ClickGUI.RGBColor.hashCode());
 			Gui.drawRect(parent.parent.getX() + 5 + 4, parent.parent.getY() + offset + 5, parent.parent.getX() + 7 + 4, parent.parent.getY() + offset + 7, new Color(0xFF222222).hashCode());
 		}
 	}

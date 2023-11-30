@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 public class NameTags extends Module {
     public NameTags() {
-        super("NameTags", Keyboard.KEY_NONE, Category.RENDER);
+        super("Nametags", Keyboard.KEY_NONE, Category.RENDER);
     }
 
     @SubscribeEvent

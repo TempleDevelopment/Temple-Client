@@ -7,6 +7,7 @@ import java.math.RoundingMode;
 import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import xyz.templecheats.templeclient.features.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.gui.clickgui.setting.Setting;
 import xyz.templecheats.templeclient.gui.clickgui.setting.component.Component;
 import xyz.templecheats.templeclient.gui.clickgui.Button;
@@ -35,14 +36,14 @@ public class Slider extends Component {
 	@Override
 	public void renderComponent() {
 
-		Gui.drawRect(parent.parent.getX() - 1, parent.parent.getY() + offset - 1, parent.parent.getX() + parent.parent.getWidth() + 1, parent.parent.getY() + offset + 13, new Color(0xADD8E6).getRGB());
+		Gui.drawRect(parent.parent.getX() - 1, parent.parent.getY() + offset - 1, parent.parent.getX() + parent.parent.getWidth() + 1, parent.parent.getY() + offset + 13, ClickGUI.RGBColor.getRGB());
 
 
 		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset, parent.parent.getX() + parent.parent.getWidth(), parent.parent.getY() + offset + 12, 0xFF111111);
 		final int drag = (int)(this.set.getValDouble() / this.set.getMax() * this.parent.parent.getWidth());
 		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset, parent.parent.getX(), parent.parent.getY() + offset + 12, 0xFF111111);
 		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset + 8, parent.parent.getX() + 88, parent.parent.getY() + offset + 12, Color.GRAY.darker().darker().darker().getRGB());
-		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset + 8, parent.parent.getX() + (int) renderWidth, parent.parent.getY() + offset + 12, new Color(0xADD8E6).hashCode());
+		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset + 8, parent.parent.getX() + (int) renderWidth, parent.parent.getY() + offset + 12, ClickGUI.RGBColor.hashCode());
 		GL11.glPushMatrix();
 		GL11.glScalef(0.7f, 0.7f, 0.7f);
 

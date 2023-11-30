@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 import xyz.templecheats.templeclient.TempleClient;
+import xyz.templecheats.templeclient.features.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.gui.clickgui.setting.Setting;
 import xyz.templecheats.templeclient.gui.clickgui.setting.component.Component;
 import xyz.templecheats.templeclient.gui.clickgui.Frame;
@@ -66,12 +67,12 @@ public class Button extends Component {
 
 	@Override
 	public void renderComponent() {
-		Gui.drawRect(parent.getX() - 1, this.parent.getY() + this.offset - 1, parent.getX() + parent.getWidth() + 1, this.parent.getY() + 13 + this.offset, new Color(0xFFADD8E6).getRGB());
+		Gui.drawRect(parent.getX() - 1, this.parent.getY() + this.offset - 1, parent.getX() + parent.getWidth() + 1, this.parent.getY() + 13 + this.offset, ClickGUI.RGBColor.getRGB());
 
 		Gui.drawRect(parent.getX(), this.parent.getY() + this.offset, parent.getX() + parent.getWidth(), this.parent.getY() + 12 + this.offset, this.isHovered ? 0xFF222222 : 0xFF111111);
-		Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(this.mod.getName(), (parent.getX() + 5), (parent.getY() + offset + 2), this.mod.isEnabled() ? 0xFFADD8E6 : 0xFFFFFF);
+		Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(this.mod.getName(), (parent.getX() + 5), (parent.getY() + offset + 2), this.mod.isEnabled() ? ClickGUI.RGBColor.getRGB() : 0xFFFFFF);
 		if (this.subcomponents.size() >= 2) {
-			Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(this.open ? "-" : "+", (parent.getX() + parent.getWidth() - 10), (parent.getY() + offset + 2), 0xADD8E6);
+			Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(this.open ? "-" : "+", (parent.getX() + parent.getWidth() - 10), (parent.getY() + offset + 2), ClickGUI.RGBColor.getRGB());
 		}
 		if (this.open) {
 			if (!this.subcomponents.isEmpty()) {

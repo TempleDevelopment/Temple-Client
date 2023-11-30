@@ -25,7 +25,7 @@ public class Setting {
 	
 	private int color;
 	
-	public Setting(String name, Module parent, ArrayList<String> options, String title){
+	public Setting(String name, Module parent, ArrayList<String> options, String title) {
 		this.name = name;
 		this.parent = parent;
 		this.options = options;
@@ -33,14 +33,14 @@ public class Setting {
 		this.mode = "Combo";
 	}
 	
-	public Setting(String name, Module parent, boolean bval){
+	public Setting(String name, Module parent, boolean bval) {
 		this.name = name;
 		this.parent = parent;
 		this.bval = bval;
 		this.mode = "Check";
 	}
 	
-	public Setting(String name, Module parent, double dval, double min, double max, boolean onlyint){
+	public Setting(String name, Module parent, double dval, double min, double max, boolean onlyint) {
 		this.name = name;
 		this.parent = parent;
 		this.dval = dval;
@@ -63,7 +63,7 @@ public class Setting {
 		return this.sval;
 	}
 	
-	public void setValString(String in){
+	public void setValString(String in) {
 		this.sval = in;
 	}
 	
@@ -83,12 +83,16 @@ public class Setting {
 		this.bval = in;
 	}
 	
-	public double getValDouble(){
-		if(this.onlyint){
+	public double getValDouble() {
+		if(this.onlyint) {
 			this.dval = (int)dval;
 		}
 		return this.dval;
 	}
+
+    public int getValInt() {
+        return (int)dval;
+    }
 
 	public void setValDouble(double in){
 		this.dval = in;

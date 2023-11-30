@@ -1,5 +1,6 @@
 package xyz.templecheats.templeclient;
 
+import xyz.templecheats.templeclient.events.EventManager;
 import xyz.templecheats.templeclient.gui.ui.watermark;
 import xyz.templecheats.templeclient.gui.menu.GuiEventsListener;
 import xyz.templecheats.templeclient.util.keys.key;
@@ -23,10 +24,11 @@ public class TempleClient
 {
     public static final String MODID = "templeclient";
     public static final String NAME = "Temple Client";
-    public static final String VERSION = "1.7.6";
+    public static final String VERSION = "1.7.7";
 
     public static TempleClient instance;
     public SettingsManager settingsManager;
+    public static EventManager clientEventManager;
     public ClickGuiManager clickGui;
 
     private static Logger logger;
@@ -39,6 +41,9 @@ public class TempleClient
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
+        clientEventManager = new EventManager();
+        MinecraftForge.EVENT_BUS.register(clientEventManager);
+
         clickGui = new ClickGuiManager();
         instance = this;
         settingsManager = new SettingsManager();

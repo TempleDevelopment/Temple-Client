@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import xyz.templecheats.templeclient.Client;
+import xyz.templecheats.templeclient.features.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.gui.clickgui.setting.component.Component;
 import xyz.templecheats.templeclient.features.modules.Module;
 import net.minecraft.client.Minecraft;
@@ -69,12 +70,12 @@ public class Frame {
 
 	public void renderFrame(FontRenderer fontRenderer) {
 
-		Gui.drawRect(this.x - 1, this.y - 2, this.x + this.width + 1, this.y - 1, new Color(0xFFADD8E6).getRGB());
-		Gui.drawRect(this.x - 1, this.y - 2, this.x, this.y + 12, new Color(0xFFADD8E6).getRGB());
-		Gui.drawRect(this.x + this.width, this.y - 2, this.x + this.width + 1, this.y + 12, new Color(0xFFADD8E6).getRGB());
-		Gui.drawRect(this.x - 1, this.y + 12, this.x + this.width + 1, this.y + 13, new Color(0xFFADD8E6).getRGB());
+		Gui.drawRect(this.x - 1, this.y - 2, this.x + this.width + 1, this.y - 1, ClickGUI.RGBColor.getRGB());
+		Gui.drawRect(this.x - 1, this.y - 2, this.x, this.y + 12, ClickGUI.RGBColor.getRGB());
+		Gui.drawRect(this.x + this.width, this.y - 2, this.x + this.width + 1, this.y + 12, ClickGUI.RGBColor.getRGB());
+		Gui.drawRect(this.x - 1, this.y + 12, this.x + this.width + 1, this.y + 13, ClickGUI.RGBColor.getRGB());
 
-			Gui.drawRect(this.x, this.y-1, this.x + this.width, this.y, new Color(0xFFADD8E6, true).hashCode());
+			Gui.drawRect(this.x, this.y-1, this.x + this.width, this.y, new Color(ClickGUI.RGBColor.getRGB(), true).hashCode());
 			Gui.drawRect(this.x, this.y, this.x + this.width, this.y + 12, new Color(0xD81C1B1B, true).hashCode());
 			Minecraft.getMinecraft(); fontRenderer.drawStringWithShadow(this.category.name(), this.x + 5, this.y + 2, -1);
 			if(this.open) {

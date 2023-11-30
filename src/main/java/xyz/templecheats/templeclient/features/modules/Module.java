@@ -8,7 +8,7 @@ public class Module {
     public boolean toggled;
     public int KeyCode;
     public Category category;
-    public Minecraft mc = Minecraft.getMinecraft();
+    public static Minecraft mc = Minecraft.getMinecraft();
     public int keyCode;
 
     public Module(String name, int keyCode, Category c) {
@@ -25,11 +25,18 @@ public class Module {
         return KeyCode;
     }
 
-    public void onEnable(){
+    public void onUpdate() {
+        return;
+    }
+
+    public void onUpdateConstant() {
+    }
+
+    public void onEnable() {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    public void onDisable(){
+    public void onDisable() {
         MinecraftForge.EVENT_BUS.unregister(this);
     }
 
@@ -46,16 +53,14 @@ public class Module {
     }
 
     public enum Category {
-        COMBAT,
-        MOVEMENT,
-        RENDER,
-        BLOCKS,
-        CLIENT,
-        MISC,
-        HUD,
 
         CHAT,
-        EXPLOITS;
+        COMBAT,
+        MISC,
+        MOVEMENT,
+        RENDER,
+        WORLD,
+        CLIENT;
     }
 
     public void toggle() {

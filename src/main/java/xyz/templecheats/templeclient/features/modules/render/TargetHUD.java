@@ -13,6 +13,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
+import xyz.templecheats.templeclient.features.modules.client.ClickGUI;
 
 import java.awt.*;
 import java.util.Objects;
@@ -76,12 +77,12 @@ public class TargetHUD extends Module {
 
             Gui.drawRect((int) (x - 140.5), (int) (y - 9.5), (int) (x - 0.5), (int) (y + 30.5f), new Color(31, 31, 31, 255).getRGB());
             Gui.drawRect((int) (x - 99.0f), (int) (y + 6.0f), (int) (x - 2.0f), (int) (y + 15.0f), new Color(40, 40, 40, 255).getRGB());
-            Gui.drawRect((int) (x - 99.0f), (int) (y + 6.0f), (int) (x - 99.0f + this.healthBarWidth), (int) (y + 15.0f), new Color(0xADD8E6).getRGB());
+            Gui.drawRect((int) (x - 99.0f), (int) (y + 6.0f), (int) (x - 99.0f + this.healthBarWidth), (int) (y + 15.0f), ClickGUI.RGBColor.getRGB());
 
-            Gui.drawRect((int) (x - 99.0f), (int) (y + 6.0f), (int) (x - 99.0f + hpWidth), (int) (y + 15.0f), new Color(0xADD8E6).getRGB());
+            Gui.drawRect((int) (x - 99.0f), (int) (y + 6.0f), (int) (x - 99.0f + hpWidth), (int) (y + 15.0f), ClickGUI.RGBColor.getRGB());
 
             mc.fontRenderer.drawStringWithShadow(healthStr, x - 138.0f + 46.0f - mc.fontRenderer.getStringWidth(healthStr) / 2.0f, y + 19.5f, -1);
-            mc.fontRenderer.drawStringWithShadow("\u2764", x - 138.0f + 46.0f + mc.fontRenderer.getStringWidth(healthStr), y + 19.5f, new Color(0xADD8E6).getRGB());
+            mc.fontRenderer.drawStringWithShadow("\u2764", x - 138.0f + 46.0f + mc.fontRenderer.getStringWidth(healthStr), y + 19.5f, ClickGUI.RGBColor.getRGB());
             mc.fontRenderer.drawStringWithShadow(entity.getName(), x - 97, y - 5.0f, -1);
 
             try {
