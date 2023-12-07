@@ -24,7 +24,6 @@ public class AutoCrystal extends Module {
     private int crystalPlaceDelay = 0;
     private int placeDelayTicks = 20;
     private int placeRadius = 2;
-    private long lastPlaceTime = 0;
 
     public AutoCrystal() {
         super("AutoCrystal", Keyboard.KEY_NONE, Category.COMBAT);
@@ -43,10 +42,8 @@ public class AutoCrystal extends Module {
 
         for (Entity entity : entities) {
             if (entity instanceof EntityEnderCrystal) {
-                if (mc.player.getDistance(entity) <= 6) {
-                    mc.playerController.attackEntity(mc.player, entity);
-                    mc.player.swingArm(EnumHand.MAIN_HAND);
-                }
+                mc.playerController.attackEntity(mc.player, entity);
+                mc.player.swingArm(EnumHand.MAIN_HAND);
                 return;
             }
             if (entity instanceof EntityPlayer && entity != mc.player) {
@@ -58,13 +55,15 @@ public class AutoCrystal extends Module {
             return;
         }
 
-        if (System.currentTimeMillis() - lastPlaceTime < (placeDelayTicks * 50)) {
+        if (crystalPlaceDelay < placeDelayTicks) {
+            crystalPlaceDelay++;
             return;
         }
 
-        lastPlaceTime = System.currentTimeMillis();
+        crystalPlaceDelay = 0;
         placeCrystalsAroundPlayer();
     }
+
 
     private void placeCrystalsAroundPlayer() {
         EntityPlayer target = getTargetPlayer();
@@ -95,6 +94,7 @@ public class AutoCrystal extends Module {
         }
     }
 
+
     private EntityPlayer getTargetPlayer() {
         double range = 6.0;
         for (EntityPlayer player : mc.world.playerEntities) {
@@ -103,6 +103,17 @@ public class AutoCrystal extends Module {
             }
         }
         return null;
+    }
+
+
+    private void breakCrystalsNearPlayer() {
+        for (Entity entity : mc.world.loadedEntityList) {
+            if (entity instanceof EntityEnderCrystal && mc.player.getDistance(entity) <= 7) {
+                mc.playerController.attackEntity(mc.player, entity);
+                mc.player.swingArm(EnumHand.MAIN_HAND);
+                return;
+            }
+        }
     }
 
     private boolean canPlaceCrystal(BlockPos pos) {
