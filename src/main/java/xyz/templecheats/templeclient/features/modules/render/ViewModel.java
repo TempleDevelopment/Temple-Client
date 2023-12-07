@@ -31,13 +31,13 @@ public class ViewModel extends Module {
         double defaultSizeZMain = 1.0;
         double defaultRotateYawMain = 0.0;
 
-        xPosMain = new Setting("OffSetXMain", this, defaultXMain, -3.0, 3.0, false);
-        yPosMain = new Setting("OffSetYMain", this, defaultYMain, -3.0, 3.0, false);
-        zPosMain = new Setting("OffSetZMain", this, defaultZMain, -3.0, 3.0, false);
-        xSizeMain = new Setting("SizeXMain", this, defaultSizeXMain, 0.0, 4.0, false);
-        ySizeMain = new Setting("SizeYMain", this, defaultSizeYMain, 0.0, 4.0, false);
-        zSizeMain = new Setting("SizeZMain", this, defaultSizeZMain, 0.0, 4.0, false);
-        rotateYawMain = new Setting("RotateYawMain", this, defaultRotateYawMain, 0.0, 360.0, false);
+        xPosMain = new Setting("OffSet X", this, defaultXMain, -3.0, 3.0, false);
+        yPosMain = new Setting("OffSet Y", this, defaultYMain, -3.0, 3.0, false);
+        zPosMain = new Setting("OffSet Z", this, defaultZMain, -3.0, 3.0, false);
+        xSizeMain = new Setting("Size X", this, defaultSizeXMain, 0.0, 4.0, false);
+        ySizeMain = new Setting("Size Y", this, defaultSizeYMain, 0.0, 4.0, false);
+        zSizeMain = new Setting("Size Z", this, defaultSizeZMain, 0.0, 4.0, false);
+        rotateYawMain = new Setting("Rotation", this, defaultRotateYawMain, 0.0, 360.0, false);
 
         settingsManager.rSetting(xPosMain);
         settingsManager.rSetting(yPosMain);
@@ -50,13 +50,13 @@ public class ViewModel extends Module {
 
     @SubscribeEvent
     public void onRender(RenderSpecificHandEvent event) {
-        double xMain = TempleClient.instance.settingsManager.getSettingByName(this.name, "OffSetXMain").getValDouble();
-        double yMain = TempleClient.instance.settingsManager.getSettingByName(this.name, "OffSetYMain").getValDouble();
-        double zMain = TempleClient.instance.settingsManager.getSettingByName(this.name, "OffSetZMain").getValDouble();
-        double xSize = TempleClient.instance.settingsManager.getSettingByName(this.name, "SizeXMain").getValDouble();
-        double ySize = TempleClient.instance.settingsManager.getSettingByName(this.name, "SizeYMain").getValDouble();
-        double zSize = TempleClient.instance.settingsManager.getSettingByName(this.name, "SizeZMain").getValDouble();
-        double rotateYaw = TempleClient.instance.settingsManager.getSettingByName(this.name, "RotateYawMain").getValDouble();
+        double xMain = TempleClient.instance.settingsManager.getSettingByName(this.name, "OffSet X").getValDouble();
+        double yMain = TempleClient.instance.settingsManager.getSettingByName(this.name, "OffSet Y").getValDouble();
+        double zMain = TempleClient.instance.settingsManager.getSettingByName(this.name, "OffSet Z").getValDouble();
+        double xSize = TempleClient.instance.settingsManager.getSettingByName(this.name, "Size X").getValDouble();
+        double ySize = TempleClient.instance.settingsManager.getSettingByName(this.name, "Size Y").getValDouble();
+        double zSize = TempleClient.instance.settingsManager.getSettingByName(this.name, "Size Z").getValDouble();
+        double rotateYaw = TempleClient.instance.settingsManager.getSettingByName(this.name, "Rotation").getValDouble();
 
         GL11.glTranslated(xMain, yMain, zMain);
         GL11.glScaled(xSize, ySize, zSize);

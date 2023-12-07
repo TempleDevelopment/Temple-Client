@@ -10,6 +10,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import java.util.Objects;
+
 public class NameTags extends Module {
     public NameTags() {
         super("Nametags", Keyboard.KEY_NONE, Category.RENDER);
@@ -34,8 +36,15 @@ public class NameTags extends Module {
         GL11.glScaled(scale, scale, scale);
         int health = (int) Math.ceil(entity.getHealth());
 
+        String pingms = "";
+
+        try {
+            final int responseTime = Objects.requireNonNull(mc.getConnection()).getPlayerInfo(entity.getUniqueID()).getResponseTime();
+            pingms += responseTime + "ms ";
+        } catch (Exception ignored) {}
+
         GL11.glColor3f(1.0F, 0.0F, 0.0F);
-        EntityRenderer.drawNameplate(mc.fontRenderer, entity.getDisplayName().getFormattedText() + " " + health, 0, 0, 0, 0,
+        EntityRenderer.drawNameplate(mc.fontRenderer,entity.getDisplayName().getFormattedText() + " " + health + " " + pingms, 0, 0, 0, 0,
                 mc.getRenderManager().playerViewY,
                 mc.getRenderManager().playerViewX,
                 mc.gameSettings.thirdPersonView == 2, false

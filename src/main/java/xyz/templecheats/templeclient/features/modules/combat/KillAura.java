@@ -2,6 +2,8 @@ package xyz.templecheats.templeclient.features.modules.combat;
 
 import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.features.modules.Module;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
@@ -19,13 +21,15 @@ public class KillAura extends Module {
         super("KillAura", Keyboard.KEY_R, Category.COMBAT);
 
         ArrayList<String> options = new ArrayList<>();
-
         options.add("Rage");
         options.add("Rotation");
 
         TempleClient.instance.settingsManager.rSetting(new Setting("Mode", this, options, "Mode"));
         TempleClient.instance.settingsManager.rSetting(new Setting("Range", this, 4.2, 1, 5, false));
         TempleClient.instance.settingsManager.rSetting(new Setting("OnlyCritical", this, false));
+        TempleClient.instance.settingsManager.rSetting(new Setting("Players", this, true));
+        TempleClient.instance.settingsManager.rSetting(new Setting("Animals", this, false));
+        TempleClient.instance.settingsManager.rSetting(new Setting("Mobs", this, false));
     }
 
     @SubscribeEvent
@@ -33,9 +37,21 @@ public class KillAura extends Module {
         String Mode = TempleClient.instance.settingsManager.getSettingByName(this.name, "Mode").getValString();
         double range = TempleClient.instance.settingsManager.getSettingByName(this.name, "Range").getValDouble();
         boolean onlyCrits = TempleClient.instance.settingsManager.getSettingByName(this.name, "OnlyCritical").getValBoolean();
+        boolean attackPlayers = TempleClient.instance.settingsManager.getSettingByName(this.name, "Players").getValBoolean();
+        boolean attackAnimals = TempleClient.instance.settingsManager.getSettingByName(this.name, "Animals").getValBoolean();
+        boolean attackMobs = TempleClient.instance.settingsManager.getSettingByName(this.name, "Mobs").getValBoolean();
 
-        EntityPlayer target  = mc.world.playerEntities.stream().filter(entityPlayer -> entityPlayer != mc.player).min(Comparator.comparing(entityPlayer ->
-                entityPlayer.getDistance(mc.player))).filter(entityPlayer -> entityPlayer.getDistance(mc.player) <= range).orElse(null);
+        EntityLivingBase target = mc.world.loadedEntityList.stream()
+                .filter(entity -> entity instanceof EntityLivingBase && entity != mc.player)
+                .map(entity -> (EntityLivingBase) entity)
+                .filter(entity -> {
+                    double distance = entity.getDistance(mc.player);
+                    return distance <= range && ((attackPlayers && entity instanceof EntityPlayer)
+                            || (attackAnimals && entity instanceof EntityAnimal)
+                            || (attackMobs && !(entity instanceof EntityPlayer) && !(entity instanceof EntityAnimal)));
+                })
+                .min(Comparator.comparing(entity -> entity.getDistance(mc.player)))
+                .orElse(null);
 
         if (target != null) {
             if (mc.player.onGround && onlyCrits) {
@@ -55,7 +71,7 @@ public class KillAura extends Module {
         }
     }
 
-    public float[] rotations(EntityPlayer entity) {
+    public float[] rotations(EntityLivingBase entity) {
         double x = entity.posX - mc.player.posX;
         double y = entity.posY - (mc.player.posY + mc.player.getEyeHeight());
         double z = entity.posZ - mc.player.posZ;

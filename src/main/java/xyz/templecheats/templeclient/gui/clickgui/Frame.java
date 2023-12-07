@@ -3,6 +3,7 @@ package xyz.templecheats.templeclient.gui.clickgui;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import net.minecraft.client.renderer.GlStateManager;
 import xyz.templecheats.templeclient.Client;
 import xyz.templecheats.templeclient.features.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.gui.clickgui.setting.component.Component;
@@ -10,6 +11,7 @@ import xyz.templecheats.templeclient.features.modules.Module;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.*;
+import xyz.templecheats.templeclient.gui.font.FontUtils;
 
 public class Frame {
 
@@ -70,22 +72,33 @@ public class Frame {
 
 	public void renderFrame(FontRenderer fontRenderer) {
 
+		GlStateManager.pushMatrix();
+
 		Gui.drawRect(this.x - 1, this.y - 2, this.x + this.width + 1, this.y - 1, ClickGUI.RGBColor.getRGB());
 		Gui.drawRect(this.x - 1, this.y - 2, this.x, this.y + 12, ClickGUI.RGBColor.getRGB());
 		Gui.drawRect(this.x + this.width, this.y - 2, this.x + this.width + 1, this.y + 12, ClickGUI.RGBColor.getRGB());
 		Gui.drawRect(this.x - 1, this.y + 12, this.x + this.width + 1, this.y + 13, ClickGUI.RGBColor.getRGB());
+		Gui.drawRect(this.x, this.y - 1, this.x + this.width, this.y, ClickGUI.RGBColor.getRGB());
+		Gui.drawRect(this.x, this.y, this.x + this.width, this.y + 12, new Color(0xD81C1B1B, true).hashCode());
 
-			Gui.drawRect(this.x, this.y-1, this.x + this.width, this.y, new Color(ClickGUI.RGBColor.getRGB(), true).hashCode());
-			Gui.drawRect(this.x, this.y, this.x + this.width, this.y + 12, new Color(0xD81C1B1B, true).hashCode());
-			Minecraft.getMinecraft(); fontRenderer.drawStringWithShadow(this.category.name(), this.x + 5, this.y + 2, -1);
-			if(this.open) {
-				if(!this.components.isEmpty()) {
-					for(Component component : components) {
-						component.renderComponent();
-					}
-				}
+		int adjustedX = (int) ((this.x + 5) / 0.7f);
+		int adjustedY = (int) ((this.y + 3) / 0.7f);
+
+		GlStateManager.scale(0.7f, 0.7f, 1.0f);
+
+		FontUtils.normal.drawString(this.category.name(), adjustedX, adjustedY, -1);
+
+		GlStateManager.popMatrix();
+
+		if (this.open && !this.components.isEmpty()) {
+			for (Component component : components) {
+				component.renderComponent();
 			}
 		}
+	}
+
+
+
 
 	public void refresh() {
 		int off = this.barHeight;

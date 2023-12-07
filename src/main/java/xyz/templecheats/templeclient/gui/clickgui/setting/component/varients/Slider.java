@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -11,6 +12,7 @@ import xyz.templecheats.templeclient.features.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.gui.clickgui.setting.Setting;
 import xyz.templecheats.templeclient.gui.clickgui.setting.component.Component;
 import xyz.templecheats.templeclient.gui.clickgui.Button;
+import xyz.templecheats.templeclient.gui.font.FontUtils;
 
 public class Slider extends Component {
 
@@ -35,25 +37,24 @@ public class Slider extends Component {
 
 	@Override
 	public void renderComponent() {
-
 		Gui.drawRect(parent.parent.getX() - 1, parent.parent.getY() + offset - 1, parent.parent.getX() + parent.parent.getWidth() + 1, parent.parent.getY() + offset + 13, ClickGUI.RGBColor.getRGB());
-
 
 		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset, parent.parent.getX() + parent.parent.getWidth(), parent.parent.getY() + offset + 12, 0xFF111111);
 		final int drag = (int)(this.set.getValDouble() / this.set.getMax() * this.parent.parent.getWidth());
 		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset, parent.parent.getX(), parent.parent.getY() + offset + 12, 0xFF111111);
 		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset + 8, parent.parent.getX() + 88, parent.parent.getY() + offset + 12, Color.GRAY.darker().darker().darker().getRGB());
 		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset + 8, parent.parent.getX() + (int) renderWidth, parent.parent.getY() + offset + 12, ClickGUI.RGBColor.hashCode());
-		GL11.glPushMatrix();
-		GL11.glScalef(0.7f, 0.7f, 0.7f);
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(0.5f, 0.5f, 0.5f);
 
-		int scaledX = (int) ((parent.parent.getX() + 7) / 0.7f);
-		int scaledY = (int) ((parent.parent.getY() + offset + 1) / 0.7f);
+		int scaledX = (int) ((parent.parent.getX() + 7) / 0.5f);
+		int scaledY = (int) ((parent.parent.getY() + offset + 1.2) / 0.5f);
 
-		Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(this.set.getName() + ": " + this.set.getValDouble(), scaledX, scaledY, -1);
+		FontUtils.normal.drawString(this.set.getName() + ": " + this.set.getValDouble(), scaledX, scaledY, -1);
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
+
 
 	@Override
 	public void setOff(int newOff) {

@@ -46,8 +46,8 @@ public class watermark {
                     GlStateManager.scale(0.7F, 0.7F, 1);
 
                     FontUtils.normal.drawString("temple-client" + " | ", 12, 15, -1);
-                    FontUtils.normal.drawString("1.7.7", 12 + FontUtils.normal.getStringWidth("temple-client" + " | "), 15, ClickGUI.RGBColor.getRGB());
-                    FontUtils.normal.drawString(" | " + mc.getSession().getUsername() + " | FPS: " + Minecraft.getDebugFPS(), 12 + FontUtils.normal.getStringWidth("temple-client" + " | " + "1.7.6"), 15, -1);
+                    FontUtils.normal.drawString("1.7.9", 12 + FontUtils.normal.getStringWidth("temple-client" + " | "), 15, ClickGUI.RGBColor.getRGB());
+                    FontUtils.normal.drawString(" | " + mc.getSession().getUsername() + " | FPS: " + Minecraft.getDebugFPS(), 12 + FontUtils.normal.getStringWidth("temple-client" + " | " + "1.7.8"), 15, -1);
                     GlStateManager.popMatrix();
 
                     GlStateManager.pushMatrix();

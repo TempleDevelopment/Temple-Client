@@ -2,6 +2,7 @@ package xyz.templecheats.templeclient.gui.clickgui.setting.component.varients;
 
 import java.awt.Color;
 
+import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -9,6 +10,7 @@ import xyz.templecheats.templeclient.features.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.gui.clickgui.setting.Setting;
 import xyz.templecheats.templeclient.gui.clickgui.setting.component.Component;
 import xyz.templecheats.templeclient.gui.clickgui.Button;
+import xyz.templecheats.templeclient.gui.font.FontUtils;
 
 public class Checkbox extends Component {
 
@@ -29,14 +31,23 @@ public class Checkbox extends Component {
 
 	@Override
 	public void renderComponent() {
-		// Cyan border on sides
-		Gui.drawRect(parent.parent.getX() - 1, parent.parent.getY() + offset - 1, parent.parent.getX() + parent.parent.getWidth() + 1, parent.parent.getY() + offset + 13, ClickGUI.RGBColor.getRGB());
 
+		Gui.drawRect(parent.parent.getX() - 1, parent.parent.getY() + offset - 1, parent.parent.getX() + parent.parent.getWidth() + 1, parent.parent.getY() + offset + 13, ClickGUI.RGBColor.getRGB());
 		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset, parent.parent.getX() + (parent.parent.getWidth() * 1), parent.parent.getY() + offset + 12, this.hovered ? 0xFF222222 : 0xFF111111);
-		GL11.glPushMatrix();
-		GL11.glScalef(0.7f, 0.7f, 0.7f);
-		Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(this.op.getName(), (int) ((parent.parent.getX() + 10 + 4 - 1) / 0.7f) + 5, (int) ((parent.parent.getY() + offset + 2 - 1) / 0.7f) + 4, -1);
-		GL11.glPopMatrix();
+
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(0.5f, 0.5f, 0.5f);
+
+		int originalX = parent.parent.getX() + 10 + 4 - 1;
+		int originalY = parent.parent.getY() + offset + 2 - 1;
+
+		int scaledX = (int) ((originalX / 0.5f) + 5);
+		int scaledY = (int) ((originalY / 0.5f) + 4);
+
+		FontUtils.normal.drawString(this.op.getName(), scaledX, scaledY, -1);
+
+		GlStateManager.popMatrix();
+
 		if (this.op.getValBoolean()) {
 			Gui.drawRect(parent.parent.getX() + 4 + 4, parent.parent.getY() + offset + 4, parent.parent.getX() + 8 + 4, parent.parent.getY() + offset + 8, ClickGUI.RGBColor.hashCode());
 		} else {
@@ -46,7 +57,8 @@ public class Checkbox extends Component {
 	}
 
 
-	
+
+
 	@Override
 	public void setOff(int newOff) {
 		offset = newOff;

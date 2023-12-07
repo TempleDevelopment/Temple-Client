@@ -1,5 +1,6 @@
 package xyz.templecheats.templeclient.gui.clickgui.setting.component.varients;
 
+import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
@@ -7,6 +8,7 @@ import net.minecraft.client.gui.Gui;
 import xyz.templecheats.templeclient.features.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.gui.clickgui.setting.component.Component;
 import xyz.templecheats.templeclient.gui.clickgui.Button;
+import xyz.templecheats.templeclient.gui.font.FontUtils;
 
 import java.awt.*;
 
@@ -36,16 +38,17 @@ public class Keybind extends Component {
 		Gui.drawRect(parent.parent.getX() - 1, parent.parent.getY() + offset - 1, parent.parent.getX() + parent.parent.getWidth() + 1, parent.parent.getY() + offset + 13, ClickGUI.RGBColor.getRGB());
 
 		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset, parent.parent.getX() + (parent.parent.getWidth() * 1), parent.parent.getY() + offset + 12, this.hovered ? 0xFF222222 : 0xFF111111);
-		GL11.glPushMatrix();
-		GL11.glScalef(0.7f, 0.7f, 0.7f);
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(0.5f, 0.5f, 0.5f);
 
-		int scaledX = (int) ((parent.parent.getX() + 7) / 0.7f);
-		int scaledY = (int) ((parent.parent.getY() + offset + 2) / 0.7f + 2);
+		int scaledX = (int) ((parent.parent.getX() + 7) / 0.5f);
+		int scaledY = (int) ((parent.parent.getY() + offset + 2) / 0.5f + 2);
 
-		Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(binding ? "< PRESS KEY >" : ("Key: " + Keyboard.getKeyName(this.parent.mod.getKey())), scaledX, scaledY, 0xADD8E6);
+		FontUtils.normal.drawString(binding ? "< PRESS KEY >" : ("Key: " + Keyboard.getKeyName(this.parent.mod.getKey())), scaledX, scaledY, -1);
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
+
 
 
 	@Override

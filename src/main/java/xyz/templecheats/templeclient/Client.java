@@ -1,7 +1,9 @@
 package xyz.templecheats.templeclient;
 
 import net.minecraft.client.Minecraft;
+import xyz.templecheats.templeclient.features.modules.chat.GreenText;
 import xyz.templecheats.templeclient.features.modules.client.*;
+import xyz.templecheats.templeclient.features.modules.client.hud.PlayerModel;
 import xyz.templecheats.templeclient.features.modules.combat.*;
 import xyz.templecheats.templeclient.features.modules.movement.*;
 import xyz.templecheats.templeclient.features.modules.render.*;
@@ -21,7 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.ArrayList;
 
 public class Client {
-    public static String name = "Temple Client 1.7.7";
+    public static String name = "Temple Client 1.7.9";
     public static String cName = "Temple Client";
     public static CopyOnWriteArrayList<Module> modules = new CopyOnWriteArrayList<Module>();
 
@@ -39,6 +41,7 @@ public class Client {
         modules.add(new AntiBot());
         modules.add(new AutoArmor());
         modules.add(new AutoCrystal());
+        modules.add(new AutoDisconnect());
         modules.add(new HitBox());
         modules.add(new KillAura());
         modules.add(new TriggerBot());
@@ -46,9 +49,8 @@ public class Client {
         modules.add(new Particles());
         modules.add(new FakeCreative());
         // Client
-        modules.add(new ArmorHUD());
         modules.add(new ClickGUI());
-        modules.add(new Coords());
+        modules.add(new HUD());
         modules.add(new Panic());
         // Movement
         modules.add(new AirJump());
@@ -73,7 +75,6 @@ public class Client {
         modules.add(new NameProtect());
         modules.add(new NameTags());
         modules.add(new PlayerESP());
-        modules.add(new PlayerModel());
         modules.add(new Radar());
         modules.add(new SpawnerESP());
         modules.add(new StorageESP());
@@ -84,6 +85,8 @@ public class Client {
         modules.add(new BlockReach());
         modules.add(new Nuker());
         modules.add(new Scaffold());
+        // Chat
+        modules.add(new GreenText());
 
         clickGuiManager = new ClickGuiManager();
 

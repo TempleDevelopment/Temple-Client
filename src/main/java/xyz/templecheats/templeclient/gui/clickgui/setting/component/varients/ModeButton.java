@@ -1,5 +1,6 @@
 package xyz.templecheats.templeclient.gui.clickgui.setting.component.varients;
 
+import net.minecraft.client.renderer.GlStateManager;
 import xyz.templecheats.templeclient.features.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.gui.clickgui.setting.Setting;
 import xyz.templecheats.templeclient.gui.clickgui.setting.component.Component;
@@ -9,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import xyz.templecheats.templeclient.gui.font.FontUtils;
 
 import java.awt.*;
 
@@ -42,21 +44,20 @@ public class ModeButton extends Component {
 
 	@Override
 	public void renderComponent() {
-
 		Gui.drawRect(parent.parent.getX() - 1, parent.parent.getY() + offset - 1, parent.parent.getX() + parent.parent.getWidth() + 1, parent.parent.getY() + offset + 13, ClickGUI.RGBColor.getRGB());
 
 		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset, parent.parent.getX() + (parent.parent.getWidth() * 1), parent.parent.getY() + offset + 12, this.hovered ? 0xFF222222 : 0xFF111111);
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(0.5f, 0.5f, 0.5f);
 
-		GL11.glPushMatrix();
-		GL11.glScalef(0.7f, 0.7f, 0.7f);
+		int scaledX = (int) ((parent.parent.getX() + 7) / 0.5f);
+		int scaledY = (int) (((parent.parent.getY() + offset + 2) + 1) / 0.5f);
 
-		int scaledX = (int) ((parent.parent.getX() + 7) / 0.7f);
-		int scaledY = (int) (((parent.parent.getY() + offset + 2) + 1) / 0.7f);
+		FontUtils.normal.drawString(set.getTitle() + ": " + set.getOptions().get(modeIndex), scaledX, scaledY, -1);
 
-		Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(set.getTitle() + ": " + set.getOptions().get(modeIndex), scaledX, scaledY, -1);
-
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
+
 
 
 
