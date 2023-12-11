@@ -27,7 +27,7 @@ public class CustomMainMenu extends GuiMainMenu {
         super.drawScreen(mouseX, mouseY, partialTicks);
         Session session = mc.getSession();
         String username = session.getUsername();
-        drawString(this.fontRenderer, "Logged in as: " + username, 0, 0, new Color(0xA4A4A4).getRGB());
+        drawString(this.fontRenderer, "Logged in as: " + username, 0, 0, new Color(0xFFFFFF).getRGB());
 
         drawString(this.fontRenderer, "Made by PhilipPanda", 0, 10,  new Color(0xFFADD8E6).getRGB());
 

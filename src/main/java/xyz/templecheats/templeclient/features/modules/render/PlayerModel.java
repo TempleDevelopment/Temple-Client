@@ -15,7 +15,7 @@ public class PlayerModel extends Module {
     public void onRender(RenderGameOverlayEvent.Post event) {
         switch (event.getType()) {
             case TEXT:
-                RenderUtil.renderEntity(mc.player, 30, 40, 100);
+                RenderUtil.renderEntity(mc.player, 28, 30, 80);
                 break;
             default:
                 break;

@@ -1,22 +1,17 @@
 package xyz.templecheats.templeclient.util.time;
-
-/**
- * @author XeonLyfe
- */
-
 public class Timer {
 
     private long current;
     private long time;
-    
+
     public Timer() {
         this.current = System.currentTimeMillis();
     }
-    
+
     public boolean hasReached(final long delay) {
         return System.currentTimeMillis() - this.current >= delay;
     }
-    
+
     public boolean hasReached(final long delay, final boolean reset) {
         if (reset) {
             this.reset();
@@ -70,11 +65,11 @@ public class Timer {
     public void reset() {
         this.current = System.currentTimeMillis();
     }
-    
+
     public long getTimePassed() {
         return System.currentTimeMillis() - this.current;
     }
-    
+
     public boolean sleep(final long time) {
         if (this.time() >= time) {
             this.reset();
@@ -82,7 +77,7 @@ public class Timer {
         }
         return false;
     }
-    
+
     public long time() {
         return System.currentTimeMillis() - this.current;
     }

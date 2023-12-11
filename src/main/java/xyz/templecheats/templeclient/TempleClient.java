@@ -1,6 +1,6 @@
 package xyz.templecheats.templeclient;
 
-import xyz.templecheats.templeclient.events.EventManager;
+import xyz.templecheats.templeclient.event.EventManager;
 import xyz.templecheats.templeclient.gui.ui.watermark;
 import xyz.templecheats.templeclient.gui.menu.GuiEventsListener;
 import xyz.templecheats.templeclient.util.keys.key;

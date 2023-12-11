@@ -3,13 +3,12 @@ package xyz.templecheats.templeclient;
 import net.minecraft.client.Minecraft;
 import xyz.templecheats.templeclient.features.modules.chat.GreenText;
 import xyz.templecheats.templeclient.features.modules.client.*;
-import xyz.templecheats.templeclient.features.modules.client.hud.PlayerModel;
 import xyz.templecheats.templeclient.features.modules.combat.*;
 import xyz.templecheats.templeclient.features.modules.movement.*;
 import xyz.templecheats.templeclient.features.modules.render.*;
 import xyz.templecheats.templeclient.features.modules.movement.ClickTP;
 import xyz.templecheats.templeclient.features.modules.misc.FakeCreative;
-import xyz.templecheats.templeclient.features.modules.render.FakePlayer;
+import xyz.templecheats.templeclient.features.modules.misc.FakePlayer;
 import xyz.templecheats.templeclient.features.modules.misc.Particles;
 import xyz.templecheats.templeclient.features.modules.Module;
 import xyz.templecheats.templeclient.features.modules.world.BlockReach;
@@ -42,12 +41,15 @@ public class Client {
         modules.add(new AutoArmor());
         modules.add(new AutoCrystal());
         modules.add(new AutoDisconnect());
+        modules.add(new AutoTotem());
+        modules.add(new FastXP());
         modules.add(new HitBox());
         modules.add(new KillAura());
         modules.add(new TriggerBot());
         // Miscellaneous
-        modules.add(new Particles());
         modules.add(new FakeCreative());
+        modules.add(new FakePlayer());
+        modules.add(new Particles());
         // Client
         modules.add(new ClickGUI());
         modules.add(new HUD());
@@ -69,7 +71,7 @@ public class Client {
         modules.add(new Yaw());
         modules.add(new Velocity());
         // Render
-        modules.add(new FakePlayer());
+        modules.add(new Freecam());
         modules.add(new FullBright());
         modules.add(new ItemESP());
         modules.add(new NameProtect());
