@@ -34,6 +34,13 @@ It is a free and open-source utility mod.
 
 </details>
 
+<details>
+  <summary>What is the command prefix.</summary>
+
+> Command prefix symbol is a period "."
+
+</details>
+
 ### Clone Repository
 ```
 git clone https://github.com/PhilipPanda/Temple-Client
