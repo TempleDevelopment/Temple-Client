@@ -1,35 +1,36 @@
 package xyz.templecheats.templeclient;
 
 import net.minecraft.client.Minecraft;
+import org.lwjgl.opengl.Display;
+import xyz.templecheats.templeclient.command.CommandManager;
+import xyz.templecheats.templeclient.command.commands.HelpCommand;
+import xyz.templecheats.templeclient.features.modules.*;
 import xyz.templecheats.templeclient.features.modules.chat.GreenText;
 import xyz.templecheats.templeclient.features.modules.client.*;
 import xyz.templecheats.templeclient.features.modules.combat.*;
+import xyz.templecheats.templeclient.features.modules.misc.*;
 import xyz.templecheats.templeclient.features.modules.movement.*;
 import xyz.templecheats.templeclient.features.modules.render.*;
-import xyz.templecheats.templeclient.features.modules.movement.ClickTP;
-import xyz.templecheats.templeclient.features.modules.misc.FakeCreative;
-import xyz.templecheats.templeclient.features.modules.misc.FakePlayer;
-import xyz.templecheats.templeclient.features.modules.misc.Particles;
-import xyz.templecheats.templeclient.features.modules.Module;
-import xyz.templecheats.templeclient.features.modules.world.BlockReach;
-import xyz.templecheats.templeclient.features.modules.world.Nuker;
-import xyz.templecheats.templeclient.features.modules.world.Scaffold;
-import xyz.templecheats.templeclient.gui.font.FontUtils;
-import org.lwjgl.opengl.Display;
+import xyz.templecheats.templeclient.features.modules.world.*;
 import xyz.templecheats.templeclient.gui.clickgui.ClickGuiManager;
+import xyz.templecheats.templeclient.gui.font.FontUtils;
 
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Client {
-    public static String name = "Temple Client 1.7.9";
+    public static String name = "Temple Client 1.8.0";
     public static String cName = "Temple Client";
-    public static CopyOnWriteArrayList<Module> modules = new CopyOnWriteArrayList<Module>();
+    public static CopyOnWriteArrayList<Module> modules = new CopyOnWriteArrayList<>();
+    public static CommandManager commandManager;
 
     public static ClickGuiManager clickGuiManager;
 
     public static void startup() {
         Display.setTitle(name);
+
+        commandManager = new CommandManager();
+        commandManager.registerCommand(new HelpCommand());
 
         /*
         Module Imports
@@ -38,6 +39,7 @@ public class Client {
         // Combat
         modules.add(new AimBot());
         modules.add(new AntiBot());
+        modules.add(new AutoClicker());
         modules.add(new AutoArmor());
         modules.add(new AutoCrystal());
         modules.add(new AutoDisconnect());
@@ -56,6 +58,7 @@ public class Client {
         modules.add(new Panic());
         // Movement
         modules.add(new AirJump());
+        modules.add(new AutoWalk());
         modules.add(new BoatFly());
         modules.add(new BunnyHop());
         modules.add(new ClickTP());
@@ -71,11 +74,13 @@ public class Client {
         modules.add(new Yaw());
         modules.add(new Velocity());
         // Render
+        modules.add(new Fov());
         modules.add(new Freecam());
         modules.add(new FullBright());
         modules.add(new ItemESP());
         modules.add(new NameProtect());
         modules.add(new NameTags());
+        modules.add(new NoRender());
         modules.add(new PlayerESP());
         modules.add(new Radar());
         modules.add(new SpawnerESP());
@@ -91,12 +96,11 @@ public class Client {
         modules.add(new GreenText());
 
         clickGuiManager = new ClickGuiManager();
-
         FontUtils.bootstrap();
     }
 
     public static ArrayList<Module> getModulesInCategory(Module.Category c) {
-        ArrayList<Module> mods = new ArrayList<Module>();
+        ArrayList<Module> mods = new ArrayList<>();
         for (Module m : modules) {
             if (m.getCategory().name().equalsIgnoreCase(c.name())) {
                 mods.add(m);

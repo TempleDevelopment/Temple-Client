@@ -1,1 +1,1 @@
-Temple Client 1.7.9
+Temple Client 1.8.0

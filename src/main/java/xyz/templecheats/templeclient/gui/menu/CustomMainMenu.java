@@ -34,8 +34,8 @@ public class CustomMainMenu extends GuiMainMenu {
         Minecraft.getMinecraft().getTextureManager().bindTexture(IMAGE_LOCATION);
         int imageWidth = 52;
         int imageHeight = 52;
-        int imageX = (this.width - imageWidth) / 2;
-        int imageY = this.height - imageHeight - 10;
+        int imageX = this.width - imageWidth - 10;
+        int imageY = 0;
         drawModalRectWithCustomSizedTexture(imageX, imageY, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
     }
 

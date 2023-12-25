@@ -21,6 +21,7 @@ public class Jesus extends Module {
 
         options.add("Matrix");
         options.add("Dolphin");
+        options.add("Solid");
 
         TempleClient.instance.settingsManager.rSetting(new Setting("Mode", this, options, "Mode"));
     }
@@ -44,6 +45,17 @@ public class Jesus extends Module {
                         mc.player.jumpMovementFactor = 0.01f;
                         mc.player.motionZ = 0.0;
                     }
+                }
+            }
+        } else if (Objects.equals(Mode, "Solid")) {
+            if (Block.getIdFromBlock(block) == 9) {
+                mc.player.onGround = true;
+                mc.player.motionY = 0.0;
+                mc.player.fallDistance = 0.0f;
+
+                if (mc.player.movementInput.moveForward != 0.0f || mc.player.movementInput.moveStrafe != 0.0f) {
+                    mc.player.motionX *= 1.0;
+                    mc.player.motionZ *= 1.0;
                 }
             }
         } else {
