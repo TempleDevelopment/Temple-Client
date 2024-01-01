@@ -5,7 +5,6 @@
 ![GitHub all releases](https://img.shields.io/github/downloads/PhilipPanda/Temple-Client/total?color=seagreen)
 [![Discord](https://img.shields.io/discord/1125838140456849418?color=skyblue&logo=discord&logoColor=white)](https://discord.gg/XZUGTpGCe8)
 ![GitHub repo size](https://img.shields.io/github/repo-size/PhilipPanda/Temple-Client)
-![Lines of code](https://img.shields.io/tokei/lines/:provider/PhilipPanda/https%3A%2F%2Fgithub.com%2FPhilipPanda%2FTemple-Client)
 
 
 Temple Client is a Minecraft 1.12.2 forge mod that enhances the anarchy server experience. 
