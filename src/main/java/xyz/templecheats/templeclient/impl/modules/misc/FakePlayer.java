@@ -15,6 +15,9 @@ public class FakePlayer extends Module {
 
     @Override
     public void onEnable() {
+        if(mc.player == null) {
+            return;
+        }
         GameProfile profile = new GameProfile(mc.player.getUniqueID(), "temple-client bot");
         fakePlayer = new EntityOtherPlayerMP(mc.world, profile);
         fakePlayer.setEntityId(-1882);
@@ -25,6 +28,9 @@ public class FakePlayer extends Module {
 
     @Override
     public void onDisable() {
+        if(fakePlayer == null) {
+            return;
+        }
         if (!Panic.isPanic) {
             mc.world.removeEntityFromWorld(fakePlayer.getEntityId());
         }

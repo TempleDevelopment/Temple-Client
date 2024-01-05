@@ -41,12 +41,18 @@ public class Module {
 
     public void enable() {
         this.toggled = true;
-        onEnable();
+
+        if (mc.player != null) {
+            onEnable();
+        }
     }
 
     public void disable() {
         this.toggled = false;
-        onDisable();
+
+        if (mc.player != null) {
+            onDisable();
+        }
     }
 
     public void toggle() {
@@ -84,35 +90,14 @@ public class Module {
         CLIENT;
     }
 
-    private int setting1;
-    private boolean setting2;
-
-    public int getSetting1() {
-        return setting1;
-    }
-
-    public void setSetting1(int setting1) {
-        this.setting1 = setting1;
-    }
-
-    public boolean getSetting2() {
-        return setting2;
-    }
-
-    public void setSetting2(boolean setting2) {
-        this.setting2 = setting2;
-    }
-
-
     public void setToggled(boolean toggled) {
         //dont do anything if the toggled state is the same
-        if(toggled == this.toggled) return;
-        
-        this.toggled = toggled;
+        if (toggled == this.toggled) return;
+
         if (toggled) {
-            onEnable();
+            enable();
         } else {
-            onDisable();
+            disable();
         }
     }
 }

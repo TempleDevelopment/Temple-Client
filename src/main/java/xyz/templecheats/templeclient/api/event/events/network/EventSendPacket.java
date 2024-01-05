@@ -19,4 +19,5 @@ public final class EventSendPacket extends EventCancellable {
     public void setPacket(Packet packet) {
         this.packet = packet;
     }
+
 }

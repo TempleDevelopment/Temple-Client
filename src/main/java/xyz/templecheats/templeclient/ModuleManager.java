@@ -1,7 +1,6 @@
 package xyz.templecheats.templeclient;
 
 import net.minecraft.client.Minecraft;
-import xyz.templecheats.templeclient.impl.command.CommandManager;
 import xyz.templecheats.templeclient.impl.modules.Module;
 import xyz.templecheats.templeclient.impl.modules.chat.GreenText;
 import xyz.templecheats.templeclient.impl.modules.client.ClickGUI;
@@ -23,7 +22,6 @@ import java.util.ArrayList;
 public class ModuleManager {
 
     public static ArrayList<Module> modules = new ArrayList<>();
-    public static CommandManager commandManager;
 
     public static void addMod(Module mod) {
         modules.add(mod);

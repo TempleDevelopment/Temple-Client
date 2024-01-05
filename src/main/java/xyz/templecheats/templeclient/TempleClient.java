@@ -84,8 +84,9 @@ public class TempleClient {
 
     @SubscribeEvent
     public void onChat(ClientChatEvent event) {
+
         if (event.getMessage().startsWith(".")) {
-            if (ModuleManager.commandManager.executeCommand(event.getMessage())) {
+            if (TempleClient.commandManager.executeCommand(event.getMessage())) {
                 event.setCanceled(true);
             }
         }

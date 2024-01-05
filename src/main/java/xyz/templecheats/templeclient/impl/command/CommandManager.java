@@ -25,10 +25,9 @@ public class CommandManager {
         return false;
     }
 
-    public static void commandInit() {
-        commandManager = new CommandManager();
-        commandManager.registerCommand(new CoordsCommand());
-        commandManager.registerCommand(new HelpCommand());
-        commandManager.registerCommand(new IpCommand());
+    public void commandInit() {
+        registerCommand(new CoordsCommand());
+        registerCommand(new HelpCommand());
+        registerCommand(new IpCommand());
     }
 }
