@@ -48,7 +48,7 @@ git clone https://github.com/PhilipPanda/Temple-Client
 ```
 ### 1.8.1 - Showcase
 <p align="center">
-   <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/showcase-1.8.1.png">
+   <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/showcase-1.8.8.png">
 </p>
 
 ### Contributors
