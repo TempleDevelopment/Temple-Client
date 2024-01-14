@@ -9,7 +9,6 @@ public class GreenText extends Module {
 
     public GreenText() {
         super("GreenText", 0, Category.CHAT);
-        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @SubscribeEvent

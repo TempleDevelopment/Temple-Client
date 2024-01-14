@@ -1,7 +1,7 @@
 package xyz.templecheats.templeclient.impl.modules.misc;
 
 import xyz.templecheats.templeclient.api.event.EventStageable;
-import xyz.templecheats.templeclient.api.event.events.network.EventSendPacket;
+import xyz.templecheats.templeclient.api.event.events.network.PacketEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.network.Packet;
@@ -36,7 +36,7 @@ public final class Blink extends Module {
     }
 
     @Listener
-    public void sendPacket(EventSendPacket event) {
+    public void sendPacket(PacketEvent.Send event) {
         if (event.getStage() == EventStageable.EventStage.PRE) {
             final Packet packet = event.getPacket();
 

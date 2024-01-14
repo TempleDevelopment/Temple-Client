@@ -35,27 +35,27 @@ public class Slider extends Component {
 
 	@Override
 	public void renderComponent() {
-
 		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset, parent.parent.getX() + parent.parent.getWidth(), parent.parent.getY() + offset + 12, 0xFF111111);
 
-		int borderThickness = 2;
+		final int drag = (int)(this.set.getValDouble() / this.set.getMax() * this.parent.parent.getWidth());
+		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset + 8, parent.parent.getX() + 88, parent.parent.getY() + offset + 12, Color.GRAY.darker().darker().darker().getRGB());
+		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset + 8, parent.parent.getX() + (int) renderWidth, parent.parent.getY() + offset + 12, ClickGUI.RGBColor.hashCode());
+
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(0.5f, 0.5f, 0.5f);
+		int scaledX = (int) ((parent.parent.getX() + 7) / 0.5f);
+		int scaledY = (int) ((parent.parent.getY() + offset + 1.2) / 0.5f);
+		FontUtils.normal.drawString(this.set.getName() + ": " + this.set.getValDouble(), scaledX, scaledY, -1);
+		GlStateManager.popMatrix();
+
+		int borderThickness = 1;
 		int borderColor = ClickGUI.RGBColor.getRGB();
 		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset, parent.parent.getX() + borderThickness, parent.parent.getY() + offset + 12, borderColor);
 
-		final int drag = (int)(this.set.getValDouble() / this.set.getMax() * this.parent.parent.getWidth());
-		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset, parent.parent.getX(), parent.parent.getY() + offset + 12, 0xFF111111);
-		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset + 8, parent.parent.getX() + 88, parent.parent.getY() + offset + 12, Color.GRAY.darker().darker().darker().getRGB());
-		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset + 8, parent.parent.getX() + (int) renderWidth, parent.parent.getY() + offset + 12, ClickGUI.RGBColor.hashCode());
-		GlStateManager.pushMatrix();
-		GlStateManager.scale(0.5f, 0.5f, 0.5f);
-
-		int scaledX = (int) ((parent.parent.getX() + 7) / 0.5f);
-		int scaledY = (int) ((parent.parent.getY() + offset + 1.2) / 0.5f);
-
-		FontUtils.normal.drawString(this.set.getName() + ": " + this.set.getValDouble(), scaledX, scaledY, -1);
-
-		GlStateManager.popMatrix();
+		int rightBorderX = parent.parent.getX() + parent.parent.getWidth() - borderThickness;
+		Gui.drawRect(rightBorderX, parent.parent.getY() + offset, parent.parent.getX() + parent.parent.getWidth(), parent.parent.getY() + offset + 12, borderColor);
 	}
+
 
 
 	@Override

@@ -5,67 +5,39 @@ import net.minecraft.util.ResourceLocation;
 
 import java.awt.*;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
-@SuppressWarnings("NonAtomicOperationOnVolatileField")
 public class FontUtils {
-    public static volatile int completed;
     public static MinecraftFontRenderer normal;
-    private static Font normal_;
+    private static Font customFont;
+    private static Font defaultFont;
 
-    private static Font getFont(Map<String, Font> locationMap, String location, int size) {
-        Font font = null;
-
-        try {
-            if (locationMap.containsKey(location)) {
-                font = locationMap.get(location).deriveFont(Font.PLAIN, size);
-            } else {
-                InputStream is = Minecraft.getMinecraft().getResourceManager()
-                        .getResource(new ResourceLocation(location)).getInputStream();
-                font = Font.createFont(0, is);
-                locationMap.put(location, font);
-                font = font.deriveFont(Font.PLAIN, size);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            font = new Font("default", Font.PLAIN, +10);
-        }
-
-        return font;
-    }
-
-    public static boolean hasLoaded() {
-        return completed >= 3;
+    static {
+        bootstrap();
     }
 
     public static void bootstrap() {
-        new Thread(() ->
-        {
-            Map<String, Font> locationMap = new HashMap<>();
-            normal_ = getFont(locationMap, "font.otf", 25);
-            completed++;
-        }).start();
-        new Thread(() ->
-        {
-            Map<String, Font> locationMap = new HashMap<>();
-            completed++;
-        }).start();
-        new Thread(() ->
-        {
-            Map<String, Font> locationMap = new HashMap<>();
-            completed++;
-        }).start();
+        customFont = loadFont("font.otf", 25);
+        defaultFont = loadFont("minecraft.otf", 24);
 
-        while (!hasLoaded()) {
-            try {
-                //noinspection BusyWait
-                Thread.sleep(5);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        normal = new MinecraftFontRenderer(customFont, true, true);
+    }
+
+    private static Font loadFont(String location, int size) {
+        Font font = null;
+        try (InputStream is = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(location)).getInputStream()) {
+            font = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(Font.PLAIN, size);
+        } catch (Exception e) {
+            e.printStackTrace();
+            font = new Font("default", Font.PLAIN, size);
         }
+        return font;
+    }
 
-        normal = new MinecraftFontRenderer(normal_, true, true);
+    public static void setCustomFont() {
+        normal = new MinecraftFontRenderer(customFont, true, true);
+    }
+
+    public static void setDefaultFont() {
+        normal = new MinecraftFontRenderer(defaultFont, true, true);
     }
 }

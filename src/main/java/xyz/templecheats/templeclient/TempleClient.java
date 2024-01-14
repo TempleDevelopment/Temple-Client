@@ -2,36 +2,38 @@ package xyz.templecheats.templeclient;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Session;
+import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.client.event.ClientChatEvent;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.Display;
+import team.stiff.pomelo.impl.annotated.AnnotatedEventManager;
 import xyz.templecheats.templeclient.api.config.ShutdownHook;
 import xyz.templecheats.templeclient.api.config.rewrite.ConfigManager;
+import xyz.templecheats.templeclient.api.event.EventManager;
+import xyz.templecheats.templeclient.api.util.keys.key;
 import xyz.templecheats.templeclient.impl.command.CommandManager;
 import xyz.templecheats.templeclient.impl.gui.clickgui.ClickGuiManager;
 import xyz.templecheats.templeclient.impl.gui.clickgui.setting.SettingsManager;
 import xyz.templecheats.templeclient.impl.gui.font.FontUtils;
 import xyz.templecheats.templeclient.impl.gui.menu.GuiEventsListener;
 import xyz.templecheats.templeclient.impl.gui.ui.watermark;
-import xyz.templecheats.templeclient.api.event.EventManager;
-import xyz.templecheats.templeclient.api.util.keys.key;
 
 import java.lang.reflect.Field;
 
 @Mod(modid = TempleClient.MODID, name = TempleClient.NAME, version = TempleClient.VERSION)
 public class TempleClient {
-    public static String name = "Temple Client 1.8.1";
+    public static String name = "Temple Client 1.8.2";
 
     public static final String MODID = "templeclient";
     public static final String NAME = "Temple Client";
-    public static final String VERSION = "1.8.1";
+    public static final String VERSION = "1.8.2";
 
+    public static AnnotatedEventManager eventBus;
     public static SettingsManager settingsManager;
     public static ModuleManager moduleManager;
     public static EventManager clientEventManager;
@@ -51,6 +53,7 @@ public class TempleClient {
         Display.setTitle(name);
         MinecraftForge.EVENT_BUS.register(new TempleClient());
 
+        eventBus = new AnnotatedEventManager();
         clientEventManager = new EventManager();
         MinecraftForge.EVENT_BUS.register(clientEventManager);
 
@@ -85,8 +88,8 @@ public class TempleClient {
     @SubscribeEvent
     public void onChat(ClientChatEvent event) {
 
-        if (event.getMessage().startsWith(".")) {
-            if (TempleClient.commandManager.executeCommand(event.getMessage())) {
+        if(event.getMessage().startsWith(".")) {
+            if(TempleClient.commandManager.executeCommand(event.getMessage())) {
                 event.setCanceled(true);
             }
         }
@@ -98,13 +101,13 @@ public class TempleClient {
         try {
             Field session = null;
 
-            for (Field f : mc.getDeclaredFields()) {
-                if (f.getType().isInstance(s)) {
+            for(Field f : mc.getDeclaredFields()) {
+                if(f.getType().isInstance(s)) {
                     session = f;
                 }
             }
 
-            if (session == null) {
+            if(session == null) {
                 throw new IllegalStateException("Session Null");
             }
 
@@ -114,7 +117,7 @@ public class TempleClient {
 
             name = "TempleClient 1.12.2 | User: " + Minecraft.getMinecraft().getSession().getUsername();
             Display.setTitle(name);
-        } catch (Exception e) {
+        } catch(Exception e) {
             e.printStackTrace();
         }
     }

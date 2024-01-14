@@ -28,7 +28,7 @@ public class ModeButton extends Component {
 		this.x = button.parent.getX() + button.parent.getWidth();
 		this.y = button.parent.getY() + button.offset;
 		this.offset = offset;
-		this.modeIndex = 0;
+		this.modeIndex = 1;
 
 		set.setValString(set.getOptions().get(0));
 	}
@@ -43,9 +43,13 @@ public class ModeButton extends Component {
 
 		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset, parent.parent.getX() + (parent.parent.getWidth() * 1), parent.parent.getY() + offset + 12, this.hovered ? 0xFF222222 : 0xFF111111);
 
-		int borderThickness = 2;
+		int borderThickness = 1;
 		int borderColor = ClickGUI.RGBColor.getRGB();
 		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset, parent.parent.getX() + borderThickness, parent.parent.getY() + offset + 12, borderColor);
+
+		int rightBorderX = parent.parent.getX() + parent.parent.getWidth() - borderThickness;
+
+		Gui.drawRect(rightBorderX, parent.parent.getY() + offset, parent.parent.getX() + parent.parent.getWidth(), parent.parent.getY() + offset + 12, borderColor);
 
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(0.5f, 0.5f, 0.5f);
@@ -53,7 +57,7 @@ public class ModeButton extends Component {
 		int scaledX = (int) ((parent.parent.getX() + 7) / 0.5f);
 		int scaledY = (int) (((parent.parent.getY() + offset + 2) + 1) / 0.5f);
 
-		FontUtils.normal.drawString(set.getTitle() + ": " + set.getOptions().get(modeIndex), scaledX, scaledY, -1);
+		FontUtils.normal.drawString(set.getTitle() + ": " + set.getValString(), scaledX, scaledY, -1);
 
 		GlStateManager.popMatrix();
 	}
@@ -68,11 +72,15 @@ public class ModeButton extends Component {
 		this.y = parent.parent.getY() + offset;
 		this.x = parent.parent.getX();
 	}
-	
+
 	@Override
 	public void mouseClicked(int mouseX, int mouseY, int button) {
 		if(isMouseOnButton(mouseX, mouseY) && button == 0 && this.parent.open) {
 			int maxIndex = set.getOptions().size();
+
+			if(modeIndex == -1) {
+				modeIndex = set.getOptions().indexOf(set.getValString());
+			}
 
 			if(modeIndex + 1 >= maxIndex)
 				modeIndex = 0;

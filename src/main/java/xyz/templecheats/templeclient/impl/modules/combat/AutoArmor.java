@@ -11,7 +11,7 @@ import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.impl.modules.Module;
 import xyz.templecheats.templeclient.impl.gui.clickgui.setting.Setting;
 import xyz.templecheats.templeclient.impl.gui.clickgui.setting.SettingsManager;
-import xyz.templecheats.templeclient.api.util.time.Timer;
+import xyz.templecheats.templeclient.api.util.time.TimerUtil;
 
 import java.util.Arrays;
 
@@ -20,7 +20,7 @@ import java.util.Arrays;
  */
 
 public class AutoArmor extends Module {
-    private Timer timer;
+    private TimerUtil timerUtil;
     private int[] bestArmorDamage;
     private int[] bestArmorSlots;
 
@@ -32,7 +32,7 @@ public class AutoArmor extends Module {
 
     public AutoArmor() {
         super("AutoArmor", Keyboard.KEY_NONE, Category.COMBAT);
-        this.timer = new Timer();
+        this.timerUtil = new TimerUtil();
 
         SettingsManager settingsManager = TempleClient.settingsManager;
 
@@ -70,12 +70,12 @@ public class AutoArmor extends Module {
                         continue;
                     }
                     AutoArmor.mc.playerController.windowClick(AutoArmor.mc.player.inventoryContainer.windowId, 8 - i, 0, ClickType.QUICK_MOVE, (EntityPlayer) AutoArmor.mc.player);
-                    if (!this.timer.hasReached(this.ms.getValInt())) {
+                    if (!this.timerUtil.hasReached(this.ms.getValInt())) {
                         return;
                     }
                 }
                 AutoArmor.mc.playerController.windowClick(AutoArmor.mc.player.inventoryContainer.windowId, bestSlot, 0, ClickType.QUICK_MOVE, (EntityPlayer) AutoArmor.mc.player);
-                this.timer.reset();
+                this.timerUtil.reset();
             }
         }
     }

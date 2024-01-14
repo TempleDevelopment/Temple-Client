@@ -1,12 +1,13 @@
 package xyz.templecheats.templeclient;
 
-import net.minecraft.client.Minecraft;
 import xyz.templecheats.templeclient.impl.modules.Module;
 import xyz.templecheats.templeclient.impl.modules.chat.GreenText;
 import xyz.templecheats.templeclient.impl.modules.client.ClickGUI;
+import xyz.templecheats.templeclient.impl.modules.client.Font;
 import xyz.templecheats.templeclient.impl.modules.client.HUD;
 import xyz.templecheats.templeclient.impl.modules.client.Panic;
 import xyz.templecheats.templeclient.impl.modules.combat.*;
+import xyz.templecheats.templeclient.impl.modules.combat.Velocity;
 import xyz.templecheats.templeclient.impl.modules.misc.Blink;
 import xyz.templecheats.templeclient.impl.modules.misc.FakeCreative;
 import xyz.templecheats.templeclient.impl.modules.misc.FakePlayer;
@@ -41,6 +42,7 @@ public class ModuleManager {
         addMod(new HitBox());
         addMod(new KillAura());
         addMod(new TriggerBot());
+        addMod(new Velocity());
         // Miscellaneous
         addMod(new Blink());
         addMod(new FakeCreative());
@@ -48,6 +50,7 @@ public class ModuleManager {
         addMod(new Particles());
         // Client
         addMod(new ClickGUI());
+        addMod(new Font());
         addMod(new HUD());
         addMod(new Panic());
         // Movement
@@ -60,13 +63,12 @@ public class ModuleManager {
         addMod(new FastFall());
         addMod(new Fly());
         addMod(new Glide());
-        addMod(new InvWalk());
+        addMod(new GuiWalk());
         addMod(new Jesus());
         addMod(new Speed());
         addMod(new Spider());
         addMod(new Sprint());
         addMod(new Yaw());
-        addMod(new Velocity());
         // Render
         addMod(new Fov());
         addMod(new Freecam());
@@ -134,11 +136,7 @@ public class ModuleManager {
 
     public void onPlayerTick() {
         for (Module module : modules) {
-
-            if (module.isToggled() && Minecraft.getMinecraft().player != null) {
-                module.onUpdate();
-            }
-            module.onUpdateConstant();
+            module.onUpdateInternal();
         }
     }
 }

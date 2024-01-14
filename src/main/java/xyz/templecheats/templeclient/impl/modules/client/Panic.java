@@ -9,7 +9,7 @@ public class Panic extends Module {
     public static boolean isPanic = false;
 
     public Panic() {
-        super("Panic[F4]", Keyboard.KEY_F4, Category.CLIENT);
+        super("Panic", Keyboard.KEY_NONE, Category.CLIENT);
     }
 
     @Override

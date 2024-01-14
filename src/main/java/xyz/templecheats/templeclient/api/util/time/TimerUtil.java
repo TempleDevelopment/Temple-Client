@@ -1,10 +1,10 @@
 package xyz.templecheats.templeclient.api.util.time;
-public class Timer {
+public class TimerUtil {
 
     private long current;
     private long time;
 
-    public Timer() {
+    public TimerUtil() {
         this.current = System.currentTimeMillis();
     }
 
@@ -46,7 +46,7 @@ public class Timer {
         return this.getMs(System.nanoTime() - this.time);
     }
 
-    public Timer resetNT() {
+    public TimerUtil resetNT() {
         this.time = System.nanoTime();
         return this;
     }

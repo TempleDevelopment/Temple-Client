@@ -67,15 +67,28 @@ public class Button extends Component {
 
 	@Override
 	public void renderComponent() {
-
 		Gui.drawRect(parent.getX(), this.parent.getY() + this.offset, parent.getX() + parent.getWidth(), this.parent.getY() + 12 + this.offset, this.isHovered ? 0xFF222222 : 0xFF111111);
 
-		int borderThickness = 2;
+		int borderThickness = 1;
 		int borderColor = ClickGUI.RGBColor.getRGB();
-		Gui.drawRect(parent.getX(), this.parent.getY() + this.offset, parent.getX() + borderThickness, this.parent.getY() + 12 + this.offset, borderColor);
 
 		int adjustedX = (int) ((parent.getX() + 5) / 0.7f);
 		int adjustedY = (int) ((parent.getY() + offset + 3) / 0.7f);
+
+		if (this.open && !this.subcomponents.isEmpty()) {
+			int rightBorderX = parent.getX() + parent.getWidth() - borderThickness;
+
+			int totalHeight = 12;
+			for (Component comp : this.subcomponents) {
+				totalHeight += comp.getHeight();
+			}
+
+			Gui.drawRect(rightBorderX, this.parent.getY() + this.offset, parent.getX() + parent.getWidth(), this.parent.getY() + this.offset + totalHeight, borderColor);
+
+			Gui.drawRect(parent.getX(), this.parent.getY() + this.offset, parent.getX() + parent.getWidth(), this.parent.getY() + this.offset + borderThickness, borderColor);
+		}
+
+		Gui.drawRect(parent.getX(), this.parent.getY() + this.offset, parent.getX() + borderThickness, this.parent.getY() + 12 + this.offset, borderColor);
 
 		GlStateManager.pushMatrix();
 
@@ -96,6 +109,7 @@ public class Button extends Component {
 			}
 		}
 	}
+
 
 
 

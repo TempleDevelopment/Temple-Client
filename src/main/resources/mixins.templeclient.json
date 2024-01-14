@@ -1,0 +1,14 @@
+{
+  "compatibilityLevel": "JAVA_8",
+  "package": "xyz.templecheats.templeclient.mixins",
+  "refmap": "refmap.templeclient.json",
+  "mixins": [
+    "IMixinSPacketExplosion",
+    "MixinEntity",
+    "MixinNetworkManager"
+  ],
+  "client": [
+    "MixinEntityPlayerSP"
+  ],
+  "server": []
+}

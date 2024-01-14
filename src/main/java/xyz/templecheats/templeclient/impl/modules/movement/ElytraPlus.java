@@ -34,7 +34,7 @@ public class ElytraPlus extends Module {
 
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (!mc.player.isElytraFlying()) return;
+        if (mc.player == null || !mc.player.isElytraFlying()) return;
 
         float yaw = mc.player.rotationYaw;
         float pitch = mc.player.rotationPitch;

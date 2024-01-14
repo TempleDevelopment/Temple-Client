@@ -32,9 +32,13 @@ public class Checkbox extends Component {
 
 		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset, parent.parent.getX() + (parent.parent.getWidth() * 1), parent.parent.getY() + offset + 12, this.hovered ? 0xFF222222 : 0xFF111111);
 
-		int borderThickness = 2;
+		int borderThickness = 1;
 		int borderColor = ClickGUI.RGBColor.getRGB();
 		Gui.drawRect(parent.parent.getX(), parent.parent.getY() + offset, parent.parent.getX() + borderThickness, parent.parent.getY() + offset + 12, borderColor);
+
+		int rightBorderX = parent.parent.getX() + parent.parent.getWidth() - borderThickness;
+
+		Gui.drawRect(rightBorderX, parent.parent.getY() + offset, parent.parent.getX() + parent.parent.getWidth(), parent.parent.getY() + offset + 12, borderColor);
 
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(0.5f, 0.5f, 0.5f);

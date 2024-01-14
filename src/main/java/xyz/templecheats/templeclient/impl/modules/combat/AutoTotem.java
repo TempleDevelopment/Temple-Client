@@ -2,60 +2,77 @@ package xyz.templecheats.templeclient.impl.modules.combat;
 
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.impl.modules.Module;
-import net.minecraft.client.gui.GuiCommandBlock;
-import net.minecraft.client.gui.GuiEnchantment;
-import net.minecraft.client.gui.GuiHopper;
-import net.minecraft.client.gui.inventory.*;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.ClickType;
+import xyz.templecheats.templeclient.impl.gui.clickgui.setting.Setting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.inventory.ClickType;
+import net.minecraft.init.Items;
+import xyz.templecheats.templeclient.TempleClient;
 
 public class AutoTotem extends Module {
 
     int delay = 0;
     int totems;
     int totemsOffHand;
-    int totemSwtichDelay = 0;
+    int totemSwitchDelay = 0;
+    Setting healthThreshold;
+    ItemStack originalOffhandItem = ItemStack.EMPTY;
 
     public AutoTotem() {
         super("AutoTotem", Keyboard.KEY_NONE, Category.COMBAT);
+        healthThreshold = new Setting("Health", this, 10, 1, 20, true);
+        TempleClient.settingsManager.rSetting(healthThreshold);
     }
-
 
     @Override
     public void onUpdate() {
-        if (mc.world == null)
-            return;
+        if (mc.world == null) return;
         totems = mc.player.inventory.mainInventory.stream().filter(itemStack -> itemStack.getItem() == Items.TOTEM_OF_UNDYING).mapToInt(ItemStack::getCount).sum();
         totemsOffHand = mc.player.inventory.offHandInventory.stream().filter(itemStack -> itemStack.getItem() == Items.TOTEM_OF_UNDYING).mapToInt(ItemStack::getCount).sum();
+        int healthToActivate = TempleClient.settingsManager.getSettingByName(this.getName(), "Health").getValInt();
 
+        if (mc.player.getHealth() <= healthToActivate && (mc.player.getHeldItemOffhand().isEmpty() || !mc.player.getHeldItemOffhand().getItem().equals(Items.TOTEM_OF_UNDYING))) {
+            if (originalOffhandItem.isEmpty()) {
+                originalOffhandItem = mc.player.getHeldItemOffhand();
+            }
+            switchToTotem();
+        } else if (mc.player.getHealth() > healthToActivate && !originalOffhandItem.isEmpty()) {
+            switchBackToOriginal();
+        }
+    }
+
+    private void switchToTotem() {
         for (int i = 0; i < 45; i++) {
-            if (totems + totemsOffHand > 0) {
-                if (!(mc.currentScreen instanceof GuiCrafting) && !(mc.currentScreen instanceof GuiFurnace) && !(mc.currentScreen instanceof GuiBeacon) && !(mc.currentScreen instanceof GuiBrewingStand) && !(mc.currentScreen instanceof GuiChest) && !(mc.currentScreen instanceof GuiCommandBlock) && !(mc.currentScreen instanceof GuiDispenser) && !(mc.currentScreen instanceof GuiEnchantment) && !(mc.currentScreen instanceof GuiShulkerBox) && !(mc.currentScreen instanceof GuiContainerCreative) && !(mc.currentScreen instanceof GuiHopper)) {
-                    ItemStack stacks = mc.player.openContainer.getSlot(i).getStack();
-
-                    if (stacks == ItemStack.EMPTY)
-                        continue;
-                    Item itemTotem = Items.TOTEM_OF_UNDYING;
-                    if (mc.player.getHeldItemOffhand().isEmpty()) {
-                        totemSwtichDelay++;
-                        if (stacks.getItem() == itemTotem) {
-                            if (totemSwtichDelay >= delay) {
-                                mc.playerController.windowClick(0, i, 1, ClickType.PICKUP, mc.player);
-                                mc.playerController.windowClick(0, 45, 1, ClickType.PICKUP, mc.player);
-                                totemSwtichDelay = 0;
-                            }
-                        }
+            if (mc.currentScreen == null && totems + totemsOffHand > 0) {
+                ItemStack stack = mc.player.openContainer.getSlot(i).getStack();
+                if (stack == ItemStack.EMPTY) continue;
+                if (stack.getItem() == Items.TOTEM_OF_UNDYING) {
+                    totemSwitchDelay++;
+                    if (totemSwitchDelay >= delay) {
+                        mc.playerController.windowClick(0, i, 1, ClickType.PICKUP, mc.player);
+                        mc.playerController.windowClick(0, 45, 1, ClickType.PICKUP, mc.player);
+                        mc.playerController.windowClick(0, i, 1, ClickType.PICKUP, mc.player);
+                        totemSwitchDelay = 0;
+                        break;
                     }
-
                 }
             }
         }
     }
 
+    private void switchBackToOriginal() {
+        if (!mc.player.getHeldItemOffhand().isEmpty()) {
+            mc.playerController.windowClick(0, 45, 1, ClickType.PICKUP, mc.player);
+        }
+        if (!originalOffhandItem.isEmpty()) {
+            mc.playerController.windowClick(0, 45, 1, ClickType.PICKUP, mc.player);
+            originalOffhandItem = ItemStack.EMPTY;
+        }
+    }
+
     @Override
     public void onEnable() {
-        totemSwtichDelay = 0;
+        totemSwitchDelay = 0;
+        originalOffhandItem = ItemStack.EMPTY;
     }
 }

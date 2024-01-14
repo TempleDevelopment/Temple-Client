@@ -2,6 +2,7 @@ package xyz.templecheats.templeclient.impl.modules;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
+import xyz.templecheats.templeclient.TempleClient;
 
 public class Module {
     public String name;
@@ -9,6 +10,7 @@ public class Module {
     public int KeyCode;
     public Category category;
     public static Minecraft mc = Minecraft.getMinecraft();
+    private boolean queueEnable;
 
     public Module(String name, int keyCode, Category c) {
         this.name = name;
@@ -24,42 +26,64 @@ public class Module {
         return KeyCode;
     }
 
-    public void onUpdate() {
-        return;
+    //do not override
+    public final void onUpdateInternal() {
+        if(mc.player != null) {
+            if(this.queueEnable) {
+                this.queueEnable = false;
+                this.onEnable();
+            }
+
+            if(this.isToggled()) {
+                this.onUpdate();
+            }
+        }
+
+        this.onUpdateConstant();
     }
 
-    public void onUpdateConstant() {
-    }
+    public void onUpdate() {}
 
-    public void onEnable() {
-        MinecraftForge.EVENT_BUS.register(this);
-    }
+    public void onUpdateConstant() {}
 
-    public void onDisable() {
-        MinecraftForge.EVENT_BUS.unregister(this);
-    }
+    public void onEnable() {}
+
+    public void onDisable() {}
 
     public void enable() {
         this.toggled = true;
+        MinecraftForge.EVENT_BUS.register(this);
+        TempleClient.eventBus.addEventListener(this);
 
-        if (mc.player != null) {
-            onEnable();
+        if(mc.player != null) {
+            this.onEnable();
+        } else {
+            this.queueEnable = true;
         }
     }
 
     public void disable() {
         this.toggled = false;
+        MinecraftForge.EVENT_BUS.unregister(this);
+        TempleClient.eventBus.removeEventListener(this);
 
-        if (mc.player != null) {
-            onDisable();
+        if(mc.player != null) {
+            this.onDisable();
         }
     }
 
     public void toggle() {
-        if (toggled) {
-            disable();
+        this.setToggled(!this.isToggled());
+    }
+
+    public void setToggled(boolean toggled) {
+        //dont do anything if the toggled state is the same
+        if(toggled == this.toggled) return;
+
+        if(toggled) {
+            this.enable();
         } else {
-            enable();
+            this.disable();
         }
     }
 
@@ -80,7 +104,6 @@ public class Module {
     }
 
     public enum Category {
-
         CHAT,
         COMBAT,
         MISC,
@@ -88,16 +111,5 @@ public class Module {
         RENDER,
         WORLD,
         CLIENT;
-    }
-
-    public void setToggled(boolean toggled) {
-        //dont do anything if the toggled state is the same
-        if (toggled == this.toggled) return;
-
-        if (toggled) {
-            enable();
-        } else {
-            disable();
-        }
     }
 }
