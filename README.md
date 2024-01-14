@@ -46,9 +46,9 @@ It is a free and open-source utility mod.
 ```
 git clone https://github.com/PhilipPanda/Temple-Client
 ```
-### 1.8.1 - Showcase
+### 1.8.2 - Showcase
 <p align="center">
-   <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/showcase-1.8.8.png">
+   <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/showcase-1.8.2.png">
 </p>
 
 ### Contributors
