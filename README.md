@@ -42,15 +42,15 @@ It is a free and open-source utility mod.
 
 </details>
 
-# Project Setup
+## Project Setup
 
-## Prerequisites
+### Prerequisites
 
 - [Adoptium JDK 8](https://adoptium.net/releases.html)
 - [Gradle](https://gradle.org/install/) (for building the project)
 - Your choice of IDE: [IntelliJ IDEA](https://www.jetbrains.com/idea/) or [Eclipse](https://www.eclipse.org/downloads/)
 
-## Setup Steps
+### Setup Steps
 
 1. **Install Adoptium JDK 8**: Download and install Adoptium JDK 8.
 
@@ -62,7 +62,7 @@ It is a free and open-source utility mod.
 ./gradlew genIntellijRuns
 ```
 
-## If build fails
+### If build fails
 
 ```
 ./gradlew build
