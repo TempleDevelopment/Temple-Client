@@ -42,10 +42,35 @@ It is a free and open-source utility mod.
 
 </details>
 
-### Clone Repository
+# Project Setup
+
+## Prerequisites
+
+- [Adoptium JDK 8](https://adoptium.net/releases.html)
+- [Gradle](https://gradle.org/install/) (for building the project)
+- Your choice of IDE: [IntelliJ IDEA](https://www.jetbrains.com/idea/) or [Eclipse](https://www.eclipse.org/downloads/)
+
+## Setup Steps
+
+1. **Install Adoptium JDK 8**: Download and install Adoptium JDK 8.
+
+2. **Clone the Project**: Clone or download this project from GitHub.
+
+3. **Build the Project**: Open a terminal and navigate to the project's root directory. Run the following command to build the project:
 ```
-git clone https://github.com/PhilipPanda/Temple-Client
+./gradlew build
+./gradlew genIntellijRuns
 ```
+
+## If build fails
+
+```
+./gradlew build
+./gradlew idea
+./gradlew eclipse
+./gradlew tasks
+```
+
 ### 1.8.2 - Showcase
 <p align="center">
    <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/showcase-1.8.2.png">
