@@ -71,9 +71,9 @@ It is a free and open-source utility mod.
 ./gradlew tasks
 ```
 
-### 1.8.2 - Showcase
+### 1.8.3 - Showcase
 <p align="center">
-   <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/showcase-1.8.2.png">
+   <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/1.8.3.png">
 </p>
 
 ### Contributors
