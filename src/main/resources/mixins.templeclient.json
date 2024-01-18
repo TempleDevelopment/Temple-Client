@@ -5,9 +5,11 @@
   "mixins": [
     "IMixinSPacketExplosion",
     "MixinEntity",
+    "MixinEntityPlayer",
     "MixinNetworkManager"
   ],
   "client": [
+    "MixinAbstractClientPlayer",
     "MixinEntityPlayerSP"
   ],
   "server": []

@@ -69,8 +69,8 @@ public class PlayerESP extends Module {
                     );
                     RenderUtil.FillOnlyLinePlayerESP(entity, box, r, g, b);
                 } else if (currentMode.equals("Glow")) {
+                    entity.setGlowing(true);
                     if (!glowed.contains(entity)) {
-                        entity.setGlowing(true);
                         glowed.add(entity);
                     }
                 }

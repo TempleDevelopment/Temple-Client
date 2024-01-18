@@ -36,6 +36,7 @@ public class ModuleManager {
         addMod(new AutoArmor());
         addMod(new AutoCrystal());
         addMod(new AutoDisconnect());
+        addMod(new AutoGapple());
         addMod(new AutoRespawn());
         addMod(new AutoTotem());
         addMod(new FastXP());

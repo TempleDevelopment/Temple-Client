@@ -11,6 +11,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketAnimation;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
@@ -44,6 +45,7 @@ public class AutoCrystal extends Module {
     private double maxSelfDamage = 4.0;
     private boolean rotate = true;
     private boolean autoSwitch = true;
+    private boolean pauseWhileEating = true;
     private String mode = "1.12";
 
     private EntityEnderCrystal curCrystal;
@@ -62,21 +64,23 @@ public class AutoCrystal extends Module {
         Setting placeDelaySetting = new Setting("PlaceDelay", this, 10, 0, 20, true);
         Setting radiusSetting = new Setting("Radius", this, 4.5, 1, 6, false);
         Setting rotate = new Setting("Rotate", this, true);
-        Setting autoSwitchSetting = new Setting("AutoSwitch", this, true);
-        Setting silentSetting = new Setting("Silent", this, false);
         Setting minDamageSetting = new Setting("MinDamage", this, 6.0, 0.1, 36.0, false);
         Setting maxSelfDamageSetting = new Setting("MaxSelfDamage", this, 6.0, 0.1, 36.0, false);
+        Setting autoSwitchSetting = new Setting("AutoSwitch", this, true);
+        Setting silentSetting = new Setting("Silent", this, false);
+        Setting pauseWhileEatingSetting = new Setting("PauseWhileEating", this, true);
 
 
         TempleClient.settingsManager.rSetting(new Setting("Mode", this, options, "Mode"));
         TempleClient.settingsManager.rSetting(rotate);
-        TempleClient.settingsManager.rSetting(autoSwitchSetting);
-        TempleClient.settingsManager.rSetting(silentSetting);
         TempleClient.settingsManager.rSetting(minDamageSetting);
         TempleClient.settingsManager.rSetting(maxSelfDamageSetting);
         TempleClient.settingsManager.rSetting(breakDelaySetting);
         TempleClient.settingsManager.rSetting(placeDelaySetting);
         TempleClient.settingsManager.rSetting(radiusSetting);
+        TempleClient.settingsManager.rSetting(autoSwitchSetting);
+        TempleClient.settingsManager.rSetting(silentSetting);
+        TempleClient.settingsManager.rSetting(pauseWhileEatingSetting);
     }
 
     @Listener
@@ -85,13 +89,18 @@ public class AutoCrystal extends Module {
             case PRE:
                 this.mode = TempleClient.settingsManager.getSettingByName(this.getName(), "Mode").getValString();
                 this.rotate = TempleClient.settingsManager.getSettingByName(this.name, "Rotate").getValBoolean();
-                this.autoSwitch = TempleClient.settingsManager.getSettingByName(this.getName(), "AutoSwitch").getValBoolean();
-                this.silent = TempleClient.settingsManager.getSettingByName(this.getName(), "Silent").getValBoolean();
                 this.breakDelayTicks = TempleClient.settingsManager.getSettingByName(this.getName(), "BreakDelay").getValInt();
                 this.placeDelayTicks = TempleClient.settingsManager.getSettingByName(this.getName(), "PlaceDelay").getValInt();
                 this.radius = TempleClient.settingsManager.getSettingByName(this.getName(), "Radius").getValDouble();
                 this.minDamage = TempleClient.settingsManager.getSettingByName(this.getName(), "MinDamage").getValDouble();
                 this.maxSelfDamage = TempleClient.settingsManager.getSettingByName(this.getName(), "MaxSelfDamage").getValDouble();
+                this.autoSwitch = TempleClient.settingsManager.getSettingByName(this.getName(), "AutoSwitch").getValBoolean();
+                this.silent = TempleClient.settingsManager.getSettingByName(this.getName(), "Silent").getValBoolean();
+                this.pauseWhileEating = TempleClient.settingsManager.getSettingByName(this.getName(), "PauseWhileEating").getValBoolean();
+
+                if(this.pauseWhileEating && mc.player.isHandActive() && mc.player.getHeldItem(mc.player.getActiveHand()).getItem() instanceof ItemFood) {
+                    return;
+                }
 
                 final EntityPlayer target = this.getTargetPlayer();
                 if(target == null) {

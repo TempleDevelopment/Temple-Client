@@ -27,10 +27,10 @@ public class KillAura extends Module {
         super("KillAura", Keyboard.KEY_R, Category.COMBAT);
 
         ArrayList<String> options = new ArrayList<>();
-        options.add("Dynamic");
-        options.add("Static");
+        options.add("DYNAMIC");
+        options.add("STATIC");
 
-        TempleClient.settingsManager.rSetting(waitMode = new Setting("WaitMode", this, options, "Mode"));
+        TempleClient.settingsManager.rSetting(waitMode = new Setting("WaitMode", this, options, "DYNAMIC"));
         TempleClient.settingsManager.rSetting(waitTick = new Setting("WaitTick", this, 0, 0, 20, true));
         TempleClient.settingsManager.rSetting(ignoreWalls = new Setting("Ignore Walls", this, true));
         TempleClient.settingsManager.rSetting(new Setting("Range", this, 4.5, 0.1, 6, false));
@@ -45,11 +45,11 @@ public class KillAura extends Module {
     public void onMotion(MotionEvent event) {
         switch(event.getStage()) {
             case PRE:
-                if(waitMode.getValString().equals("Dynamic")) {
+                if(waitMode.getValString().equals("DYNAMIC")) {
                     if(mc.player.getCooledAttackStrength(0) < 1) {
                         return;
                     }
-                } else if(waitMode.getValString().equals("Static") && waitTick.getValInt() > 0) {
+                } else if(waitMode.getValString().equals("STATIC") && waitTick.getValInt() > 0) {
                     if(waitCounter < waitTick.getValInt()) {
                         waitCounter++;
                         return;
@@ -90,12 +90,14 @@ public class KillAura extends Module {
                     event.setYaw(rotations[0]);
                     event.setPitch(rotations[1]);
                 }
+                break;
             case POST:
                 if(this.target != null) {
                     mc.playerController.attackEntity(mc.player, this.target);
                     mc.player.swingArm(EnumHand.MAIN_HAND);
                     this.target = null;
                 }
+                break;
         }
     }
 

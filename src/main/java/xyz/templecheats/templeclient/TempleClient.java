@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.Display;
 import team.stiff.pomelo.impl.annotated.AnnotatedEventManager;
+import xyz.templecheats.templeclient.api.cape.CapeManager;
 import xyz.templecheats.templeclient.api.config.ShutdownHook;
 import xyz.templecheats.templeclient.api.config.rewrite.ConfigManager;
 import xyz.templecheats.templeclient.api.event.EventManager;
@@ -40,6 +41,7 @@ public class TempleClient {
     public static CommandManager commandManager;
     public static ClickGuiManager clickGui;
     public static ConfigManager configManager;
+    public static CapeManager capeManager;
     private static Logger logger;
 
     @EventHandler
@@ -64,6 +66,8 @@ public class TempleClient {
 
         (TempleClient.commandManager = new CommandManager()).commandInit();
         logger.info("Commands Loaded.");
+
+        capeManager = new CapeManager();
 
         MinecraftForge.EVENT_BUS.register(clientEventManager);
         MinecraftForge.EVENT_BUS.register(commandManager);
