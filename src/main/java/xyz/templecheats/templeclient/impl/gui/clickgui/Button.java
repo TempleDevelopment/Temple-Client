@@ -25,6 +25,8 @@ public class Button extends Component {
 	public int offset;
 	private boolean isHovered;
 	private ArrayList<Component> subcomponents;
+
+	private float currentAlpha = 0.0f;
 	public boolean open;
 	public int height;
 	public FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
@@ -88,7 +90,13 @@ public class Button extends Component {
 			Gui.drawRect(parent.getX(), this.parent.getY() + this.offset, parent.getX() + parent.getWidth(), this.parent.getY() + this.offset + borderThickness, borderColor);
 		}
 
+		Gui.drawRect(parent.getX() + parent.getWidth() - borderThickness, this.parent.getY() + this.offset, parent.getX() + parent.getWidth(), this.parent.getY() + 12 + this.offset, borderColor);
+
 		Gui.drawRect(parent.getX(), this.parent.getY() + this.offset, parent.getX() + borderThickness, this.parent.getY() + 12 + this.offset, borderColor);
+
+		if (this.parent.getComponents().indexOf(this) == this.parent.getComponents().size() - 1) {
+			Gui.drawRect(parent.getX(), this.parent.getY() + this.offset + this.height, parent.getX() + parent.getWidth(), this.parent.getY() + this.offset + this.height + borderThickness, borderColor);
+		}
 
 		GlStateManager.pushMatrix();
 
@@ -133,14 +141,22 @@ public class Button extends Component {
 
 	@Override
 	public void mouseClicked(int mouseX, int mouseY, int button) {
-		if(isMouseOnButton(mouseX, mouseY) && button == 0) {
+		if (isMouseOnButton(mouseX, mouseY) && button == 0) {
 			this.mod.toggle();
 		}
-		if(isMouseOnButton(mouseX, mouseY) && button == 1) {
+		if (isMouseOnButton(mouseX, mouseY) && button == 1) {
+			for (Component component : this.parent.getComponents()) {
+				if (component instanceof Button) {
+					Button otherButton = (Button) component;
+					if (otherButton != this && otherButton.open) {
+						otherButton.open = false;
+					}
+				}
+			}
 			this.open = !this.open;
 			this.parent.refresh();
 		}
-		for(Component comp : this.subcomponents) {
+		for (Component comp : this.subcomponents) {
 			comp.mouseClicked(mouseX, mouseY, button);
 		}
 	}

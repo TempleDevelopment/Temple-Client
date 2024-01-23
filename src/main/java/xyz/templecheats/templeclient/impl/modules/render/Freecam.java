@@ -8,14 +8,20 @@ import xyz.templecheats.templeclient.api.event.EventStageable;
 import xyz.templecheats.templeclient.api.event.events.network.PacketEvent;
 import xyz.templecheats.templeclient.api.event.events.player.MotionEvent;
 import xyz.templecheats.templeclient.api.event.events.player.MoveEvent;
+import xyz.templecheats.templeclient.impl.gui.clickgui.setting.Setting;
 import xyz.templecheats.templeclient.impl.modules.Module;
 
 public class Freecam extends Module {
     private EntityOtherPlayerMP fakePlayer;
     private float startYaw, startPitch;
 
+    private Setting horizontalSpeed;
+    private Setting verticalSpeed;
+
     public Freecam() {
         super("Freecam", Keyboard.KEY_NONE, Category.RENDER);
+        horizontalSpeed = new Setting("Horizontal Speed", this, 1.0, 0.1, 5.0, false);
+        verticalSpeed = new Setting("Vertical Speed", this, 1.0, 0.1, 5.0, false);
     }
 
     @Listener
@@ -27,8 +33,39 @@ public class Freecam extends Module {
 
     @Listener
     public void onMove(MoveEvent event) {
-        mc.player.noClip = mc.player.capabilities.isFlying = mc.player.capabilities.allowFlying = true;
+        mc.player.noClip = true;
         mc.player.onGround = false;
+        mc.player.capabilities.isFlying = true;
+
+        double hSpeed = horizontalSpeed.getValDouble();
+        double vSpeed = verticalSpeed.getValDouble();
+
+        if (mc.gameSettings.keyBindForward.isKeyDown()) {
+            mc.player.motionX = hSpeed * Math.cos(Math.toRadians(mc.player.rotationYaw + 90));
+            mc.player.motionZ = hSpeed * Math.sin(Math.toRadians(mc.player.rotationYaw + 90));
+        } else if (mc.gameSettings.keyBindBack.isKeyDown()) {
+            mc.player.motionX = -hSpeed * Math.cos(Math.toRadians(mc.player.rotationYaw + 90));
+            mc.player.motionZ = -hSpeed * Math.sin(Math.toRadians(mc.player.rotationYaw + 90));
+        } else {
+            mc.player.motionX = 0;
+            mc.player.motionZ = 0;
+        }
+
+        if (mc.gameSettings.keyBindLeft.isKeyDown()) {
+            mc.player.motionX += hSpeed * Math.cos(Math.toRadians(mc.player.rotationYaw));
+            mc.player.motionZ += hSpeed * Math.sin(Math.toRadians(mc.player.rotationYaw));
+        } else if (mc.gameSettings.keyBindRight.isKeyDown()) {
+            mc.player.motionX -= hSpeed * Math.cos(Math.toRadians(mc.player.rotationYaw));
+            mc.player.motionZ -= hSpeed * Math.sin(Math.toRadians(mc.player.rotationYaw));
+        }
+
+        if (mc.gameSettings.keyBindJump.isKeyDown()) {
+            mc.player.motionY = vSpeed;
+        } else if (mc.gameSettings.keyBindSneak.isKeyDown()) {
+            mc.player.motionY = -vSpeed;
+        } else {
+            mc.player.motionY = 0;
+        }
     }
 
     @Listener

@@ -48,6 +48,31 @@ public class RenderUtil {
         }
     }
 
+    public static void blockESP(BlockPos blockPos, boolean fill, boolean outline, float r, float g, float b) {
+        GL11.glPushMatrix();
+        GL11.glBlendFunc(770, 771);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glDepthMask(false);
+
+        double x = blockPos.getX() - Minecraft.getMinecraft().getRenderManager().viewerPosX;
+        double y = blockPos.getY() - Minecraft.getMinecraft().getRenderManager().viewerPosY;
+        double z = blockPos.getZ() - Minecraft.getMinecraft().getRenderManager().viewerPosZ;
+        final AxisAlignedBB box = new AxisAlignedBB(x, y, z, x + 1.0, y + 1.0, z + 1.0);
+        if(fill) {
+            RenderGlobal.renderFilledBox(box, r, g, b, 0.5F);
+        }
+        if(outline) {
+            RenderGlobal.drawSelectionBoundingBox(box, r, g, b, 1);
+        }
+
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthMask(true);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glPopMatrix();
+    }
+
     public static void FillOnlyLine(Entity entity, AxisAlignedBB box) {
         GL11.glBlendFunc(770, 771);
         GL11.glEnable(GL11.GL_BLEND);
@@ -79,7 +104,6 @@ public class RenderUtil {
         GL11.glDepthMask(true);
         GL11.glDisable(GL11.GL_BLEND);
     }
-
     public static void renderEntity(EntityLivingBase entity, int scale, int posX, int posY) {
         GlStateManager.enableTexture2D();
         GlStateManager.depthMask(true);

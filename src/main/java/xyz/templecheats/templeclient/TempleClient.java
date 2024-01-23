@@ -28,11 +28,11 @@ import java.lang.reflect.Field;
 
 @Mod(modid = TempleClient.MODID, name = TempleClient.NAME, version = TempleClient.VERSION)
 public class TempleClient {
-    public static String name = "Temple Client 1.8.2";
+    public static String name = "Temple Client 1.8.4";
 
     public static final String MODID = "templeclient";
     public static final String NAME = "Temple Client";
-    public static final String VERSION = "1.8.2";
+    public static final String VERSION = "1.8.4";
 
     public static AnnotatedEventManager eventBus;
     public static SettingsManager settingsManager;

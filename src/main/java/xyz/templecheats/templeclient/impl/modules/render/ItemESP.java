@@ -21,6 +21,14 @@ public class ItemESP extends Module {
     public void onRender(RenderWorldLastEvent e) {
         for (Entity entity : mc.world.loadedEntityList) {
             if (entity instanceof EntityItem) {
+                EntityItem itemEntity = (EntityItem) entity;
+                String itemName = itemEntity.getItem().getDisplayName();
+
+                double x = itemEntity.lastTickPosX + (itemEntity.posX - itemEntity.lastTickPosX) * Minecraft.getMinecraft().getRenderPartialTicks();
+                double y = itemEntity.lastTickPosY + (itemEntity.posY - itemEntity.lastTickPosY) * Minecraft.getMinecraft().getRenderPartialTicks();
+                double z = itemEntity.lastTickPosZ + (itemEntity.posZ - itemEntity.lastTickPosZ) * Minecraft.getMinecraft().getRenderPartialTicks();
+
+                mc.fontRenderer.drawStringWithShadow(itemName, (float)x, (float)y, 0xFFFFFF);
                 box = new AxisAlignedBB(
                         entity.getEntityBoundingBox().minX
                                 - 0.05

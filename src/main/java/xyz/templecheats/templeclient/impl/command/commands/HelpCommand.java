@@ -18,6 +18,8 @@ public class HelpCommand implements Command {
 
         Minecraft.getMinecraft().player.sendMessage(new TextComponentString(templePrefix + "Available Commands:"));
 
+        Minecraft.getMinecraft().player.sendMessage(new TextComponentString(commandPrefix + ".bind - Binds a module to a key (ex: .bind freecam r)"));
+
         Minecraft.getMinecraft().player.sendMessage(new TextComponentString(commandPrefix + ".coords - Copies your coordinates to your clipboard"));
 
         Minecraft.getMinecraft().player.sendMessage(new TextComponentString(commandPrefix + ".help - Shows this help message"));

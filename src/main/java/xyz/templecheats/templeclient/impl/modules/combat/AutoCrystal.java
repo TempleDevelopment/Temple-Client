@@ -24,86 +24,64 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.input.Keyboard;
 import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
-import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.api.event.events.network.PacketEvent;
 import xyz.templecheats.templeclient.api.event.events.player.MotionEvent;
+import xyz.templecheats.templeclient.api.util.render.RenderUtil;
 import xyz.templecheats.templeclient.impl.gui.clickgui.setting.Setting;
 import xyz.templecheats.templeclient.impl.modules.Module;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AutoCrystal extends Module {
-    private int breakDelayTicks = 20;
-    private int placeDelayTicks = 20;
-    private long lastBreakTime = 0;
-    private long lastPlaceTime = 0;
-    private boolean attackPlayers = true;
-    private boolean silent = false;
-    private double radius = 4.5;
-    private double minDamage = 6.0;
-    private double maxSelfDamage = 4.0;
-    private boolean rotate = true;
-    private boolean autoSwitch = true;
-    private boolean pauseWhileEating = true;
-    private String mode = "1.12";
+    /**
+     * Settings
+     */
+    private final Setting mode = new Setting("Mode", this, new ArrayList<>(Arrays.asList("1.12", "1.13+", "crystalpvp.cc")), "Mode");
+    private final Setting breakDelay = new Setting("BreakDelay", this, 10, 0, 20, true);
+    private final Setting placeDelay = new Setting("PlaceDelay", this, 10, 0, 20, true);
+    private final Setting radius = new Setting("Radius", this, 4.5, 1, 6, false);
+    private final Setting rotate = new Setting("Rotate", this, true);
+    private final Setting minDamage = new Setting("MinDamage", this, 6.0, 0.1, 36.0, false);
+    private final Setting maxSelfDamage = new Setting("MaxSelfDamage", this, 6.0, 0.1, 36.0, false);
+    private final Setting autoSwitch = new Setting("AutoSwitch", this, true);
+    private final Setting silent = new Setting("Silent", this, false);
+    private final Setting pauseWhileEating = new Setting("PauseWhileEating", this, true);
+    private final Setting fill = new Setting("Box Fill", this, true);
+    private final Setting outline = new Setting("Box Outline", this, true);
+    private final Setting red = new Setting("Box Red", this, 255, 0, 255, true);
+    private final Setting green = new Setting("Box Green", this, 0, 0, 255, true);
+    private final Setting blue = new Setting("Box Blue", this, 0, 0, 255, true);
 
+    /**
+     * Variables
+     */
     private EntityEnderCrystal curCrystal;
-    private BlockPos curPos;
+    private BlockPos curPos, cachedPos;
     private EnumHand placeHand;
+    private long lastBreakTime;
+    private long lastPlaceTime;
 
     public AutoCrystal() {
         super("AutoCrystal", Keyboard.KEY_NONE, Category.COMBAT);
 
-        ArrayList<String> options = new ArrayList<>();
-        options.add("1.12");
-        options.add("1.13+");
-        options.add("crystalpvp.cc");
-
-        Setting breakDelaySetting = new Setting("BreakDelay", this, 10, 0, 20, true);
-        Setting placeDelaySetting = new Setting("PlaceDelay", this, 10, 0, 20, true);
-        Setting radiusSetting = new Setting("Radius", this, 4.5, 1, 6, false);
-        Setting rotate = new Setting("Rotate", this, true);
-        Setting minDamageSetting = new Setting("MinDamage", this, 6.0, 0.1, 36.0, false);
-        Setting maxSelfDamageSetting = new Setting("MaxSelfDamage", this, 6.0, 0.1, 36.0, false);
-        Setting autoSwitchSetting = new Setting("AutoSwitch", this, true);
-        Setting silentSetting = new Setting("Silent", this, false);
-        Setting pauseWhileEatingSetting = new Setting("PauseWhileEating", this, true);
-
-
-        TempleClient.settingsManager.rSetting(new Setting("Mode", this, options, "Mode"));
-        TempleClient.settingsManager.rSetting(rotate);
-        TempleClient.settingsManager.rSetting(minDamageSetting);
-        TempleClient.settingsManager.rSetting(maxSelfDamageSetting);
-        TempleClient.settingsManager.rSetting(breakDelaySetting);
-        TempleClient.settingsManager.rSetting(placeDelaySetting);
-        TempleClient.settingsManager.rSetting(radiusSetting);
-        TempleClient.settingsManager.rSetting(autoSwitchSetting);
-        TempleClient.settingsManager.rSetting(silentSetting);
-        TempleClient.settingsManager.rSetting(pauseWhileEatingSetting);
+        this.registerSettings(mode, rotate, minDamage, maxSelfDamage, breakDelay, placeDelay, radius, autoSwitch, silent, pauseWhileEating, fill, outline, red, green, blue);
     }
 
     @Listener
     public void onMotion(MotionEvent event) {
         switch(event.getStage()) {
             case PRE:
-                this.mode = TempleClient.settingsManager.getSettingByName(this.getName(), "Mode").getValString();
-                this.rotate = TempleClient.settingsManager.getSettingByName(this.name, "Rotate").getValBoolean();
-                this.breakDelayTicks = TempleClient.settingsManager.getSettingByName(this.getName(), "BreakDelay").getValInt();
-                this.placeDelayTicks = TempleClient.settingsManager.getSettingByName(this.getName(), "PlaceDelay").getValInt();
-                this.radius = TempleClient.settingsManager.getSettingByName(this.getName(), "Radius").getValDouble();
-                this.minDamage = TempleClient.settingsManager.getSettingByName(this.getName(), "MinDamage").getValDouble();
-                this.maxSelfDamage = TempleClient.settingsManager.getSettingByName(this.getName(), "MaxSelfDamage").getValDouble();
-                this.autoSwitch = TempleClient.settingsManager.getSettingByName(this.getName(), "AutoSwitch").getValBoolean();
-                this.silent = TempleClient.settingsManager.getSettingByName(this.getName(), "Silent").getValBoolean();
-                this.pauseWhileEating = TempleClient.settingsManager.getSettingByName(this.getName(), "PauseWhileEating").getValBoolean();
-
-                if(this.pauseWhileEating && mc.player.isHandActive() && mc.player.getHeldItem(mc.player.getActiveHand()).getItem() instanceof ItemFood) {
+                if(this.pauseWhileEating.getValBoolean() && mc.player.isHandActive() && mc.player.getHeldItem(mc.player.getActiveHand())
+                        .getItem() instanceof ItemFood) {
+                    this.cachedPos = null;
                     return;
                 }
 
                 final EntityPlayer target = this.getTargetPlayer();
                 if(target == null) {
+                    this.cachedPos = null;
                     return;
                 }
 
@@ -112,7 +90,7 @@ public class AutoCrystal extends Module {
                 if(this.curCrystal == null) {
                     final int crystalSlot = this.getCrystalHotbarSlot();
 
-                    if(crystalSlot != -999 && (this.autoSwitch || crystalSlot == -1 || crystalSlot == mc.player.inventory.currentItem)) {
+                    if(crystalSlot != -999 && (this.autoSwitch.getValBoolean() || crystalSlot == -1 || crystalSlot == mc.player.inventory.currentItem)) {
                         this.curPos = this.getTargetPos(target);
                         this.placeHand = crystalSlot != -1 ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND;
 
@@ -120,9 +98,11 @@ public class AutoCrystal extends Module {
                             mc.player.inventory.currentItem = crystalSlot;
                         }
                     }
+
+                    this.cachedPos = this.curPos;
                 }
 
-                if((this.curCrystal == null && this.curPos == null) || !this.rotate) {
+                if((this.curCrystal == null && this.curPos == null) || !this.rotate.getValBoolean()) {
                     return;
                 }
 
@@ -132,7 +112,7 @@ public class AutoCrystal extends Module {
                 break;
             case POST:
                 if(this.curCrystal != null) {
-                    if(this.silent) {
+                    if(this.silent.getValBoolean()) {
                         mc.player.connection.sendPacket(new CPacketUseEntity(this.curCrystal));
                         mc.player.connection.sendPacket(new CPacketAnimation(EnumHand.MAIN_HAND));
                     } else {
@@ -141,7 +121,7 @@ public class AutoCrystal extends Module {
                     }
                     this.lastBreakTime = System.currentTimeMillis();
                 } else if(this.curPos != null) {
-                    if(this.silent) {
+                    if(this.silent.getValBoolean()) {
                         mc.player.connection.sendPacket(new CPacketPlayerTryUseItemOnBlock(this.curPos, EnumFacing.UP, this.placeHand, 0, 0, 0));
                         mc.player.connection.sendPacket(new CPacketAnimation(this.placeHand));
                     } else {
@@ -173,6 +153,13 @@ public class AutoCrystal extends Module {
         }
     }
 
+    @Override
+    public void onRenderWorld(float partialTicks) {
+        if(this.cachedPos != null) {
+            RenderUtil.blockESP(this.cachedPos, this.fill.getValBoolean(), this.outline.getValBoolean(), red.getValInt() / 255F, green.getValInt() / 255F, blue.getValInt() / 255F);
+        }
+    }
+
     private int getCrystalHotbarSlot() {
         final ItemStack mainHand = mc.player.getHeldItem(EnumHand.MAIN_HAND);
         if(!mainHand.isEmpty() && mainHand.getItem() == Items.END_CRYSTAL) {
@@ -194,7 +181,7 @@ public class AutoCrystal extends Module {
     }
 
     private EntityPlayer getTargetPlayer() {
-        final double range = this.radius + 12;
+        final double range = this.radius.getValDouble() + 12;
 
         for(EntityPlayer player : mc.world.playerEntities) {
             if(!player.equals(mc.player) && player.getDistance(mc.player) <= range) {
@@ -206,7 +193,7 @@ public class AutoCrystal extends Module {
     }
 
     private EntityEnderCrystal getTargetCrystal(EntityLivingBase target) {
-        if(System.currentTimeMillis() - this.lastBreakTime < (this.breakDelayTicks * 50L)) {
+        if(System.currentTimeMillis() - this.lastBreakTime < (this.breakDelay.getValInt() * 50L)) {
             return null;
         }
 
@@ -214,7 +201,7 @@ public class AutoCrystal extends Module {
 
         for(Entity entity : entities) {
             if(entity instanceof EntityEnderCrystal) {
-                if(mc.player.getDistance(entity) <= radius) {
+                if(mc.player.getDistance(entity) <= this.radius.getValDouble()) {
                     return (EntityEnderCrystal) entity;
                 }
             }
@@ -224,23 +211,23 @@ public class AutoCrystal extends Module {
     }
 
     private BlockPos getTargetPos(EntityLivingBase target) {
-        if(System.currentTimeMillis() - this.lastPlaceTime < (this.placeDelayTicks * 50L)) {
+        if(System.currentTimeMillis() - this.lastPlaceTime < (this.placeDelay.getValInt() * 50L)) {
             return null;
         }
 
-        final List<BlockPos> validPositions = getValidCrystalPositions(target.getPosition(), (float) this.radius, (int) this.radius, false, true, 0);
+        final List<BlockPos> validPositions = getValidCrystalPositions(target.getPosition(), (float) this.radius.getValDouble(), (int) this.radius.getValDouble(), false, true, 0);
         final List<Pair<BlockPos, Float>> positionsAndDamage = new ArrayList<>();
 
         for(BlockPos pos : validPositions) {
             final float potentialDamage = calculateDamageForCrystalAtBlock(target, pos);
 
-            if(potentialDamage < this.minDamage) {
+            if(potentialDamage < this.minDamage.getValDouble()) {
                 continue;
             }
 
             final float selfDamage = calculateDamageForCrystalAtBlock(mc.player, pos);
 
-            if(selfDamage > this.maxSelfDamage) {
+            if(selfDamage > this.maxSelfDamage.getValDouble()) {
                 continue;
             }
 
@@ -255,7 +242,7 @@ public class AutoCrystal extends Module {
 
         for(Pair<BlockPos, Float> pair : positionsAndDamage) {
             final BlockPos pos = pair.getLeft();
-            if(mc.player.getDistance(pos.getX(), pos.getY(), pos.getZ()) <= radius) {
+            if(mc.player.getDistance(pos.getX(), pos.getY(), pos.getZ()) <= this.radius.getValDouble()) {
                 return pos;
             }
         }
@@ -299,7 +286,7 @@ public class AutoCrystal extends Module {
             return false;
         }
 
-        if(this.mode.equals("1.12")) {
+        if(this.mode.getValString().equals("1.12")) {
             final BlockPos above2Pos = abovePos.up();
             final Block above2Block = mc.world.getBlockState(above2Pos).getBlock();
 
@@ -311,7 +298,7 @@ public class AutoCrystal extends Module {
         final double x = pos.getX();
         final double y = pos.getY();
         final double z = pos.getZ();
-        final double offset = this.mode.equals("crystalpvp.cc") ? 1.0 : 2.0;
+        final double offset = this.mode.getValString().equals("crystalpvp.cc") ? 1.0 : 2.0;
         final List<Entity> entities = mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(x, y, z, x + 1.0, y + offset, z + 1.0));
 
         return entities.isEmpty();

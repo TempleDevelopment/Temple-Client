@@ -31,6 +31,7 @@ public class PlayerESP extends Module {
         red = new Setting("Red", this, 255, 0, 255, true);
         green = new Setting("Green", this, 255, 0, 255, true);
         blue = new Setting("Blue", this, 255, 0, 255, true);
+
         TempleClient.settingsManager.rSetting(mode);
         TempleClient.settingsManager.rSetting(red);
         TempleClient.settingsManager.rSetting(green);

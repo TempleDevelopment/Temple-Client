@@ -2,16 +2,14 @@ package xyz.templecheats.templeclient;
 
 import xyz.templecheats.templeclient.impl.modules.Module;
 import xyz.templecheats.templeclient.impl.modules.chat.GreenText;
+import xyz.templecheats.templeclient.impl.modules.chat.Spammer;
 import xyz.templecheats.templeclient.impl.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.impl.modules.client.Font;
 import xyz.templecheats.templeclient.impl.modules.client.HUD;
 import xyz.templecheats.templeclient.impl.modules.client.Panic;
 import xyz.templecheats.templeclient.impl.modules.combat.*;
 import xyz.templecheats.templeclient.impl.modules.combat.Velocity;
-import xyz.templecheats.templeclient.impl.modules.misc.Blink;
-import xyz.templecheats.templeclient.impl.modules.misc.FakeCreative;
-import xyz.templecheats.templeclient.impl.modules.misc.FakePlayer;
-import xyz.templecheats.templeclient.impl.modules.misc.Particles;
+import xyz.templecheats.templeclient.impl.modules.misc.*;
 import xyz.templecheats.templeclient.impl.modules.movement.*;
 import xyz.templecheats.templeclient.impl.modules.render.*;
 import xyz.templecheats.templeclient.impl.modules.world.BlockReach;
@@ -48,6 +46,7 @@ public class ModuleManager {
         addMod(new Blink());
         addMod(new FakeCreative());
         addMod(new FakePlayer());
+        addMod(new Hitmarker());
         addMod(new Particles());
         // Client
         addMod(new ClickGUI());
@@ -71,6 +70,7 @@ public class ModuleManager {
         addMod(new Sprint());
         addMod(new Yaw());
         // Render
+        addMod(new BlockOverlay());
         addMod(new Fov());
         addMod(new Freecam());
         addMod(new FullBright());
@@ -91,6 +91,7 @@ public class ModuleManager {
         addMod(new Scaffold());
         // Chat
         addMod(new GreenText());
+        addMod(new Spammer());
     }
 
 

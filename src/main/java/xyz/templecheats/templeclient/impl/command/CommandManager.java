@@ -1,5 +1,6 @@
 package xyz.templecheats.templeclient.impl.command;
 
+import xyz.templecheats.templeclient.impl.command.commands.BindCommand;
 import xyz.templecheats.templeclient.impl.command.commands.CoordsCommand;
 import xyz.templecheats.templeclient.impl.command.commands.HelpCommand;
 import xyz.templecheats.templeclient.impl.command.commands.IpCommand;
@@ -26,6 +27,7 @@ public class CommandManager {
     }
 
     public void commandInit() {
+        registerCommand(new BindCommand());
         registerCommand(new CoordsCommand());
         registerCommand(new HelpCommand());
         registerCommand(new IpCommand());

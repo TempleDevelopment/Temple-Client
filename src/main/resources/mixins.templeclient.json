@@ -9,6 +9,7 @@
     "MixinNetworkManager"
   ],
   "client": [
+    "IMixinRenderManager",
     "MixinAbstractClientPlayer",
     "MixinEntityPlayerSP"
   ],

@@ -3,6 +3,7 @@ package xyz.templecheats.templeclient.impl.modules;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import xyz.templecheats.templeclient.TempleClient;
+import xyz.templecheats.templeclient.impl.gui.clickgui.setting.Setting;
 
 public class Module {
     public String name;
@@ -46,6 +47,8 @@ public class Module {
 
     public void onUpdateConstant() {}
 
+    public void onRenderWorld(float partialTicks) {}
+
     public void onEnable() {}
 
     public void onDisable() {}
@@ -77,13 +80,18 @@ public class Module {
     }
 
     public void setToggled(boolean toggled) {
-        //dont do anything if the toggled state is the same
         if(toggled == this.toggled) return;
 
         if(toggled) {
             this.enable();
         } else {
             this.disable();
+        }
+    }
+
+    protected void registerSettings(Setting... settings) {
+        for(Setting setting : settings) {
+            TempleClient.settingsManager.rSetting(setting);
         }
     }
 

@@ -12,15 +12,17 @@ import java.util.ArrayList;
 public class ElytraPlus extends Module {
     private Mode mode = Mode.BOOST;
     private boolean moving;
+    private Setting speed;
 
     public ElytraPlus() {
         super("Elytra+", Keyboard.KEY_NONE, Category.MOVEMENT);
-
         ArrayList<String> options = new ArrayList<>();
         options.add("Boost");
         options.add("Control");
 
         TempleClient.settingsManager.rSetting(new Setting("Mode", this, options, "Mode"));
+        speed = new Setting("Control Speed", this, 1, 0, 5, false);
+        TempleClient.settingsManager.rSetting(speed);
     }
 
     public enum Mode {
@@ -38,11 +40,11 @@ public class ElytraPlus extends Module {
 
         float yaw = mc.player.rotationYaw;
         float pitch = mc.player.rotationPitch;
-        double boostSpeed = 0.01;
-        double controlSpeed = 1.0;
-        double controlUpSpeed = 1.0;
-        double controlDownSpeed = -1.0;
-        double controlMoveSpeed = 1.0;
+        double boostSpeed = 0.02;
+        double controlSpeed = speed.getValDouble();
+        double controlUpSpeed = speed.getValDouble();
+        double controlDownSpeed = -speed.getValDouble();
+        double controlMoveSpeed = speed.getValDouble();
 
         String modeVal = TempleClient.settingsManager.getSettingByName(this.name, "Mode").getValString();
         mode = modeVal.equalsIgnoreCase("Boost") ? Mode.BOOST : Mode.CONTROL;

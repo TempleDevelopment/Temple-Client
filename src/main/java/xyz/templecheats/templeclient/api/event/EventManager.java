@@ -1,15 +1,14 @@
 package xyz.templecheats.templeclient.api.event;
 
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import xyz.templecheats.templeclient.ModuleManager;
 import xyz.templecheats.templeclient.TempleClient;
-
-/**
- * @author XeonLyfe
- */
-
+import xyz.templecheats.templeclient.impl.modules.Module;
 public class EventManager {
     private boolean playerLoaded;
 
@@ -17,7 +16,8 @@ public class EventManager {
         MinecraftForge.EVENT_BUS.register(this);
         playerLoaded = false;
     }
-/*
+
+    /*
     @SubscribeEvent
     public void onPlayerEvent(TickEvent.PlayerTickEvent event) {
         if (playerLoaded && Minecraft.getMinecraft().player != null) {
@@ -25,8 +25,7 @@ public class EventManager {
             playerLoaded = false;
         }
     }
-
- */
+    */
 
     @SubscribeEvent
     public void onTickEvent(TickEvent.ClientTickEvent event) {
@@ -41,5 +40,18 @@ public class EventManager {
     @SubscribeEvent
     public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
         TempleClient.configManager.saveModules();
+    }
+
+    @SubscribeEvent
+    public void onRenderWorldLast(RenderWorldLastEvent event) {
+        if(Minecraft.getMinecraft().player == null) {
+            return;
+        }
+
+        for(Module module : ModuleManager.getModules()) {
+            if(module.isToggled()) {
+                module.onRenderWorld(event.getPartialTicks());
+            }
+        }
     }
 }
