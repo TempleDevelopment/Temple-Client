@@ -1,0 +1,16 @@
+[
+{
+  "modid": "templeclient",
+  "name": "Temple Client",
+  "description": "Temple Client is a 1.12.2 Minecraft utility mod that features many PVP modules and functions to use to have an advantage over Vanilla players. ",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://templecheats.xyz",
+  "updateUrl": "",
+  "authorList": ["PhilipPanda"],
+  "credits": "XeonLyfe, John200410, FluorideHistorian",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
