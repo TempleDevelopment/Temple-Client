@@ -18,12 +18,8 @@ import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
 import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import org.lwjgl.input.Keyboard;
 import net.minecraft.util.math.*;
+import org.lwjgl.input.Keyboard;
 import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
 import xyz.templecheats.templeclient.api.event.events.network.PacketEvent;
 import xyz.templecheats.templeclient.api.event.events.player.MotionEvent;
@@ -61,6 +57,7 @@ public class AutoCrystal extends Module {
      */
     private EntityEnderCrystal curCrystal;
     private BlockPos curPos, cachedPos;
+    private EnumFacing curFace;
     private EnumHand placeHand;
     private long lastBreakTime;
     private long lastPlaceTime;
@@ -92,8 +89,12 @@ public class AutoCrystal extends Module {
                     final int crystalSlot = this.getCrystalHotbarSlot();
 
                     if(crystalSlot != -999 && (this.autoSwitch.getValBoolean() || crystalSlot == -1 || crystalSlot == mc.player.inventory.currentItem)) {
-                        this.curPos = this.getTargetPos(target);
-                        this.placeHand = crystalSlot != -1 ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND;
+                        final Pair<BlockPos, EnumFacing> posData = this.getTargetPos(target);
+                        if(posData != null) {
+                            this.curPos = posData.getLeft();
+                            this.curFace = posData.getRight();
+                            this.placeHand = crystalSlot != -1 ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND;
+                        }
 
                         if(this.curPos != null && crystalSlot != -1) {
                             mc.player.inventory.currentItem = crystalSlot;
@@ -123,11 +124,11 @@ public class AutoCrystal extends Module {
 
                     this.lastBreakTime = System.currentTimeMillis();
                 } else if(this.curPos != null) {
-                    EnumFacing face = mc.player.posY + mc.player.getEyeHeight() > this.curPos.getY() + 0.5 || !mc.world.isAirBlock(this.curPos.down()) ? EnumFacing.UP : EnumFacing.DOWN;
+                    EnumFacing face = this.curFace;
                     Vec3d vec = new Vec3d(this.curPos.getX() + 0.5, this.curPos.getY() + 1, this.curPos.getZ() + 0.5);
 
                     if(this.raytrace.getValBoolean()) {
-                        final RayTraceResult result = mc.world.rayTraceBlocks(mc.player.getPositionEyes(1.0F), new Vec3d(this.curPos.getX() + 0.5, this.curPos.getY() - 0.5, this.curPos.getZ() + 0.5));
+                        final RayTraceResult result = mc.world.rayTraceBlocks(mc.player.getPositionEyes(1.0F), new Vec3d(this.curPos.getX() + 0.5, this.curPos.getY() + 0.5, this.curPos.getZ() + 0.5));
 
                         if(result != null && result.typeOfHit == RayTraceResult.Type.BLOCK && mc.world.isAirBlock(this.curPos.offset(result.sideHit))) {
                             face = result.sideHit;
@@ -151,6 +152,7 @@ public class AutoCrystal extends Module {
 
                 this.curCrystal = null;
                 this.curPos = null;
+                this.curFace = null;
                 break;
         }
     }
@@ -228,22 +230,43 @@ public class AutoCrystal extends Module {
         return null;
     }
 
-    private BlockPos getTargetPos(EntityLivingBase target) {
+    private Pair<BlockPos, EnumFacing> getTargetPos(EntityLivingBase target) {
         if(System.currentTimeMillis() - this.lastPlaceTime < (this.placeDelay.getValInt() * 50L)) {
             return null;
         }
 
         final List<BlockPos> validPositions = getValidCrystalPositions(target.getPosition(), (float) this.radius.getValDouble(), (int) this.radius.getValDouble(), false, true, 0);
-        final List<Pair<BlockPos, Float>> positionsAndDamage = new ArrayList<>();
+        final List<Triplet<BlockPos, Float, EnumFacing>> positionsAndDamage = new ArrayList<>();
 
         for(BlockPos pos : validPositions) {
-            final float potentialDamage = calculateDamageForCrystalAtBlock(target, pos);
+            if(mc.player.getDistance(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) > this.radius.getValDouble()) {
+                continue;
+            }
+
+            EnumFacing validFace = mc.player.posY + mc.player.getEyeHeight() > pos.getY() + 0.5 || !mc.world.isAirBlock(pos.down()) ? EnumFacing.UP : EnumFacing.DOWN;
+
+            if(this.raytrace.getValBoolean()) {
+                validFace = null;
+
+                final Vec3d vec = new Vec3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+                final RayTraceResult result = mc.world.rayTraceBlocks(mc.player.getPositionEyes(1.0F), vec);
+
+                if(result != null && result.typeOfHit == RayTraceResult.Type.BLOCK && mc.world.isAirBlock(pos.offset(result.sideHit))) {
+                    validFace = result.sideHit;
+                }
+            }
+
+            if(validFace == null) {
+                continue;
+            }
+
+            final float potentialDamage = this.calculateDamageForCrystalAtBlock(target, pos);
 
             if(potentialDamage < this.minDamage.getValDouble()) {
                 continue;
             }
 
-            final float selfDamage = calculateDamageForCrystalAtBlock(mc.player, pos);
+            final float selfDamage = this.calculateDamageForCrystalAtBlock(mc.player, pos);
 
             if(selfDamage > this.maxSelfDamage.getValDouble()) {
                 continue;
@@ -253,16 +276,13 @@ public class AutoCrystal extends Module {
                 continue;
             }
 
-            positionsAndDamage.add(new Pair<>(pos, potentialDamage));
+            positionsAndDamage.add(new Triplet<>(pos, potentialDamage, validFace));
         }
 
-        positionsAndDamage.sort((pair1, pair2) -> Float.compare(pair2.getRight(), pair1.getRight()));
+        positionsAndDamage.sort((triplet1, triplet2) -> Float.compare(triplet2.getRight(), triplet1.getRight()));
 
-        for(Pair<BlockPos, Float> pair : positionsAndDamage) {
-            final BlockPos pos = pair.getLeft();
-            if(mc.player.getDistance(pos.getX(), pos.getY(), pos.getZ()) <= this.radius.getValDouble()) {
-                return pos;
-            }
+        for(Triplet<BlockPos, Float, EnumFacing> triplet : positionsAndDamage) {
+            return new Pair<>(triplet.getLeft(), triplet.getThird());
         }
 
         return null;
@@ -396,9 +416,11 @@ public class AutoCrystal extends Module {
     }
 
     public static float[] rotations(BlockPos pos) {
-        double x = pos.getX() + 0.5 - mc.player.posX;
-        double y = pos.getY() + 0.5 - (mc.player.posY + mc.player.getEyeHeight());
-        double z = pos.getZ() + 0.5 - mc.player.posZ;
+        final Vec3d vec = new Vec3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+
+        double x = vec.x - mc.player.posX;
+        double y = vec.y - (mc.player.posY + mc.player.getEyeHeight());
+        double z = vec.z - mc.player.posZ;
 
         double u = MathHelper.sqrt(x * x + z * z);
 
@@ -412,6 +434,7 @@ public class AutoCrystal extends Module {
         private final L left;
         private final R right;
 
+
         public Pair(L left, R right) {
             this.left = left;
             this.right = right;
@@ -423,6 +446,31 @@ public class AutoCrystal extends Module {
 
         public R getRight() {
             return right;
+        }
+    }
+
+    private static class Triplet<L, R, T> {
+        private final L left;
+        private final R right;
+        private final T third;
+
+
+        public Triplet(L left, R right, T third) {
+            this.left = left;
+            this.right = right;
+            this.third = third;
+        }
+
+        public L getLeft() {
+            return left;
+        }
+
+        public R getRight() {
+            return right;
+        }
+
+        public T getThird() {
+            return third;
         }
     }
 }

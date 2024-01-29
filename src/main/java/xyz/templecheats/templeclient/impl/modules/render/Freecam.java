@@ -15,16 +15,12 @@ public class Freecam extends Module {
     private EntityOtherPlayerMP fakePlayer;
     private float startYaw, startPitch;
 
-    private Setting horizontalSpeed;
-    private Setting verticalSpeed;
+    private Setting horizontalSpeed = new Setting("Horizontal Speed", this, 1.0, 0.1, 5.0, false);
+    private Setting verticalSpeed = new Setting("Vertical Speed", this, 1.0, 0.1, 5.0, false);
 
     public Freecam() {
-        super("Freecam","Out of body experience", Keyboard.KEY_NONE, Category.RENDER);
-        horizontalSpeed = new Setting("Horizontal Speed", this, 1.0, 0.1, 5.0, false);
-        verticalSpeed = new Setting("Vertical Speed", this, 1.0, 0.1, 5.0, false);
-
-        this.registerSettings(horizontalSpeed);
-        this.registerSettings(verticalSpeed);
+        super("Freecam", "Out of body experience", Keyboard.KEY_NONE, Category.RENDER);
+        this.registerSettings(horizontalSpeed, verticalSpeed);
     }
 
     @Listener
@@ -40,13 +36,12 @@ public class Freecam extends Module {
         mc.player.onGround = false;
         mc.player.fallDistance = 0;
 
-        double hSpeed = horizontalSpeed.getValDouble() * 2;
-        double vSpeed = verticalSpeed.getValDouble() * 2;
+        final double hSpeed = this.horizontalSpeed.getValDouble() * 2;
 
-        if (mc.gameSettings.keyBindForward.isKeyDown()) {
+        if(mc.gameSettings.keyBindForward.isKeyDown()) {
             mc.player.motionX = hSpeed * Math.cos(Math.toRadians(mc.player.rotationYaw + 90));
             mc.player.motionZ = hSpeed * Math.sin(Math.toRadians(mc.player.rotationYaw + 90));
-        } else if (mc.gameSettings.keyBindBack.isKeyDown()) {
+        } else if(mc.gameSettings.keyBindBack.isKeyDown()) {
             mc.player.motionX = -hSpeed * Math.cos(Math.toRadians(mc.player.rotationYaw + 90));
             mc.player.motionZ = -hSpeed * Math.sin(Math.toRadians(mc.player.rotationYaw + 90));
         } else {
@@ -54,35 +49,37 @@ public class Freecam extends Module {
             mc.player.motionZ = 0;
         }
 
-        if (mc.gameSettings.keyBindLeft.isKeyDown()) {
+        if(mc.gameSettings.keyBindLeft.isKeyDown()) {
             mc.player.motionX += hSpeed * Math.cos(Math.toRadians(mc.player.rotationYaw));
             mc.player.motionZ += hSpeed * Math.sin(Math.toRadians(mc.player.rotationYaw));
-        } else if (mc.gameSettings.keyBindRight.isKeyDown()) {
+        } else if(mc.gameSettings.keyBindRight.isKeyDown()) {
             mc.player.motionX -= hSpeed * Math.cos(Math.toRadians(mc.player.rotationYaw));
             mc.player.motionZ -= hSpeed * Math.sin(Math.toRadians(mc.player.rotationYaw));
-        }
-
-        if (mc.gameSettings.keyBindJump.isKeyDown()) {
-            mc.player.motionY += vSpeed * Math.cos(Math.toRadians(mc.player.rotationPitch + 90));
-            mc.player.motionY += vSpeed * Math.sin(Math.toRadians(mc.player.rotationPitch + 90));
-        } else if (mc.gameSettings.keyBindSneak.isKeyDown()) {
-            mc.player.motionY -= vSpeed * Math.cos(Math.toRadians(mc.player.rotationPitch + 90));
-            mc.player.motionY -= vSpeed * Math.sin(Math.toRadians(mc.player.rotationPitch + 90));
-        }   else {
-            mc.player.motionY = 0;
         }
     }
 
     @Listener
     public void onMotion(MotionEvent event) {
-        if(event.getStage() != EventStageable.EventStage.POST || this.fakePlayer == null) {
+        if(event.getStage() != EventStageable.EventStage.POST) {
             return;
         }
 
-        this.fakePlayer.rotationYaw = this.fakePlayer.rotationYawHead = mc.player.rotationYaw;
-        this.fakePlayer.rotationPitch = mc.player.rotationPitch;
-        this.fakePlayer.inventory.copyInventory(mc.player.inventory);
-        this.fakePlayer.inventory.currentItem = mc.player.inventory.currentItem;
+        final double vSpeed = this.verticalSpeed.getValDouble() * 2;
+
+        if(mc.gameSettings.keyBindJump.isKeyDown()) {
+            mc.player.motionY = vSpeed;
+        } else if(mc.gameSettings.keyBindSneak.isKeyDown()) {
+            mc.player.motionY = -vSpeed;
+        } else {
+            mc.player.motionY = 0;
+        }
+
+        if(this.fakePlayer != null) {
+            this.fakePlayer.rotationYaw = this.fakePlayer.rotationYawHead = mc.player.rotationYaw;
+            this.fakePlayer.rotationPitch = mc.player.rotationPitch;
+            this.fakePlayer.inventory.copyInventory(mc.player.inventory);
+            this.fakePlayer.inventory.currentItem = mc.player.inventory.currentItem;
+        }
     }
 
     @Override
