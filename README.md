@@ -6,7 +6,6 @@
     <a href="https://discord.gg/XZUGTpGCe8"><img src="https://img.shields.io/discord/689197705683140636?logo=discord" alt="Discord"/></a>
     <br>
     <img src="https://img.shields.io/github/downloads/PhilipPanda/Temple-Client" alt="Downloads"/>
-    <img src="https://img.shields.io/github/commit-activity/w/MeteorDevelopment/meteor-client" alt="GitHub commit activity"/>
     <br>
     <img src="https://img.shields.io/github/languages/code-size/TempleDevelopment/Temple-Client" alt="GitHub code size in bytes"/>
     <img src="https://tokei.rs/b1/github/TempleDevelopment/Temple-Client alt="GitHub lines of code"/>
