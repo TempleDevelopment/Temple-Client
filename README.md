@@ -2,10 +2,15 @@
   <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/Logo.png">
 </p>
 
-![GitHub all releases](https://img.shields.io/github/downloads/PhilipPanda/Temple-Client/total?color=seagreen)
-[![Discord](https://img.shields.io/discord/1125838140456849418?color=skyblue&logo=discord&logoColor=white)](https://discord.gg/XZUGTpGCe8)
-![GitHub repo size](https://img.shields.io/github/repo-size/PhilipPanda/Temple-Client)
-
+<div align="center">
+    <a href="https://discord.gg/XZUGTpGCe8"><img src="https://img.shields.io/discord/689197705683140636?logo=discord" alt="Discord"/></a>
+    <br>
+    <img src="https://img.shields.io/github/downloads/PhilipPanda/Temple-Client" alt="Downloads"/>
+    <img src="https://img.shields.io/github/commit-activity/w/MeteorDevelopment/meteor-client" alt="GitHub commit activity"/>
+    <br>
+    <img src="https://img.shields.io/github/languages/code-size/TempleDevelopment/Temple-Client" alt="GitHub code size in bytes"/>
+    <img src="https://tokei.rs/b1/github/TempleDevelopment/Temple-Client alt="GitHub lines of code"/>
+</div>
 
 Temple Client is a Minecraft 1.12.2 forge mod that enhances the anarchy server experience. 
 It is a free and open-source utility mod.
