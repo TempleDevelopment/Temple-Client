@@ -70,9 +70,9 @@ It is a free and open-source utility mod.
 ./gradlew tasks
 ```
 
-### 1.8.5 - Showcase
+### 1.8.6 - Showcase
 <p align="center">
-   <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/1.8.5.png">
+   <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/1.8.6.png">
 </p>
 
 ### Contributors
