@@ -7,11 +7,11 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
-import xyz.templecheats.templeclient.impl.gui.setting.Setting;
+import xyz.templecheats.templeclient.api.setting.Setting;
 
-public class HitBox extends Module {
-    public HitBox() {
-        super("HitBox","Increases entities hitbox", Keyboard.KEY_NONE, Category.COMBAT);
+public class Hitbox extends Module {
+    public Hitbox() {
+        super("Hitbox","Increases entities hitbox", Keyboard.KEY_NONE, Category.Combat);
 
         TempleClient.settingsManager.rSetting(new Setting("Size", this, 1, 0.1, 1, false));
     }
@@ -19,7 +19,7 @@ public class HitBox extends Module {
     @SubscribeEvent
     public void onUpdate(RenderWorldLastEvent e) {
         if (this.toggled) {
-            float size = (float) TempleClient.settingsManager.getSettingByName(this.name, "Size").getValDouble();
+            float size = (float) TempleClient.settingsManager.getSettingByName(this.getName(), "Size").getValDouble();
 
             for (EntityPlayer player : mc.world.playerEntities) {
                 if (player != null && player != mc.player) {

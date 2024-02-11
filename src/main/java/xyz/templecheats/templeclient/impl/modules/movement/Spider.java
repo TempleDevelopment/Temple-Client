@@ -7,7 +7,7 @@ import org.lwjgl.input.Keyboard;
 
 public class Spider extends Module {
     public Spider() {
-        super("Spider","Allows climbing on blocks", Keyboard.KEY_NONE, Category.MOVEMENT);
+        super("Spider","Allows climbing on blocks", Keyboard.KEY_NONE, Category.Movement);
     }
 
     @SubscribeEvent

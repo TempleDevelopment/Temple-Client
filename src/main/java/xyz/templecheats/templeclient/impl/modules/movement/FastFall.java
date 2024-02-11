@@ -7,7 +7,7 @@ import org.lwjgl.input.Keyboard;
 
 public class FastFall extends Module {
     public FastFall() {
-        super("FastFall","Increases falling speed (pretty bricked atm)", Keyboard.KEY_NONE, Category.MOVEMENT);
+        super("FastFall","Increases falling speed (pretty bricked atm)", Keyboard.KEY_NONE, Category.Movement);
     }
 
     @SubscribeEvent

@@ -6,15 +6,15 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.input.Keyboard;
 import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
 import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.api.event.events.player.MotionEvent;
 import xyz.templecheats.templeclient.api.util.time.TimerUtil;
-import xyz.templecheats.templeclient.impl.gui.setting.Setting;
+import xyz.templecheats.templeclient.api.setting.Setting;
 import xyz.templecheats.templeclient.impl.modules.Module;
-import xyz.templecheats.templeclient.impl.modules.combat.AutoCrystal;
 
 public class Scaffold extends Module {
     private final Setting tower = new Setting("Tower", this, true);
@@ -24,8 +24,36 @@ public class Scaffold extends Module {
     private EnumFacing placeFace;
 
     public Scaffold() {
-        super("Scaffold","Automatically places blocks under your feet", Keyboard.KEY_NONE, Category.WORLD);
+        super("Scaffold","Automatically places blocks under your feet", Keyboard.KEY_NONE, Category.World);
         TempleClient.settingsManager.rSetting(tower);
+    }
+
+    public static float[] rotations(Entity entity) {
+        double x = entity.posX - mc.player.posX;
+        double y = entity.posY - (mc.player.posY + mc.player.getEyeHeight());
+        double z = entity.posZ - mc.player.posZ;
+
+        double u = MathHelper.sqrt(x * x + z * z);
+
+        float u2 = (float) (MathHelper.atan2(z, x) * (180D / Math.PI) - 90.0F);
+        float u3 = (float) (-MathHelper.atan2(y, u) * (180D / Math.PI));
+
+        return new float[]{u2, u3};
+    }
+
+    public static float[] rotations(BlockPos pos) {
+        final Vec3d vec = new Vec3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+
+        double x = vec.x - mc.player.posX;
+        double y = vec.y - (mc.player.posY + mc.player.getEyeHeight());
+        double z = vec.z - mc.player.posZ;
+
+        double u = MathHelper.sqrt(x * x + z * z);
+
+        float u2 = (float) (MathHelper.atan2(z, x) * (180D / Math.PI) - 90.0F);
+        float u3 = (float) (-MathHelper.atan2(y, u) * (180D / Math.PI));
+
+        return new float[]{u2, u3};
     }
 
     @Listener
@@ -85,7 +113,7 @@ public class Scaffold extends Module {
                 }
 
                 if(this.placePos != null) {
-                    final float[] rotations = AutoCrystal.rotations(this.placePos);
+                    final float[] rotations = rotations(this.placePos);
                     event.setYaw(rotations[0]);
                     event.setPitch(rotations[1]);
                 }

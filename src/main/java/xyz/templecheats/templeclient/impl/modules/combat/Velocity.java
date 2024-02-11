@@ -10,7 +10,7 @@ import xyz.templecheats.templeclient.mixins.IMixinSPacketExplosion;
 
 public class Velocity extends Module {
     public Velocity() {
-        super("Velocity","Reduces knockback", Keyboard.KEY_NONE, Category.COMBAT);
+        super("Velocity","Reduces knockback", Keyboard.KEY_NONE, Category.Combat);
     }
 
     @Listener

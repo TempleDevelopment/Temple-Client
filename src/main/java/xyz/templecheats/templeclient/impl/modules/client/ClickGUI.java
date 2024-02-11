@@ -1,7 +1,7 @@
 package xyz.templecheats.templeclient.impl.modules.client;
 
 import org.lwjgl.input.Keyboard;
-import xyz.templecheats.templeclient.impl.gui.setting.Setting;
+import xyz.templecheats.templeclient.api.setting.Setting;
 import xyz.templecheats.templeclient.impl.modules.Module;
 
 import java.awt.*;
@@ -36,7 +36,7 @@ public class ClickGUI extends Module {
 	private int rainbowColor;
 	
 	public ClickGUI() {
-		super("ClickGUI", "Customize your ClickGUI", Keyboard.KEY_NONE, Category.CLIENT);
+		super("ClickGUI", "Customize your ClickGUI", Keyboard.KEY_RSHIFT, Category.Client);
 		INSTANCE = this;
 		
 		this.registerSettings(scale, scrollSpeed, rainbow, startRed, startGreen, startBlue, startAlpha, endRed, endGreen, endBlue, endAlpha);

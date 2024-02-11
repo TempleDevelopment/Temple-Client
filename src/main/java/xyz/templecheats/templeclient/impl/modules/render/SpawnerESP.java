@@ -9,7 +9,7 @@ import org.lwjgl.input.Keyboard;
 
 public class SpawnerESP extends Module {
     public SpawnerESP() {
-        super("SpawnerESP","Highlights mob spawners", Keyboard.KEY_NONE, Category.RENDER);
+        super("SpawnerESP","Highlights mob spawners", Keyboard.KEY_NONE, Category.Render);
     }
 
     @SubscribeEvent

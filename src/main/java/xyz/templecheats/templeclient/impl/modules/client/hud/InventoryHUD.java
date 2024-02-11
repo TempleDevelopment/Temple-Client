@@ -1,49 +1,39 @@
 package xyz.templecheats.templeclient.impl.modules.client.hud;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.lwjgl.input.Keyboard;
-import xyz.templecheats.templeclient.impl.modules.Module;
+import xyz.templecheats.templeclient.impl.modules.client.HUD;
 
-public class InventoryHUD extends Module {
-    public static final InventoryHUD INSTANCE = new InventoryHUD();
-
+public class InventoryHUD extends HUD.HudElement {
     public InventoryHUD() {
-        super("InventoryHUD","Shows your inventory in the HUD", Keyboard.KEY_NONE, Category.CLIENT);
+        super("InventoryHUD", "Shows your inventory in the HUD");
     }
 
-    @SubscribeEvent
-    public void onRenderOverlay(RenderGameOverlayEvent.Post event) {
-        if (event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
-            renderInventory();
-        }
-    }
+    @Override
+    protected void renderElement(ScaledResolution sr) {
+        this.setWidth(162);
+        this.setHeight(54);
 
-    private void renderInventory() {
-        Minecraft mc = Minecraft.getMinecraft();
-        ScaledResolution scaledRes = new ScaledResolution(mc);
-
-        int startX = scaledRes.getScaledWidth() - 170;
-        int startY = scaledRes.getScaledHeight() - 55;
-
+        GlStateManager.pushMatrix();
         RenderHelper.enableGUIStandardItemLighting();
 
-        for (int i = 9; i < 36; i++) {
-            int row = (i - 9) / 9;
-            int x = startX + (i % 9) * 18;
-            int y = startY + row * 18;
+        int startX = (int) this.getX();
+        int startY = (int) this.getY();
 
-            ItemStack itemStack = mc.player.inventory.mainInventory.get(i);
-            if (!itemStack.isEmpty()) {
+        for(int i = 9; i < 36; i++) {
+            final ItemStack itemStack = mc.player.inventory.mainInventory.get(i);
+            if(!itemStack.isEmpty()) {
+                final int x = startX + (i % 9) * 18;
+                final int y = startY + ((i - 9) / 9) * 18;
+
                 mc.getRenderItem().renderItemAndEffectIntoGUI(itemStack, x, y);
                 mc.getRenderItem().renderItemOverlayIntoGUI(mc.fontRenderer, itemStack, x, y, null);
             }
         }
 
         RenderHelper.disableStandardItemLighting();
+        GlStateManager.popMatrix();
     }
 }

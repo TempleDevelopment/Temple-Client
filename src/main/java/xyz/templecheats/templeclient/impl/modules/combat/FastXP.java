@@ -9,7 +9,7 @@ import xyz.templecheats.templeclient.impl.modules.Module;
 public class FastXP extends Module {
 
     public FastXP() {
-        super("FastXP","Increases XP throwing speed", Keyboard.KEY_NONE, Category.COMBAT);
+        super("FastXP","Increases XP throwing speed", Keyboard.KEY_NONE, Category.Combat);
     }
 
     @Override

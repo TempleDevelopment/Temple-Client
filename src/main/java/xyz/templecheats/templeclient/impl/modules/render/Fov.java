@@ -4,14 +4,14 @@ import org.lwjgl.input.Keyboard;
 import net.minecraft.client.Minecraft;
 import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.impl.modules.Module;
-import xyz.templecheats.templeclient.impl.gui.setting.Setting;
+import xyz.templecheats.templeclient.api.setting.Setting;
 
 public class Fov extends Module {
 
     private float originalFOV = 0;
 
     public Fov() {
-        super("Fov","Increases your field of view", Keyboard.KEY_NONE, Category.RENDER);
+        super("Fov","Increases your field of view", Keyboard.KEY_NONE, Category.Render);
         TempleClient.settingsManager.rSetting(new Setting("FOV", this, 70, 5, 150, true));
     }
 
@@ -28,7 +28,7 @@ public class Fov extends Module {
     @Override
     public void onUpdate() {
         if(this.isEnabled()) {
-            double newFOV = TempleClient.settingsManager.getSettingByName(this.name, "FOV").getValDouble();
+            double newFOV = TempleClient.settingsManager.getSettingByName(this.getName(), "FOV").getValDouble();
             Minecraft.getMinecraft().gameSettings.fovSetting = (float)newFOV;
         }
     }

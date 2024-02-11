@@ -9,14 +9,14 @@ import net.minecraftforge.client.event.RenderSpecificHandEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
-import xyz.templecheats.templeclient.impl.gui.setting.Setting;
-import xyz.templecheats.templeclient.impl.gui.setting.SettingsManager;
+import xyz.templecheats.templeclient.api.setting.Setting;
+import xyz.templecheats.templeclient.api.setting.SettingsManager;
 
 public class ViewModel extends Module {
     private Setting xPosMain, yPosMain, zPosMain;
     private Setting xSizeMain, ySizeMain, zSizeMain;
     public ViewModel() {
-        super("ViewModel","Improves view-model positioning and size", Keyboard.KEY_NONE, Category.RENDER);
+        super("ViewModel","Improves view-model positioning and size", Keyboard.KEY_NONE, Category.Render);
         SettingsManager settingsManager = TempleClient.settingsManager;
 
         initializeSettings(settingsManager);
@@ -24,12 +24,12 @@ public class ViewModel extends Module {
 
     private void initializeSettings(SettingsManager settingsManager) {
 
-        xPosMain = new Setting("OffSet X", this, 0.0, -3.0, 3.0, false);
-        yPosMain = new Setting("OffSet Y", this, 0.0, -3.0, 3.0, false);
-        zPosMain = new Setting("OffSet Z", this, 0.0, -3.0, 3.0, false);
-        xSizeMain = new Setting("Size X", this, 1.0, 0.0, 4.0, false);
-        ySizeMain = new Setting("Size Y", this, 1.0, 0.0, 4.0, false);
-        zSizeMain = new Setting("Size Z", this, 1.0, 0.0, 4.0, false);
+        xPosMain = new Setting("OffSet X", this, 0.0, -3.0, 5.0, false);
+        yPosMain = new Setting("OffSet Y", this, 0.0, -3.0, 5.0, false);
+        zPosMain = new Setting("OffSet Z", this, 0.0, -3.0, 5.0, false);
+        xSizeMain = new Setting("Size X", this, 1.0, 0.0, 5.0, false);
+        ySizeMain = new Setting("Size Y", this, 1.0, 0.0, 5.0, false);
+        zSizeMain = new Setting("Size Z", this, 1.0, 0.0, 5.0, false);
 
         settingsManager.rSetting(xPosMain);
         settingsManager.rSetting(yPosMain);

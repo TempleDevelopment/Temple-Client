@@ -12,26 +12,25 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.Display;
 import team.stiff.pomelo.impl.annotated.AnnotatedEventManager;
-import xyz.templecheats.templeclient.api.cape.CapeManager;
+import xyz.templecheats.templeclient.api.manager.CapeManager;
 import xyz.templecheats.templeclient.api.config.ShutdownHook;
-import xyz.templecheats.templeclient.api.config.rewrite.ConfigManager;
+import xyz.templecheats.templeclient.api.config.ConfigManager;
 import xyz.templecheats.templeclient.api.event.EventManager;
-import xyz.templecheats.templeclient.api.util.keys.key;
-import xyz.templecheats.templeclient.impl.command.CommandManager;
-import xyz.templecheats.templeclient.impl.gui.setting.SettingsManager;
+import xyz.templecheats.templeclient.api.manager.SongManager;
+import xyz.templecheats.templeclient.api.util.keys.KeyUtil;
+import xyz.templecheats.templeclient.api.command.CommandManager;
+import xyz.templecheats.templeclient.api.setting.SettingsManager;
 import xyz.templecheats.templeclient.impl.gui.font.FontUtils;
 import xyz.templecheats.templeclient.impl.gui.menu.GuiEventsListener;
-import xyz.templecheats.templeclient.impl.gui.ui.watermark;
 
 import java.lang.reflect.Field;
 
 @Mod(modid = TempleClient.MODID, name = TempleClient.NAME, version = TempleClient.VERSION)
 public class TempleClient {
-    public static String name = "Temple Client 1.8.5";
-
     public static final String MODID = "templeclient";
     public static final String NAME = "Temple Client";
-    public static final String VERSION = "1.8.5";
+    public static final String VERSION = "1.8.6";
+    public static String name = NAME + " " + VERSION;
 
     public static AnnotatedEventManager eventBus;
     public static SettingsManager settingsManager;
@@ -40,6 +39,7 @@ public class TempleClient {
     public static CommandManager commandManager;
     public static ConfigManager configManager;
     public static CapeManager capeManager;
+    public static SongManager SONG_MANAGER;
     private static Logger logger;
 
     @EventHandler
@@ -67,11 +67,12 @@ public class TempleClient {
 
         capeManager = new CapeManager();
 
+        SONG_MANAGER = new SongManager();
+
         MinecraftForge.EVENT_BUS.register(clientEventManager);
         MinecraftForge.EVENT_BUS.register(commandManager);
 
-        MinecraftForge.EVENT_BUS.register(new key());
-        MinecraftForge.EVENT_BUS.register(new watermark());
+        MinecraftForge.EVENT_BUS.register(new KeyUtil());
         MinecraftForge.EVENT_BUS.register(new GuiEventsListener());
 
         FontUtils.bootstrap();
@@ -80,7 +81,7 @@ public class TempleClient {
 
         logger.info("Initialized Config!");
 
-        configManager.loadModules();
+        configManager.loadAll();
 
         Runtime.getRuntime().addShutdownHook(new ShutdownHook());
     }

@@ -9,7 +9,7 @@ import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.impl.modules.Module;
 import xyz.templecheats.templeclient.api.util.render.RenderUtil;
-import xyz.templecheats.templeclient.impl.gui.setting.Setting;
+import xyz.templecheats.templeclient.api.setting.Setting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ public class PlayerESP extends Module {
     private static List<Entity> glowed = new ArrayList<>();
 
     public PlayerESP() {
-        super("PlayerESP","Highlights players", Keyboard.KEY_NONE, Category.RENDER);
+        super("PlayerESP","Highlights players", Keyboard.KEY_NONE, Category.Render);
         ArrayList<String> options = new ArrayList<>();
         options.add("Box");
         options.add("Glow");

@@ -7,7 +7,7 @@ import org.lwjgl.input.Keyboard;
 
 public class Particles extends Module {
     public Particles() {
-        super("Particles","Increases particle volume", Keyboard.KEY_NONE, Category.MISC);
+        super("Particles","Increases particle volume", Keyboard.KEY_NONE, Category.Miscelleaneous);
     }
 
     @SubscribeEvent

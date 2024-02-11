@@ -8,7 +8,7 @@ import xyz.templecheats.templeclient.api.event.EventStageable;
 import xyz.templecheats.templeclient.api.event.events.network.PacketEvent;
 import xyz.templecheats.templeclient.api.event.events.player.MotionEvent;
 import xyz.templecheats.templeclient.api.event.events.player.MoveEvent;
-import xyz.templecheats.templeclient.impl.gui.setting.Setting;
+import xyz.templecheats.templeclient.api.setting.Setting;
 import xyz.templecheats.templeclient.impl.modules.Module;
 
 public class Freecam extends Module {
@@ -19,7 +19,7 @@ public class Freecam extends Module {
     private Setting verticalSpeed = new Setting("Vertical Speed", this, 1.0, 0.1, 5.0, false);
 
     public Freecam() {
-        super("Freecam", "Out of body experience", Keyboard.KEY_NONE, Category.RENDER);
+        super("Freecam", "Out of body experience", Keyboard.KEY_NONE, Category.Render);
         this.registerSettings(horizontalSpeed, verticalSpeed);
     }
 

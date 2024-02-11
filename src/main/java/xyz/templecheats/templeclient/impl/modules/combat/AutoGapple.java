@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.TempleClient;
-import xyz.templecheats.templeclient.impl.gui.setting.Setting;
+import xyz.templecheats.templeclient.api.setting.Setting;
 import xyz.templecheats.templeclient.impl.modules.Module;
 
 public class AutoGapple extends Module {
@@ -15,7 +15,7 @@ public class AutoGapple extends Module {
     private int originalSlot = -1;
 
     public AutoGapple() {
-        super("AutoGapple","Automatically swaps & eats a (notch) apple when health is below the set threshold", Keyboard.KEY_NONE, Category.COMBAT);
+        super("AutoGapple","Automatically swaps & eats a (notch) apple when health is below the set threshold", Keyboard.KEY_NONE, Category.Combat);
         TempleClient.settingsManager.rSetting(healthThreshold);
     }
 

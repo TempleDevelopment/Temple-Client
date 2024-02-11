@@ -11,7 +11,8 @@
   "client": [
     "IMixinRenderManager",
     "MixinAbstractClientPlayer",
-    "MixinEntityPlayerSP"
+    "MixinEntityPlayerSP",
+    "MixinWorldClient"
   ],
   "server": []
 }

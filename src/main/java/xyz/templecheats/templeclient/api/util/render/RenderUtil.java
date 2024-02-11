@@ -17,7 +17,7 @@ import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 
 public class RenderUtil {
-    public static void trace(Minecraft mc, Entity e, float partialTicks, int mode) {
+    public static void trace(Minecraft mc, Entity e, float partialTicks, int mode, float red, float green, float blue) {
         if (mc.getRenderManager().renderViewEntity != null) {
             GL11.glDisable(GL11.GL_DEPTH_TEST);
             GL11.glDisable(GL11.GL_LIGHTING);
@@ -31,7 +31,9 @@ public class RenderUtil {
             GL11.glDisable(GL11.GL_TEXTURE_2D);
             GL11.glBegin(GL11.GL_LINES);
 
-            RenderManager r = mc.getRenderManager();
+            GL11.glColor4d(red, green, blue, 1);
+
+            RenderManager renderManager = mc.getRenderManager();
 
             Vec3d v = new Vec3d(0.0D, 0.0D, 1.0D).rotatePitch(-((float) Math.toRadians((double) mc.player.rotationPitch))).rotateYaw(-((float) Math.toRadians((double) mc.player.rotationYaw)));
 
@@ -41,7 +43,7 @@ public class RenderUtil {
             double y = e.lastTickPosY + (e.posY - e.lastTickPosY) * partialTicks;
             double z = e.lastTickPosZ + (e.posZ - e.lastTickPosZ) * partialTicks;
 
-            GL11.glVertex3d(x - r.viewerPosX, y - r.viewerPosY + 0.25, z - r.viewerPosZ);
+            GL11.glVertex3d(x - renderManager.viewerPosX, y - renderManager.viewerPosY + 0.25, z - renderManager.viewerPosZ);
 
             GL11.glEnd();
             GL11.glDepthMask(true);

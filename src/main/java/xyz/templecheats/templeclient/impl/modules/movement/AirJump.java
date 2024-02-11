@@ -7,7 +7,7 @@ import org.lwjgl.input.Keyboard;
 
 public class AirJump extends Module {
     public AirJump() {
-        super("AirJump","Allows jumping in the air", Keyboard.KEY_NONE, Category.MOVEMENT);
+        super("AirJump","Allows jumping in the air", Keyboard.KEY_NONE, Category.Movement);
     }
 
     @SubscribeEvent

@@ -5,7 +5,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.impl.modules.Module;
-import xyz.templecheats.templeclient.impl.gui.setting.Setting;
+import xyz.templecheats.templeclient.api.setting.Setting;
 
 import java.util.ArrayList;
 
@@ -15,7 +15,7 @@ public class ElytraPlus extends Module {
     private Setting speed;
 
     public ElytraPlus() {
-        super("Elytra+","Allows you to fly with elytras", Keyboard.KEY_NONE, Category.MOVEMENT);
+        super("Elytra+","Allows you to fly with elytras", Keyboard.KEY_NONE, Category.Movement);
         ArrayList<String> options = new ArrayList<>();
         options.add("Boost");
         options.add("Control");
@@ -46,7 +46,7 @@ public class ElytraPlus extends Module {
         double controlDownSpeed = -speed.getValDouble();
         double controlMoveSpeed = speed.getValDouble();
 
-        String modeVal = TempleClient.settingsManager.getSettingByName(this.name, "Mode").getValString();
+        String modeVal = TempleClient.settingsManager.getSettingByName(this.getName(), "Mode").getValString();
         mode = modeVal.equalsIgnoreCase("Boost") ? Mode.BOOST : Mode.CONTROL;
 
         if (mode == Mode.BOOST) {

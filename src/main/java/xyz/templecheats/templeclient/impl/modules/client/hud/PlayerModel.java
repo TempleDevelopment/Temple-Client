@@ -1,25 +1,38 @@
 package xyz.templecheats.templeclient.impl.modules.client.hud;
 
-import xyz.templecheats.templeclient.impl.modules.Module;
-import xyz.templecheats.templeclient.api.util.render.RenderUtil;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.RenderManager;
+import xyz.templecheats.templeclient.impl.modules.client.HUD;
 
-public class PlayerModel extends Module {
-    public static final PlayerModel INSTANCE = new PlayerModel();
+public class PlayerModel extends HUD.HudElement {
     public PlayerModel() {
-        super("PlayerModel","Shows your player model in the HUD", Keyboard.KEY_NONE, Module.Category.CLIENT);
+        super("PlayerModel", "Shows your player model in the HUD");
     }
 
-    @SubscribeEvent
-    public void onRender(RenderGameOverlayEvent.Post event) {
-        switch (event.getType()) {
-            case TEXT:
-                RenderUtil.renderEntity(mc.player, 28, 30, 80);
-                break;
-            default:
-                break;
-        }
+    @Override
+    protected void renderElement(ScaledResolution sr) {
+        this.setWidth(40);
+        this.setHeight(70);
+
+        GlStateManager.pushAttrib();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(this.getX() + this.getWidth() - 20, this.getY() + this.getHeight() - 10, 0);
+        GlStateManager.rotate(180, 1, 0, 0);
+        GlStateManager.rotate(180, 0, 1, 0);
+        GlStateManager.rotate(-mc.player.rotationYaw, 0, 1, 0);
+        GlStateManager.scale(-25, 25, 25);
+        GlStateManager.color(1.0F, 1.0F, 1.0F);
+        RenderManager renderManager = Minecraft.getMinecraft().getRenderManager();
+        renderManager.setPlayerViewY(180);
+        renderManager.setRenderShadow(false);
+        renderManager.renderEntity(mc.player, 0, 0, 0, 0, 1, false);
+        renderManager.setRenderShadow(true);
+        GlStateManager.popMatrix();
+        GlStateManager.color(1.0F, 1.0F, 1.0F);
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableLighting();
+        GlStateManager.popAttrib();
     }
 }

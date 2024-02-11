@@ -9,8 +9,8 @@ import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.impl.modules.Module;
-import xyz.templecheats.templeclient.impl.gui.setting.Setting;
-import xyz.templecheats.templeclient.impl.gui.setting.SettingsManager;
+import xyz.templecheats.templeclient.api.setting.Setting;
+import xyz.templecheats.templeclient.api.setting.SettingsManager;
 import xyz.templecheats.templeclient.api.util.time.TimerUtil;
 
 import java.util.Arrays;
@@ -26,7 +26,7 @@ public class AutoArmor extends Module {
     public Setting ms;
 
     public AutoArmor() {
-        super("AutoArmor","Automatically equips armor", Keyboard.KEY_NONE, Category.COMBAT);
+        super("AutoArmor","Automatically equips armor", Keyboard.KEY_NONE, Category.Combat);
         this.timerUtil = new TimerUtil();
 
         SettingsManager settingsManager = TempleClient.settingsManager;

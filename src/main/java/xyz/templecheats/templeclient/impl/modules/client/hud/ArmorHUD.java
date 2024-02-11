@@ -1,49 +1,56 @@
 package xyz.templecheats.templeclient.impl.modules.client.hud;
 
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import com.google.common.collect.Lists;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.input.Keyboard;
-import xyz.templecheats.templeclient.impl.modules.Module;
+import xyz.templecheats.templeclient.TempleClient;
+import xyz.templecheats.templeclient.api.setting.Setting;
+import xyz.templecheats.templeclient.impl.modules.client.HUD;
 
-public class ArmorHUD extends Module {
+import java.util.ArrayList;
 
-    public static final ArmorHUD INSTANCE = new ArmorHUD();
-
-    private final Minecraft mc = Minecraft.getMinecraft();
+public class ArmorHUD extends HUD.HudElement {
+    private Setting displayMode;
 
     public ArmorHUD() {
-        super("ArmorHUD","Shows your Armor in the HUD", Keyboard.KEY_NONE, Module.Category.CLIENT);
+        super("ArmorHUD", "Shows your Armor in the HUD");
+
+        ArrayList<String> options = new ArrayList<>();
+        options.add("Vertical");
+        options.add("Horizontal");
+
+        TempleClient.settingsManager.rSetting(displayMode = new Setting("Display", this, options, "Horizontal"));
     }
 
-    @SubscribeEvent
-    public void onRenderOverlay(RenderGameOverlayEvent.Post event) {
-        if (event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
-            ScaledResolution sr = new ScaledResolution(mc);
-            renderArmorHUD(sr);
+    @Override
+    protected void renderElement(ScaledResolution sr) {
+        if(displayMode.getValString().equals("Vertical")) {
+            this.setWidth(16);
+            this.setHeight(84);
+        } else {
+            this.setWidth(84);
+            this.setHeight(16);
         }
-    }
-
-    private void renderArmorHUD(ScaledResolution sr) {
-        int width = sr.getScaledWidth();
-        int height = sr.getScaledHeight();
 
         GlStateManager.pushMatrix();
         RenderHelper.enableGUIStandardItemLighting();
 
-        int x = width / 2 + 74;
+        int startX = (int) this.getX();
+        int startY = (int) this.getY();
 
-        for (ItemStack stack : mc.player.inventory.armorInventory) {
-            if (!stack.isEmpty()) {
-                mc.getRenderItem().renderItemAndEffectIntoGUI(stack, x, height - 58);
-                mc.getRenderItem().renderItemOverlays(mc.fontRenderer, stack, x, height - 58);
+        for(ItemStack stack : Lists.reverse(mc.player.inventory.armorInventory)) {
+            if(!stack.isEmpty()) {
+                mc.getRenderItem().renderItemAndEffectIntoGUI(stack, startX, startY);
+                mc.getRenderItem().renderItemOverlays(mc.fontRenderer, stack, startX, startY);
             }
 
-            x -= 21;
+            if(displayMode.getValString().equals("Vertical")) {
+                startY += 21;
+            } else {
+                startX += 21;
+            }
         }
 
         RenderHelper.disableStandardItemLighting();

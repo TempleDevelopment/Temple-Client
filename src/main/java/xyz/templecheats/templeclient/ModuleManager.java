@@ -3,16 +3,12 @@ package xyz.templecheats.templeclient;
 import xyz.templecheats.templeclient.impl.modules.Module;
 import xyz.templecheats.templeclient.impl.modules.chat.GreenText;
 import xyz.templecheats.templeclient.impl.modules.chat.Spammer;
-import xyz.templecheats.templeclient.impl.modules.client.ClickGUI;
-import xyz.templecheats.templeclient.impl.modules.client.Font;
-import xyz.templecheats.templeclient.impl.modules.client.HUD;
-import xyz.templecheats.templeclient.impl.modules.client.Panic;
+import xyz.templecheats.templeclient.impl.modules.client.*;
 import xyz.templecheats.templeclient.impl.modules.combat.*;
-import xyz.templecheats.templeclient.impl.modules.combat.Velocity;
 import xyz.templecheats.templeclient.impl.modules.misc.*;
 import xyz.templecheats.templeclient.impl.modules.movement.*;
+import xyz.templecheats.templeclient.impl.modules.player.*;
 import xyz.templecheats.templeclient.impl.modules.render.*;
-import xyz.templecheats.templeclient.impl.modules.world.BlockReach;
 import xyz.templecheats.templeclient.impl.modules.world.Nuker;
 import xyz.templecheats.templeclient.impl.modules.world.Scaffold;
 
@@ -27,70 +23,71 @@ public class ModuleManager {
     }
 
     public static void initMods() {
-        // Combat
-        addMod(new AimBot());
-        addMod(new AntiBot());
-        addMod(new AutoClicker());
-        addMod(new AutoArmor());
-        addMod(new AutoCrystal());
-        addMod(new AutoLog());
-        addMod(new AutoGapple());
-        addMod(new AutoRespawn());
-        addMod(new AutoTotem());
-        addMod(new FastXP());
-        addMod(new HitBox());
-        addMod(new KillAura());
-        addMod(new TriggerBot());
-        addMod(new Velocity());
-        // Miscellaneous
-        addMod(new Blink());
-        addMod(new FakeCreative());
-        addMod(new FakePlayer());
-        addMod(new Hitmarker());
-        addMod(new Particles());
-        // Client
-        addMod(new ClickGUI());
-        addMod(new Font());
-        addMod(new HUD());
-        addMod(new Panic());
-        // Movement
-        addMod(new AirJump());
-        addMod(new AutoWalk());
-        addMod(new BoatFly());
-        addMod(new BunnyHop());
-        addMod(new ElytraPlus());
-        addMod(new FastFall());
-        addMod(new Fly());
-        addMod(new Glide());
-        addMod(new GuiWalk());
-        addMod(new Jesus());
-        addMod(new Speed());
-        addMod(new Spider());
-        addMod(new Sprint());
-        addMod(new Yaw());
-        // Render
-        addMod(new BlockOverlay());
-        addMod(new Fov());
-        addMod(new Freecam());
-        addMod(new FullBright());
-        addMod(new ItemESP());
-        addMod(new NameProtect());
-        addMod(new NameTags());
-        addMod(new NoRender());
-        addMod(new PlayerESP());
-        addMod(new Radar());
-        addMod(new SpawnerESP());
-        addMod(new StorageESP());
-        addMod(new TargetHUD());
-        addMod(new Tracers());
-        addMod(new ViewModel());
-        // World
-        addMod(new BlockReach());
-        addMod(new Nuker());
-        addMod(new Scaffold());
         // Chat
         addMod(new GreenText());
         addMod(new Spammer());
+        // Combat
+        addMod(new AutoDisconecct());
+        addMod(new AutoCrystal());
+        addMod(new AutoClicker());
+        addMod(new AutoGapple());
+        addMod(new AutoArmor());
+        addMod(new AutoTotem());
+        addMod(new Surround());
+        addMod(new Velocity());
+        addMod(new AntiBots());
+        addMod(new AimAssist());
+        addMod(new Trigger());
+        addMod(new Hitbox());
+        addMod(new FastXP());
+        addMod(new Aura());
+        // Miscellaneous
+        addMod(new FakeCreative());
+        addMod(new AutoRespawn());
+        addMod(new FakePlayer());
+        addMod(new Hitmarker());
+        // Client
+        addMod(new Particles());
+        addMod(new ClickGUI());
+        addMod(new Panic());
+        addMod(new Font());
+        addMod(new HUD());
+        // Movement
+        addMod(new ElytraPlus());
+        addMod(new FastFall());
+        addMod(new AutoWalk());
+        addMod(new YawLock());
+        addMod(new AirJump());
+        addMod(new BoatFly());
+        addMod(new GuiWalk());
+        addMod(new Sprint());
+        addMod(new Spider());
+        addMod(new NoFall());
+        addMod(new Speed());
+        addMod(new Glide());
+        addMod(new Jesus());
+        addMod(new Flight());
+        // Render
+        addMod(new BlockHighlight());
+        addMod(new DeathEffect());
+        addMod(new NameProtect());
+        addMod(new Fullbright());
+        addMod(new SpawnerESP());
+        addMod(new StorageESP());
+        addMod(new PlayerESP());
+        addMod(new ViewModel());
+        addMod(new NoRender());
+        addMod(new NameTags());
+        addMod(new ItemESP());
+        addMod(new Tracers());
+        addMod(new Fov());
+        // World
+        addMod(new Scaffold());
+        addMod(new Nuker());
+        // Player
+        addMod(new Freecam());
+        addMod(new Reach());
+        addMod(new Blink());
     }
 
 

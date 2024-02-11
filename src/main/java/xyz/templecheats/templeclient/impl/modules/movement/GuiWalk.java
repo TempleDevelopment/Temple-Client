@@ -14,7 +14,7 @@ public class GuiWalk extends Module {
     private static final double DEFAULT_SPEED = 0.05;
 
     public GuiWalk() {
-        super("GuiWalk","Allows you to move while guis are open", Keyboard.KEY_NONE, Category.MOVEMENT);
+        super("GuiWalk","Allows you to move while guis are open", Keyboard.KEY_NONE, Category.Movement);
     }
 
     @SubscribeEvent

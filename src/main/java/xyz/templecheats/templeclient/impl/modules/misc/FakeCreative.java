@@ -7,7 +7,7 @@ import org.lwjgl.input.Keyboard;
 
 public class FakeCreative extends Module {
     public FakeCreative() {
-        super("FakeCreative","Client sided creative", Keyboard.KEY_NONE, Category.MISC);
+        super("FakeCreative","Client sided creative", Keyboard.KEY_NONE, Category.Miscelleaneous);
     }
 
     @Override

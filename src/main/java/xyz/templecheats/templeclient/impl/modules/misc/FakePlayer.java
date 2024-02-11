@@ -1,16 +1,26 @@
 package xyz.templecheats.templeclient.impl.modules.misc;
 
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import xyz.templecheats.templeclient.api.setting.Setting;
 import xyz.templecheats.templeclient.impl.modules.Module;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import com.mojang.authlib.GameProfile;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.impl.modules.client.Panic;
 
+import java.util.Random;
+
 public class FakePlayer extends Module {
-    EntityOtherPlayerMP fakePlayer;
+    AttackableFakePlayer fakePlayer;
+    BlockPos respawnLocation;
+    Random random = new Random();
+    Setting moveButton;
 
     public FakePlayer() {
-        super("FakePlayer","Spawns in a fake player", Keyboard.KEY_NONE, Category.MISC);
+        super("FakePlayer","Spawns in a fake player", Keyboard.KEY_NONE, Category.Miscelleaneous);
+        moveButton = new Setting("Move", this, false);
+        this.registerSettings(moveButton);
     }
 
     @Override
@@ -19,10 +29,11 @@ public class FakePlayer extends Module {
             return;
         }
         GameProfile profile = new GameProfile(mc.player.getUniqueID(), "temple-client bot");
-        fakePlayer = new EntityOtherPlayerMP(mc.world, profile);
+        fakePlayer = new AttackableFakePlayer(mc.world, profile);
         fakePlayer.setEntityId(-1882);
         fakePlayer.copyLocationAndAnglesFrom(mc.player);
         fakePlayer.rotationYawHead = mc.player.rotationYawHead;
+        respawnLocation = mc.player.getPosition();
         mc.world.addEntityToWorld(fakePlayer.getEntityId(), fakePlayer);
     }
 
@@ -33,6 +44,25 @@ public class FakePlayer extends Module {
         }
         if (!Panic.isPanic) {
             mc.world.removeEntityFromWorld(fakePlayer.getEntityId());
+        }
+    }
+
+    @Override
+    public void onUpdate() {
+        if (fakePlayer != null && moveButton.getValBoolean()) {
+            fakePlayer.moveRandomly();
+        }
+    }
+
+    class AttackableFakePlayer extends EntityOtherPlayerMP {
+        public AttackableFakePlayer(World worldIn, GameProfile gameProfileIn) {
+            super(worldIn, gameProfileIn);
+        }
+
+        public void moveRandomly() {
+            double x = respawnLocation.getX() + (random.nextDouble() - 0.5) * 1;
+            double z = respawnLocation.getZ() + (random.nextDouble() - 0.5) * 1;
+            this.setPosition(x, this.posY, z);
         }
     }
 }

@@ -10,6 +10,6 @@ public class ShutdownHook extends Thread {
 
     @Override
     public void run() {
-        TempleClient.configManager.saveModules();
+        TempleClient.configManager.saveAll();
     }
 }

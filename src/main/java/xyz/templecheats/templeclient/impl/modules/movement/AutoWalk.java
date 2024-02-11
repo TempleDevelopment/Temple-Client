@@ -8,7 +8,7 @@ import xyz.templecheats.templeclient.impl.modules.Module;
 
 public class AutoWalk extends Module {
     public AutoWalk() {
-        super("AutoWalk","Automatically walks towards the direction your aiming at", Keyboard.KEY_NONE, Category.MOVEMENT);
+        super("AutoWalk","Automatically walks towards the direction your aiming at", Keyboard.KEY_NONE, Category.Movement);
     }
 
     @Override

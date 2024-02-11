@@ -1,3 +1,7 @@
+/**
+ * This FontRenderer was made by a user, and was modified.
+ */
+
 package xyz.templecheats.templeclient.impl.gui.font;
 
 import net.minecraft.client.renderer.texture.DynamicTexture;

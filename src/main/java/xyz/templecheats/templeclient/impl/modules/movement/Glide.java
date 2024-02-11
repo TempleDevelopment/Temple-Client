@@ -7,7 +7,7 @@ import org.lwjgl.input.Keyboard;
 
 public class Glide extends Module {
     public Glide() {
-        super("Glide","Glides when falling for a smoother landing", Keyboard.KEY_NONE, Category.MOVEMENT);
+        super("Glide","Glides when falling for a smoother landing", Keyboard.KEY_NONE, Category.Movement);
     }
 
     @SubscribeEvent

@@ -14,7 +14,7 @@ public class ItemESP extends Module {
     AxisAlignedBB box;
 
     public ItemESP() {
-        super("ItemESP","Highlights items", Keyboard.KEY_NONE, Category.RENDER);
+        super("ItemESP","Highlights items", Keyboard.KEY_NONE, Category.Render);
     }
 
     @SubscribeEvent

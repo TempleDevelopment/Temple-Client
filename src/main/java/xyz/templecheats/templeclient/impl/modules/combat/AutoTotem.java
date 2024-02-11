@@ -2,7 +2,7 @@ package xyz.templecheats.templeclient.impl.modules.combat;
 
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.impl.modules.Module;
-import xyz.templecheats.templeclient.impl.gui.setting.Setting;
+import xyz.templecheats.templeclient.api.setting.Setting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.init.Items;
@@ -18,7 +18,7 @@ public class AutoTotem extends Module {
     ItemStack originalOffhandItem = ItemStack.EMPTY;
 
     public AutoTotem() {
-        super("AutoTotem","Automatically places a totem in your offhand", Keyboard.KEY_NONE, Category.COMBAT);
+        super("AutoTotem","Automatically places a totem in your offhand", Keyboard.KEY_NONE, Category.Combat);
         healthThreshold = new Setting("Health", this, 10, 1, 20, true);
         TempleClient.settingsManager.rSetting(healthThreshold);
     }

@@ -8,7 +8,7 @@ import xyz.templecheats.templeclient.impl.modules.Module;
 public class GreenText extends Module {
 
     public GreenText() {
-        super("GreenText", "Places > behind your message", 0, Category.CHAT);
+        super("GreenText", "Places > behind your message", 0, Category.Chat);
     }
 
     @SubscribeEvent

@@ -8,7 +8,7 @@ import org.lwjgl.input.Keyboard;
 
 public class BoatFly extends Module {
     public BoatFly() {
-        super("BoatFly","Allows flying in a boat", Keyboard.KEY_NONE, Category.MOVEMENT);
+        super("BoatFly","Allows flying in a boat", Keyboard.KEY_NONE, Category.Movement);
     }
 
     @SubscribeEvent

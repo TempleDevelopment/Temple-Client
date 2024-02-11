@@ -16,7 +16,7 @@ public class Nuker extends Module {
     private final Random random = new Random();
 
     public Nuker() {
-        super("Nuker","Automatically mines blocks within reach", Keyboard.KEY_N, Category.WORLD);
+        super("Nuker","Automatically mines blocks within reach", Keyboard.KEY_NONE, Category.World);
     }
 
     @SubscribeEvent
@@ -30,7 +30,7 @@ public class Nuker extends Module {
 
         BlockPos playerPos = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
 
-        for (int i = 0; i < 10; i++) { // Break up to 10 blocks
+        for (int i = 0; i < 10; i++) {
             int offsetX = random.nextInt(range * 2 + 1) - range;
             int offsetY = random.nextInt(range * 2 + 1) - range;
             int offsetZ = random.nextInt(range * 2 + 1) - range;

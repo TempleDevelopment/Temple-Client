@@ -8,14 +8,14 @@ import xyz.templecheats.templeclient.impl.modules.Module;
 import org.lwjgl.input.Keyboard;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import xyz.templecheats.templeclient.impl.gui.setting.Setting;
+import xyz.templecheats.templeclient.api.setting.Setting;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class Jesus extends Module {
     public Jesus() {
-        super("Jesus","Allows you to walk on water (amen)", Keyboard.KEY_NONE, Category.MOVEMENT);
+        super("Jesus","Allows you to walk on water (amen)", Keyboard.KEY_NONE, Category.Movement);
 
         ArrayList<String> options = new ArrayList<>();
 
@@ -28,7 +28,7 @@ public class Jesus extends Module {
 
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent e) {
-        String Mode =  TempleClient.settingsManager.getSettingByName(this.name, "Mode").getValString();
+        String Mode =  TempleClient.settingsManager.getSettingByName(this.getName(), "Mode").getValString();
 
         BlockPos blockPos = new BlockPos(mc.player.posX, mc.player.posY - 0.1, mc.player.posZ);
         Block block = mc.world.getBlockState(blockPos).getBlock();

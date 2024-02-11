@@ -3,11 +3,11 @@ package xyz.templecheats.templeclient.impl.modules.render;
 import xyz.templecheats.templeclient.impl.modules.Module;
 import org.lwjgl.input.Keyboard;
 
-public class FullBright extends Module {
-    private float originalGamma;
+public class Fullbright extends Module {
+    private float originalGamma = 1.0f;
 
-    public FullBright() {
-        super("FullBright","Makes your world brighter <3", Keyboard.KEY_NONE, Category.RENDER);
+    public Fullbright() {
+        super("Fullbright", "Makes your world brighter <3", Keyboard.KEY_NONE, Category.Render);
     }
 
     @Override

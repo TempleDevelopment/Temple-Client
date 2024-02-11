@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class NameProtect extends Module {
     public NameProtect() {
-        super("NameProtect","Hides player names", Keyboard.KEY_NONE, Category.RENDER);
+        super("NameProtect","Hides player names", Keyboard.KEY_NONE, Category.Render);
     }
 
     @SubscribeEvent
