@@ -28,7 +28,7 @@ It is a free and open-source utility mod.
 <details>
   <summary>How do i open the Hud Editor.</summary>
 
-> Press `the grave key `` &
+> Press `grave key`
 
 </details>
 
