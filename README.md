@@ -26,6 +26,14 @@ It is a free and open-source utility mod.
 </details>
 
 <details>
+  <summary>How do i open the Hud Editor.</summary>
+
+> Press `the grave key `` &
+
+</details>
+
+
+<details>
   <summary>How do I install plugins.</summary>
 
 > Find the plugins you like and put them in the same mods folder you put the client in.
