@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/Logo.png">
+  <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/logo.png">
 </p>
 
 ![GitHub all releases](https://img.shields.io/github/downloads/TempleDevelopment/Temple-Client/total?color=seagreen)
