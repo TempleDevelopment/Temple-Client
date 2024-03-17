@@ -11,12 +11,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xyz.templecheats.templeclient.ModuleManager;
 import xyz.templecheats.templeclient.TempleClient;
-import xyz.templecheats.templeclient.api.event.EventStageable;
-import xyz.templecheats.templeclient.api.event.events.player.MotionEvent;
-import xyz.templecheats.templeclient.api.event.events.player.MoveEvent;
-import xyz.templecheats.templeclient.impl.modules.render.Freecam;
+import xyz.templecheats.templeclient.event.EventStageable;
+import xyz.templecheats.templeclient.event.events.player.MotionEvent;
+import xyz.templecheats.templeclient.event.events.player.MoveEvent;
+import xyz.templecheats.templeclient.features.module.modules.render.Freecam;
+import xyz.templecheats.templeclient.manager.ModuleManager;
 
 @Mixin(value = EntityPlayerSP.class)
 public class MixinEntityPlayerSP extends MixinEntity {
@@ -53,7 +53,7 @@ public class MixinEntityPlayerSP extends MixinEntity {
     @Inject(method = "pushOutOfBlocks", at = @At("HEAD"), cancellable = true)
     public void pushOutOfBlocks(double x, double y, double z, CallbackInfoReturnable<Boolean> callback) {
         if(Minecraft.getMinecraft() != null && Minecraft.getMinecraft().player != null) {
-            final Freecam freecam = (Freecam) ModuleManager.getModuleByName("Freecam");
+            Freecam freecam = ModuleManager.getModule(Freecam.class);
 
             if(freecam != null && freecam.isEnabled()) {
                 callback.setReturnValue(false);

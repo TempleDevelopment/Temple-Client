@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import xyz.templecheats.templeclient.TempleClient;
-import xyz.templecheats.templeclient.api.event.events.world.EntityEvent;
+import xyz.templecheats.templeclient.event.events.world.EntityEvent;
 
 @Mixin(value = WorldClient.class)
 public class MixinWorldClient {

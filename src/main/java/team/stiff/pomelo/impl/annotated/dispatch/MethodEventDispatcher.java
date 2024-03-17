@@ -4,7 +4,6 @@ import team.stiff.pomelo.dispatch.EventDispatcher;
 import team.stiff.pomelo.handler.EventHandler;
 
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,8 +28,11 @@ public final class MethodEventDispatcher implements EventDispatcher {
     @Override
     public <E> void dispatch(final E event) {
         // iterate all registered event handlers and pass the event onto them
-        for (final EventHandler eventHandler : eventHandlers.getOrDefault(
-                event.getClass(), Collections.emptySet()))
-            eventHandler.handle(event);
+        Set<EventHandler> handlers = eventHandlers.get(event.getClass());
+        if (handlers != null) {
+            for (final EventHandler eventHandler : handlers) {
+                eventHandler.handle(event);
+            }
+        }
     }
 }

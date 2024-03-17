@@ -1,5 +1,6 @@
 package team.stiff.pomelo.impl.annotated.handler.scan;
 
+import team.stiff.pomelo.filter.EventFilter;
 import team.stiff.pomelo.filter.EventFilterScanner;
 import team.stiff.pomelo.handler.EventHandler;
 import team.stiff.pomelo.handler.scan.EventHandlerScanner;
@@ -31,8 +32,15 @@ public final class MethodHandlerScanner implements EventHandlerScanner {
         Stream.of(listenerContainer.getClass().getDeclaredMethods())
                 .filter(annotatedListenerPredicate).forEach(method -> eventHandlers
                         .computeIfAbsent(method.getParameterTypes()[0], obj -> new TreeSet<>())
-                        .add(new MethodEventHandler(listenerContainer, method,
-                                filterScanner.scan(method))));
+                        .add(create(listenerContainer, method, filterScanner.scan(method))));
         return eventHandlers;
+    }
+
+    private EventHandler create(Object owner, Method method, Set<EventFilter> filters) {
+        try {
+            return new MethodEventHandler(owner, method, filters);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("Could not create event handlers", e);
+        }
     }
 }

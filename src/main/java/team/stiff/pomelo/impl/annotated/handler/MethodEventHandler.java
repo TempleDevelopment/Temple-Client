@@ -4,8 +4,10 @@ import team.stiff.pomelo.filter.EventFilter;
 import team.stiff.pomelo.handler.EventHandler;
 import team.stiff.pomelo.handler.ListenerPriority;
 import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
+import xyz.templecheats.templeclient.TempleClient;
 
-import java.lang.reflect.InvocationTargetException;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 import java.util.Set;
 
@@ -17,15 +19,11 @@ import java.util.Set;
  * @since May 31, 2017
  */
 public final class MethodEventHandler implements EventHandler {
-    /**
-     * The class instance and parent of the method.
-     */
-    private final Object listenerParent;
 
     /**
      * The method object that has been marked as a listener.
      */
-    private final Method method;
+    private final MethodHandle methodHandle;
 
     /**
      * A filter predicate used to test the passed method against
@@ -39,12 +37,8 @@ public final class MethodEventHandler implements EventHandler {
     private final Listener listenerAnnotation;
 
     public MethodEventHandler(final Object listenerParent, final Method method,
-                              final Set<EventFilter> eventFilters) {
-        this.listenerParent = listenerParent;
-        if (!method.isAccessible())
-            method.setAccessible(true);
-
-        this.method = method;
+                              final Set<EventFilter> eventFilters) throws IllegalAccessException {
+        this.methodHandle = TempleClient.LOOKUP.unreflect(method).bindTo(listenerParent).asType(MethodType.methodType(void.class, Object.class));
         this.eventFilters = eventFilters;
         this.listenerAnnotation = method.getAnnotation(Listener.class);
     }
@@ -59,15 +53,15 @@ public final class MethodEventHandler implements EventHandler {
 
         try {
             // invoke the listener with the current event
-            method.invoke(listenerParent, event);
-        } catch (final IllegalAccessException | InvocationTargetException exception) {
+            methodHandle.invokeExact(event);
+        } catch (final Throwable exception) {
             exception.printStackTrace();
         }
     }
 
     @Override
     public Object getListener() {
-        return method;
+        return methodHandle;
     }
 
     @Override

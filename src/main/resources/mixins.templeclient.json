@@ -3,7 +3,9 @@
   "package": "xyz.templecheats.templeclient.mixins",
   "refmap": "refmap.templeclient.json",
   "mixins": [
+    "IMixinCPacketPlayer",
     "IMixinSPacketExplosion",
+    "MixinBlockLiquid",
     "MixinEntity",
     "MixinEntityPlayer",
     "MixinNetworkManager"
@@ -12,6 +14,10 @@
     "IMixinRenderManager",
     "MixinAbstractClientPlayer",
     "MixinEntityPlayerSP",
+    "MixinEntityRenderer",
+    "MixinGuiChat",
+    "MixinItemRenderer",
+    "MixinPotionOverlay",
     "MixinWorldClient"
   ],
   "server": []

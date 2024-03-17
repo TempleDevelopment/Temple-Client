@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.templecheats.templeclient.TempleClient;
-import xyz.templecheats.templeclient.api.event.events.network.PacketEvent;
+import xyz.templecheats.templeclient.event.events.network.PacketEvent;
 
 @Mixin(value = NetworkManager.class)
 public class MixinNetworkManager {

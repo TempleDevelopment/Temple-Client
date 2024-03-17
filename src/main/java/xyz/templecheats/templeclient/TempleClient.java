@@ -12,35 +12,40 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.Display;
 import team.stiff.pomelo.impl.annotated.AnnotatedEventManager;
-import xyz.templecheats.templeclient.api.manager.CapeManager;
-import xyz.templecheats.templeclient.api.config.ShutdownHook;
-import xyz.templecheats.templeclient.api.config.ConfigManager;
-import xyz.templecheats.templeclient.api.event.EventManager;
-import xyz.templecheats.templeclient.api.manager.SongManager;
-import xyz.templecheats.templeclient.api.util.keys.KeyUtil;
-import xyz.templecheats.templeclient.api.command.CommandManager;
-import xyz.templecheats.templeclient.api.setting.SettingsManager;
-import xyz.templecheats.templeclient.impl.gui.font.FontUtils;
-import xyz.templecheats.templeclient.impl.gui.menu.GuiEventsListener;
+import xyz.templecheats.templeclient.config.ConfigManager;
+import xyz.templecheats.templeclient.event.ForgeEventManager;
+import xyz.templecheats.templeclient.features.gui.font.FontUtils;
+import xyz.templecheats.templeclient.features.gui.menu.GuiEventsListener;
+import xyz.templecheats.templeclient.manager.CapeManager;
+import xyz.templecheats.templeclient.manager.CommandManager;
+import xyz.templecheats.templeclient.manager.ModuleManager;
+import xyz.templecheats.templeclient.manager.SongManager;
+import xyz.templecheats.templeclient.util.friend.FriendManager;
+import xyz.templecheats.templeclient.util.keys.KeyUtil;
+import xyz.templecheats.templeclient.util.setting.SettingsManager;
 
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
+
 
 @Mod(modid = TempleClient.MODID, name = TempleClient.NAME, version = TempleClient.VERSION)
 public class TempleClient {
     public static final String MODID = "templeclient";
     public static final String NAME = "Temple Client";
-    public static final String VERSION = "1.8.6";
+    public static final String VERSION = "1.8.7";
+    public static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
     public static String name = NAME + " " + VERSION;
 
     public static AnnotatedEventManager eventBus;
     public static SettingsManager settingsManager;
     public static ModuleManager moduleManager;
-    public static EventManager clientEventManager;
+    public static ForgeEventManager clientForgeEventManager;
     public static CommandManager commandManager;
     public static ConfigManager configManager;
     public static CapeManager capeManager;
+    public static FriendManager friendManager;
     public static SongManager SONG_MANAGER;
-    private static Logger logger;
+    public static Logger logger;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -54,22 +59,24 @@ public class TempleClient {
         MinecraftForge.EVENT_BUS.register(new TempleClient());
 
         eventBus = new AnnotatedEventManager();
-        clientEventManager = new EventManager();
-        MinecraftForge.EVENT_BUS.register(clientEventManager);
+        clientForgeEventManager = new ForgeEventManager();
+        MinecraftForge.EVENT_BUS.register(clientForgeEventManager);
 
         settingsManager = new SettingsManager();
 
-        (TempleClient.moduleManager = new ModuleManager()).initMods();
+        TempleClient.moduleManager = new ModuleManager();
         logger.info("Module Manager Loaded.");
 
-        (TempleClient.commandManager = new CommandManager()).commandInit();
+        TempleClient.commandManager = new CommandManager();
         logger.info("Commands Loaded.");
 
         capeManager = new CapeManager();
 
+        friendManager = new FriendManager();
+
         SONG_MANAGER = new SongManager();
 
-        MinecraftForge.EVENT_BUS.register(clientEventManager);
+        MinecraftForge.EVENT_BUS.register(clientForgeEventManager);
         MinecraftForge.EVENT_BUS.register(commandManager);
 
         MinecraftForge.EVENT_BUS.register(new KeyUtil());
@@ -83,7 +90,7 @@ public class TempleClient {
 
         configManager.loadAll();
 
-        Runtime.getRuntime().addShutdownHook(new ShutdownHook());
+        Runtime.getRuntime().addShutdownHook(new Thread(TempleClient.configManager::saveAll));
     }
 
     @SubscribeEvent
