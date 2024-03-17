@@ -78,9 +78,13 @@ It is a free and open-source utility mod.
 ./gradlew tasks
 ```
 
-### 1.8.6 - Showcase
+### 1.8.7 - Showcase
 <p align="center">
-   <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/1.8.6.png">
+   <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/1.8.7.png">
+</p>
+### 1.8.7 - CSGO Clickgui
+<p align="center">
+   <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/1.8.7-csgo.png">
 </p>
 
 ### Contributors
