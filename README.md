@@ -30,7 +30,7 @@ It is a free and open-source utility mod.
 - [FluorideHistorian](https://github.com/FluorideHistorian)
 - [KuroHere](https://github.com/KuroHere)
 - [Zane2b2t](https://github.com/Zane2b2t)
-- [XeonLyfe]([https://github.com/XeonLyfe)
+- [XeonLyfe](https://github.com/XeonLyfe)
 - [RacoonDog](https://github.com/RacoonDog)
 
 ## ScreenShots
