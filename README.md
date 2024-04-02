@@ -2,11 +2,19 @@
   <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/logo.png">
 </p>
 
-<div align="center">
+<p align="center">
+<table>
+<tr>
+<th>
+
 ![GitHub all releases](https://img.shields.io/github/downloads/TempleDevelopment/Temple-Client/total?color=seagreen)
 [![Discord](https://img.shields.io/discord/1125838140456849418?color=skyblue&logo=discord&logoColor=white)](https://discord.gg/XZUGTpGCe8)
 ![GitHub repo size](https://img.shields.io/github/repo-size/TempleDevelopment/Temple-Client)
-</div>
+
+</th>
+</tr>
+</table>
+</p>
 
 Temple Client is a Minecraft 1.12.2 forge mod that enhances the anarchy server experience. 
 It is a free and open-source utility mod.
@@ -23,12 +31,11 @@ It is a free and open-source utility mod.
 4. Put the file in your `.minecraft/mods` folder.
 
 ## Credits
-- [Ai_24](https://www.youtube.com/@Ai_24) for showcase
-- [KiLAB Gaming](https://www.youtube.com/@KiLABGaming) for CCO
-- [@meteordevelopment](https://github.com/meteordevelopment) for orbit
-- [@ladysnake](https://github.com/ladysnake) for satin
-- [@0x3C50](https://github.com/0x3C50/Renderer) for Renderer
-
+- [FluorideHistorian](https://github.com/FluorideHistorian)
+- [KuroHere](https://github.com/KuroHere)
+- [Zane2b2t](https://github.com/Zane2b2t)
+- [XeonLyfe]([https://github.com/XeonLyfe)
+- [RacoonDog](https://github.com/RacoonDog)
 
 ## ScreenShots
 <p align="center">
