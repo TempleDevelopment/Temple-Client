@@ -19,7 +19,7 @@ It is a free and open-source utility mod.
 - Minecraft version: ```forge``` 1.12.2
 - Default ClickGui keybind - **```r-shift```**
 - Default prefix  - **```.```**
-- 
+
 ## Installation
 1. Install Minecraft 1.12.2
 2. Install the latest Forge for 1.12.2 [(download)](https://files.minecraftforge.net/net/minecraftforge/forge/index_1.12.2.html)
