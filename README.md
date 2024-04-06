@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/PhilipPanda/Temple-Client/blob/main/github/images/logo.png">
+  <img src="https://github.com/TempleDevelopment/Temple-Client/blob/main/github/images/logo.png">
 </p>
 
 <p align="center">
