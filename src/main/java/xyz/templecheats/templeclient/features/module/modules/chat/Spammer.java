@@ -9,7 +9,7 @@ public class Spammer extends Module {
     private int timer = 0;
 
     public Spammer() {
-        super("Spammer", "Spams a message in chat", 0, Category.Chat);
+        super("Spammer", "Spams chat", 0, Category.Chat);
 
         this.registerSettings(delay);
     }

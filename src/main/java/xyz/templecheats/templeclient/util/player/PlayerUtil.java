@@ -13,10 +13,10 @@ public class PlayerUtil {
         double deltaX = posX - mc.player.posX;
         double deltaY = posY - mc.player.posY - mc.player.getEyeHeight();
         double deltaZ = posZ - mc.player.posZ;
-        double deltaGround = Math.sqrt(deltaX*deltaX + deltaZ*deltaZ);
+        double deltaGround = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
 
-        float pitch = (float) - Math.toDegrees(Math.atan(deltaY/deltaGround));
-        float yaw = (float) - Math.toDegrees(Math.atan(deltaX/deltaZ));
+        float pitch = (float) - Math.toDegrees(Math.atan(deltaY / deltaGround));
+        float yaw = (float) - Math.toDegrees(Math.atan(deltaX / deltaZ));
 
         if (deltaZ <= 0) {
             if (deltaX > 0) {
@@ -26,7 +26,10 @@ public class PlayerUtil {
             }
         }
 
-        return new float[] {pitch, yaw};
+        return new float[] {
+                pitch,
+                yaw
+        };
     }
 
     public static double[] getPlayerMoveVec() {
@@ -37,7 +40,10 @@ public class PlayerUtil {
         float strafe = mc.player.moveStrafing;
 
         if (forward == 0 && strafe == 0) {
-            return new double[] {0, 0};
+            return new double[] {
+                    0,
+                    0
+            };
         }
 
         if (forward > 0) {
@@ -66,7 +72,9 @@ public class PlayerUtil {
             }
         }
 
-        return new double[] {-Math.sin(Math.toRadians(yaw)), Math.cos(Math.toRadians(yaw))};
+        return new double[] {
+                -Math.sin(Math.toRadians(yaw)), Math.cos(Math.toRadians(yaw))
+        };
     }
 
     public static void swapContainerItems(int slot1, int slot2) {

@@ -32,7 +32,7 @@ public class ChatCrypt extends Module {
         }
     }
     public ChatCrypt() {
-        super("ChatCrypt", "Encrypts your chat messages so only temple client users can see.", 0, Module.Category.Chat);
+        super("ChatCrypt", "Encrypt and Decrypt chat messages that users with Decrypt online can see", 0, Module.Category.Chat);
     }
 
     public static String encrypt(String value) {

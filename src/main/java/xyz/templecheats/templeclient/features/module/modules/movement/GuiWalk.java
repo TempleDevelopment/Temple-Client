@@ -10,16 +10,18 @@ import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.gui.clickgui.basic.ClickGuiScreen;
 import xyz.templecheats.templeclient.features.module.Module;
 public class GuiWalk extends Module {
+    /*
+     * Constants
+     */
     private static final double DEFAULT_SPEED = 0.05;
 
     public GuiWalk() {
-        super("GuiWalk","Allows you to move while guis are open", Keyboard.KEY_NONE, Category.Movement);
+        super("GuiWalk", "Allows you to move while guis are open", Keyboard.KEY_NONE, Category.Movement);
     }
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent e) {
         if (!(mc.currentScreen instanceof GuiChat) && !(mc.currentScreen instanceof GuiContainer) && !(mc.currentScreen instanceof ClickGuiScreen)) {
-            mc.gameSettings.thirdPersonView = 0;
             return;
         }
 
@@ -65,27 +67,26 @@ public class GuiWalk extends Module {
         mc.player.motionX -= (double)(MathHelper.cos(direction) * speed);
     }
 
-
     void handleForward(double speed) {
-        if(!Keyboard.isKeyDown(mc.gameSettings.keyBindForward.getKeyCode()))
+        if (!Keyboard.isKeyDown(mc.gameSettings.keyBindForward.getKeyCode()))
             return;
         moveForward(speed);
     }
 
     void handleBack(double speed) {
-        if(!Keyboard.isKeyDown(mc.gameSettings.keyBindBack.getKeyCode()))
+        if (!Keyboard.isKeyDown(mc.gameSettings.keyBindBack.getKeyCode()))
             return;
         moveBack(speed);
     }
 
     void handleLeft(double speed) {
-        if(!Keyboard.isKeyDown(mc.gameSettings.keyBindLeft.getKeyCode()))
+        if (!Keyboard.isKeyDown(mc.gameSettings.keyBindLeft.getKeyCode()))
             return;
         moveLeft(speed);
     }
 
     void handleRight(double speed) {
-        if(!Keyboard.isKeyDown(mc.gameSettings.keyBindRight.getKeyCode()))
+        if (!Keyboard.isKeyDown(mc.gameSettings.keyBindRight.getKeyCode()))
             return;
         moveRight(speed);
     }
@@ -111,13 +112,15 @@ public class GuiWalk extends Module {
             forward = -0.5f;
         } else if (mc.player.moveForward > 0.0F) {
             forward = 0.5f;
-        } if (mc.player.moveStrafing > 0.0f) {
+        }
+        if (mc.player.moveStrafing > 0.0f) {
             var1 -= 90.0f * forward;
-        } if (mc.player.moveStrafing < 0.0f) {
+        }
+        if (mc.player.moveStrafing < 0.0f) {
             var1 += 90.0f * forward;
         }
 
         var1 *= 0.017453292f;
-        return  var1;
+        return var1;
     }
 }

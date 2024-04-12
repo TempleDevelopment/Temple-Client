@@ -41,7 +41,7 @@ public class FriendCommand extends Command {
             sendMessage("Removed " + name + " from friends list.", false);
         } else if (action.equalsIgnoreCase("list")) {
             StringBuilder friendsList = new StringBuilder("Friends: ");
-            for (Friend friend : TempleClient.friendManager.getFriends()) {
+            for (Friend friend: TempleClient.friendManager.getFriends()) {
                 friendsList.append(friend.getName()).append(", ");
             }
             sendMessage(friendsList.toString(), false);

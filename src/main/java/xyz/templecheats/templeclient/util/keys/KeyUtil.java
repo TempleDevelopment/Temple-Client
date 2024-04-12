@@ -5,7 +5,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.gui.clickgui.basic.ClickGuiScreen;
-import xyz.templecheats.templeclient.features.gui.clickgui.csgo.ClientCsgoGuiScreen;
+import xyz.templecheats.templeclient.features.gui.clickgui.csgo.CsgoGuiScreen;
 import xyz.templecheats.templeclient.features.gui.clickgui.hud.HudEditorScreen;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.features.module.modules.client.HUD;
@@ -21,7 +21,7 @@ public class KeyUtil {
                 if (ClickGUI.INSTANCE.theme.value() != ClickGUI.Theme.CSGO) {
                     Minecraft.getMinecraft().displayGuiScreen(ClickGuiScreen.getInstance());
                 } else {
-                    Minecraft.getMinecraft().displayGuiScreen(ClientCsgoGuiScreen.getInstance());
+                    Minecraft.getMinecraft().displayGuiScreen(CsgoGuiScreen.getInstance());
                 }
                 return;
             }
@@ -30,7 +30,7 @@ public class KeyUtil {
                 Minecraft.getMinecraft().displayGuiScreen(HudEditorScreen.getInstance());
                 return;
             }
-            
+
             ModuleManager.keyPress(key);
         }
     }

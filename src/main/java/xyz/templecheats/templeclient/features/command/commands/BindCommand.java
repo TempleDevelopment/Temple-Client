@@ -14,7 +14,6 @@ public class BindCommand extends Command {
     public String getName() {
         return ".bind";
     }
-
     @Override
     public void execute(String[] args) {
         if (args.length != 3) {
@@ -43,8 +42,8 @@ public class BindCommand extends Command {
         sendMessage("Bound " + moduleName + " to " + keyName + ".", false);
     }
 
-    private void sendMessage(String message, boolean isError) {
-        String templePrefix = isError ? TextFormatting.RED + "[Temple] " : TextFormatting.AQUA + "[Temple] ";
+    public static void sendMessage(String message, boolean isError) {
+        String templePrefix = isError ? TextFormatting.RED + "[TempleClient] " + TextFormatting.RESET : TextFormatting.AQUA + "[TempleClient] " + TextFormatting.RESET;
         String formattedMessage = isError ? TextFormatting.WHITE + message : TextFormatting.RESET + message;
         Minecraft.getMinecraft().player.sendMessage(
                 new TextComponentString(templePrefix + formattedMessage)

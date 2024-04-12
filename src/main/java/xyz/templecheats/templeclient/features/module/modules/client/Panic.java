@@ -7,29 +7,32 @@ import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.manager.ModuleManager;
 
 public class Panic extends Module {
+    /*
+     * Variables
+     */
     public static boolean isPanic = false;
-    
+
     public Panic() {
-        super("Panic", "Disables everything so you wont get caught ;)", Keyboard.KEY_NONE, Category.Client);
+        super("Panic", "Turn off all modules", Keyboard.KEY_NONE, Category.Client);
     }
-    
+
     @Override
     public void onEnable() {
         isPanic = true;
-        
+
         Display.setTitle("Minecraft 1.12.2");
-        
-        for(Module m : ModuleManager.getModules()) {
-            if(m != this) {
+
+        for (Module m: ModuleManager.getModules()) {
+            if (m != this) {
                 m.setToggled(false);
             }
         }
     }
-    
+
     @Override
     public void onDisable() {
         isPanic = false;
-        
+
         Display.setTitle("TempleClient 1.12.2 | User: " + Minecraft.getMinecraft().getSession().getUsername());
     }
 }

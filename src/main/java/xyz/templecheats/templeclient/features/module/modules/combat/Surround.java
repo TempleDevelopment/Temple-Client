@@ -18,8 +18,14 @@ import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.time.TimerUtil;
 
-
 public class Surround extends Module {
+    /**
+     * Setings
+     */
+    private final BooleanSetting disableOnJump = new BooleanSetting("Disable On Jump", this, false);
+    private final BooleanSetting strictDir = new BooleanSetting("Strict Dir", this, false);
+    private final DoubleSetting placeDelay = new DoubleSetting("Place Delay", this, 0d, 150d, 10d);
+
     /**
      * Variables
      */
@@ -27,21 +33,18 @@ public class Surround extends Module {
     private EnumFacing placeFace;
     private TimerUtil timer = new TimerUtil();
 
-    /**
-     * Setings
-     */
-    private final BooleanSetting strictDir = new BooleanSetting("Strict Dir", this, false);
-    private final DoubleSetting placeDelay = new DoubleSetting("Place Delay", this, 0d, 150d, 10d);
-
     public Surround() {
-        super("Surround", "Surrounds you with blocks", Keyboard.KEY_NONE, Category.Combat);
+        super("Surround", "Automatically surrounds your feet with obsidian", Keyboard.KEY_NONE, Category.Combat);
 
-        registerSettings(strictDir, placeDelay);
+        registerSettings(disableOnJump, strictDir, placeDelay);
     }
-
 
     @Listener
     public void onMotion(MotionEvent event) {
+        if (disableOnJump.booleanValue() && mc.player.motionY > 0) {
+            this.disable();
+            return;
+        }
         final EnumHand placeHand;
         int newSlot = -1;
         int oldSlot = mc.player.inventory.currentItem;
@@ -71,7 +74,7 @@ public class Surround extends Module {
             case PRE:
                 final BlockPos playerPos = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
 
-                for (EnumFacing direction : EnumFacing.values()) {
+                for (EnumFacing direction: EnumFacing.values()) {
                     if (direction == EnumFacing.UP || direction == EnumFacing.DOWN) {
                         continue;
                     }
@@ -82,7 +85,7 @@ public class Surround extends Module {
                         continue;
                     }
 
-                    for (EnumFacing supportDir : EnumFacing.values()) {
+                    for (EnumFacing supportDir: EnumFacing.values()) {
                         final BlockPos supportPos = targetPos.offset(supportDir);
 
                         if (this.isSupportBlock(supportPos, supportDir.getOpposite())) {
@@ -92,7 +95,7 @@ public class Surround extends Module {
                         }
 
                         if (this.canPlaceBlock(supportPos)) {
-                            for (EnumFacing extendDir : EnumFacing.values()) {
+                            for (EnumFacing extendDir: EnumFacing.values()) {
                                 final BlockPos extendPos = supportPos.offset(extendDir);
 
                                 if (this.isSupportBlock(extendPos, extendDir.getOpposite())) {

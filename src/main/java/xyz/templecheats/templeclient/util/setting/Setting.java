@@ -1,8 +1,10 @@
 package xyz.templecheats.templeclient.util.setting;
 
 import com.google.gson.JsonObject;
+import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.Item;
+import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.buttons.Button;
 
-public abstract class Setting<T> {
+public abstract class Setting < T > {
     public final String name;
     public final SettingHolder parent;
     public boolean visible;
@@ -18,6 +20,6 @@ public abstract class Setting<T> {
     public abstract void serialize(JsonObject jsonObject);
     public abstract void deserialize(JsonObject jsonObject);
 
-    public abstract xyz.templecheats.templeclient.features.gui.clickgui.basic.Item createBasicButton(xyz.templecheats.templeclient.features.gui.clickgui.basic.Button parent);
-    public abstract xyz.templecheats.templeclient.features.gui.clickgui.csgo.Item createCsgoButton(xyz.templecheats.templeclient.features.gui.clickgui.csgo.Button parent);
+    public abstract Item createBasicButton(Button parent);
+    public abstract xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.Item createCsgoButton(xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.Button parent);
 }

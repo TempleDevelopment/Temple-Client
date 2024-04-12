@@ -11,7 +11,7 @@ public class CommandManager {
         commandInit();
     }
 
-    private final Map<String, Command> commands = new HashMap<>();
+    private final Map < String, Command > commands = new HashMap < > ();
 
     public void registerCommand(Command command) {
         commands.put(command.getName(), command);
@@ -34,5 +34,6 @@ public class CommandManager {
         registerCommand(new FriendCommand());
         registerCommand(new HelpCommand());
         registerCommand(new IpCommand());
+        registerCommand(new NameMcCommand());
     }
 }

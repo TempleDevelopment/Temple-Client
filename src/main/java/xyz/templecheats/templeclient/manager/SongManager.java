@@ -14,7 +14,7 @@ import java.util.List;
 
 public class SongManager implements Globals {
 
-    private final List<ISound> songs = Arrays.asList(
+    private final List < ISound > songs = Arrays.asList(
             Templeos.sound
     );
 

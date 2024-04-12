@@ -12,10 +12,7 @@ import xyz.templecheats.templeclient.manager.ModuleManager;
 import xyz.templecheats.templeclient.util.friend.Friend;
 import xyz.templecheats.templeclient.util.setting.Setting;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,12 +24,15 @@ public class ConfigManager {
     private final File modulesDirectory;
     private final File hudElementsDirectory;
     private final File friendsDirectory;
+    private File altsDirectory;
+    private File altsFile;
 
     public ConfigManager() {
         this.mainDirectory = new File(System.getProperty("user.dir") + File.separator + "Temple Client");
         this.modulesDirectory = new File(this.mainDirectory, "Modules");
         this.hudElementsDirectory = new File(this.mainDirectory, "Hud Elements");
         this.friendsDirectory = new File(this.mainDirectory, "Friends");
+        this.altsDirectory = new File(this.mainDirectory, "Alts");
 
         if (!this.modulesDirectory.exists()) {
             this.modulesDirectory.mkdirs();
@@ -45,6 +45,11 @@ public class ConfigManager {
         if (!this.friendsDirectory.exists()) {
             this.friendsDirectory.mkdirs();
         }
+
+        if (!this.altsDirectory.exists()) {
+            this.altsDirectory.mkdirs();
+        }
+        this.altsFile = new File(this.altsDirectory, "alt_accounts.json");
     }
 
     public void saveAll() {
@@ -62,24 +67,24 @@ public class ConfigManager {
     private void saveModules() {
 
         //iterate through each module to save its config
-        for (Module module : ModuleManager.getModules()) {
+        for (Module module: ModuleManager.getModules()) {
 
             //file that the config will be saved to
             final File moduleConfigFile = new File(this.modulesDirectory, module.getName() + ".json");
 
-            //json object that will store properties of the module
+            //json object that will store panels of the module
             final JsonObject moduleObject = new JsonObject();
 
-            //add properties
+            //add panels
             moduleObject.addProperty("toggled", module.isToggled());
             moduleObject.addProperty("key", module.getKey());
 
             //add settings
-            final List<Setting<?>> settings = TempleClient.settingsManager.getSettingsByMod(module);
+            final List < Setting < ? >> settings = TempleClient.settingsManager.getSettingsByMod(module);
             if (!settings.isEmpty()) {
                 final JsonObject settingsObject = new JsonObject();
 
-                for (Setting<?> setting : settings) {
+                for (Setting < ? > setting : settings) {
                     setting.serialize(settingsObject);
                 }
 
@@ -100,7 +105,7 @@ public class ConfigManager {
 
     private void loadModules() {
 
-        for (Module module : ModuleManager.getModules()) {
+        for (Module module: ModuleManager.getModules()) {
 
             //file that the config was saved to
             final File moduleConfigFile = new File(this.modulesDirectory, module.getName() + ".json");
@@ -118,14 +123,14 @@ public class ConfigManager {
                 //get json object from file
                 final JsonObject moduleObject = GSON.fromJson(jsonReader, JsonObject.class);
 
-                //deserialize properties
+                //deserialize panels
                 module.setToggled(moduleObject.get("toggled").getAsBoolean());
                 module.setKey(moduleObject.get("key").getAsInt());
 
                 //deserialize settings
                 if (moduleObject.has("settings")) {
                     final JsonObject settingsObject = moduleObject.get("settings").getAsJsonObject();
-                    for (Setting<?> setting : TempleClient.settingsManager.getSettingsByMod(module)) {
+                    for (Setting < ? > setting : TempleClient.settingsManager.getSettingsByMod(module)) {
                         if (!settingsObject.has(setting.name)) continue;
 
                         setting.deserialize(settingsObject);
@@ -140,26 +145,26 @@ public class ConfigManager {
 
     private void saveHud() {
 
-        for (HUD.HudElement element : HUD.INSTANCE.getHudElements()) {
+        for (HUD.HudElement element: HUD.INSTANCE.getHudElements()) {
 
             //file that the config will be saved to
             final File hudElementConfigFile = new File(this.hudElementsDirectory, element.getName() + ".json");
 
-            //json object that will store properties of the module
+            //json object that will store panels of the module
             final JsonObject hudElementObject = new JsonObject();
 
-            //add properties
+            //add panels
             hudElementObject.addProperty("enabled", element.isEnabled());
             hudElementObject.addProperty("x", element.getX());
             hudElementObject.addProperty("y", element.getY());
 
             //add settings
-            final List<Setting<?>> settings = TempleClient.settingsManager.getSettingsByMod(element);
+            final List < Setting < ? >> settings = TempleClient.settingsManager.getSettingsByMod(element);
             if (!settings.isEmpty()) {
                 //json object just for settings
                 final JsonObject settingsObject = new JsonObject();
 
-                for (Setting<?> setting : settings) {
+                for (Setting < ? > setting : settings) {
                     setting.serialize(settingsObject);
                 }
 
@@ -179,7 +184,7 @@ public class ConfigManager {
     }
 
     private void loadHud() {
-        for (HUD.HudElement element : HUD.INSTANCE.getHudElements()) {
+        for (HUD.HudElement element: HUD.INSTANCE.getHudElements()) {
 
             //file that the config was saved to
             final File hudElementConfigFile = new File(this.hudElementsDirectory, element.getName() + ".json");
@@ -197,7 +202,7 @@ public class ConfigManager {
                 //get json object from file
                 final JsonObject hudElementObject = GSON.fromJson(jsonReader, JsonObject.class);
 
-                //deserialize properties
+                //deserialize panels
                 element.setEnabled(hudElementObject.get("enabled").getAsBoolean());
                 element.setX(hudElementObject.get("x").getAsDouble());
                 element.setY(hudElementObject.get("y").getAsDouble());
@@ -205,7 +210,7 @@ public class ConfigManager {
                 //deserialize settings
                 if (hudElementObject.has("settings")) {
                     final JsonObject settingsObject = hudElementObject.get("settings").getAsJsonObject();
-                    for (Setting<?> setting : TempleClient.settingsManager.getSettingsByMod(element)) {
+                    for (Setting < ? > setting : TempleClient.settingsManager.getSettingsByMod(element)) {
                         if (!settingsObject.has(setting.name)) continue;
 
                         setting.deserialize(settingsObject);
@@ -221,8 +226,8 @@ public class ConfigManager {
     private void saveFriends() {
         final File friendsFile = new File(this.friendsDirectory, "Friends.json");
 
-        final List<String> friendNames = new ArrayList<>();
-        for (Friend friend : TempleClient.friendManager.getFriends()) {
+        final List < String > friendNames = new ArrayList < > ();
+        for (Friend friend: TempleClient.friendManager.getFriends()) {
             friendNames.add(friend.getName());
         }
 
@@ -247,15 +252,31 @@ public class ConfigManager {
             final FileReader fileReader = new FileReader(friendsFile);
             final JsonReader jsonReader = GSON.newJsonReader(fileReader);
 
-            final List<String> friendNames = GSON.fromJson(jsonReader, new TypeToken<List<String>>() {
-            }.getType());
+            final List < String > friendNames = GSON.fromJson(jsonReader, new TypeToken < List < String >> () {}.getType());
 
-            for (String name : friendNames) {
+            for (String name: friendNames) {
                 TempleClient.friendManager.addFriend(name);
             }
         } catch (Throwable t) {
             System.err.println("Could not load friends!");
             t.printStackTrace();
+        }
+    }
+    public List<String> loadAlts() {
+        if (!altsFile.exists()) return new ArrayList<>();
+        try (Reader reader = new FileReader(altsFile)) {
+            return GSON.fromJson(reader, new TypeToken<List<String>>() {}.getType());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
+    public void saveAlts(List<String> alts) {
+        try (Writer writer = new FileWriter(altsFile)) {
+            GSON.toJson(alts, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

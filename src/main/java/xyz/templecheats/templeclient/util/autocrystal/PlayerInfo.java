@@ -32,7 +32,7 @@ public class PlayerInfo {
         this.hasResistance = entity.isPotionActive(RESISTANCE);
 
         boolean i = false;
-        for (ItemStack stack : entity.getArmorInventoryList()) {
+        for (ItemStack stack: entity.getArmorInventoryList()) {
             if ((1.0f - ((float) stack.getItemDamage() / (float) stack.getMaxDamage())) < armorPercent) {
                 i = true;
                 break;

@@ -9,12 +9,18 @@ import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 
 public class AutoDisconnect extends Module {
+    /*
+     * Settings
+     */
     private final IntSetting healthThreshold = new IntSetting("Health", this, 1, 20, 10);
 
+    /*
+     * Variables
+     */
     private boolean shouldDisconnect = false;
 
     public AutoDisconnect() {
-        super("AutoDisconnect","Automatically disconnects when health is low enough", Keyboard.KEY_NONE, Category.Combat);
+        super("AutoDisconnect", "Automatically logs you out when you have low health", Keyboard.KEY_NONE, Category.Combat);
         registerSettings(healthThreshold);
     }
 

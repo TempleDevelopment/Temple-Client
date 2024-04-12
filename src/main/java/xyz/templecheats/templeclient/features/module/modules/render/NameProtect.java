@@ -8,7 +8,7 @@ import xyz.templecheats.templeclient.features.module.Module;
 
 public class NameProtect extends Module {
     public NameProtect() {
-        super("NameProtect","Hides player names", Keyboard.KEY_NONE, Category.Render);
+        super("NameProtect", "Hides player names", Keyboard.KEY_NONE, Category.Render);
     }
 
     @SubscribeEvent
@@ -16,7 +16,6 @@ public class NameProtect extends Module {
         if (isEnabled() && event.getEntity() != null) {
             EntityLivingBase entity = event.getEntity();
 
-            // Check if the entity is a player and hide their name tag
             if (entity instanceof net.minecraft.entity.player.EntityPlayer) {
                 event.setCanceled(true);
             }

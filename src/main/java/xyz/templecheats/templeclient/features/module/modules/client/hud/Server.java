@@ -2,9 +2,10 @@ package xyz.templecheats.templeclient.features.module.modules.client.hud;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import xyz.templecheats.templeclient.features.gui.font.FontUtils;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.features.module.modules.client.HUD;
+
+import java.util.Objects;
 
 public class Server extends HUD.HudElement {
     public Server() {
@@ -15,12 +16,12 @@ public class Server extends HUD.HudElement {
     }
 
     @Override
-    protected void renderElement(ScaledResolution sr) {
-        final String serverName = Minecraft.getMinecraft().isSingleplayer() ? "singleplayer" : Minecraft.getMinecraft().getCurrentServerData().serverIP;
+    public void renderElement(ScaledResolution sr) {
+        final String serverName = Minecraft.getMinecraft().isSingleplayer() ? "singleplayer" : Objects.requireNonNull(Minecraft.getMinecraft().getCurrentServerData()).serverIP;
 
-        this.setWidth(FontUtils.getStringWidth(serverName));
-        this.setHeight(FontUtils.getFontHeight());
+        this.setWidth(font.getStringWidth(serverName));
+        this.setHeight(font.getFontHeight());
 
-        FontUtils.drawString(serverName, this.getX(), this.getY(), ClickGUI.INSTANCE.getStartColor(), true);
+        font.drawString(serverName, (float) this.getX(), (float) this.getY(), ClickGUI.INSTANCE.getStartColor().getRGB(), true, 1.0f);
     }
 }

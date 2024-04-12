@@ -14,28 +14,30 @@ import org.lwjgl.opengl.GL11;
 import xyz.templecheats.templeclient.features.module.Module;
 
 public class Hitmarker extends Module {
+	/*
+	 * Variables
+	 */
 	private static final ResourceLocation hitmarkerTexture = new ResourceLocation("textures/icons/hitmarker.png");
 	private int hitmarkerDuration = 0;
-	
+
 	public Hitmarker() {
-		super("Hitmarker","Shows a hit-marker when dealing damage", Keyboard.KEY_NONE, Category.Render);
+		super("Hitmarker", "Hitmarkers from Call of Duty", Keyboard.KEY_NONE, Category.Render);
 	}
 
 	@SubscribeEvent
 	public void onAttackEntity(AttackEntityEvent event) {
-		if(event.getEntityPlayer().equals(mc.player)) {
+		if (event.getEntityPlayer().equals(mc.player)) {
 			this.hitmarkerDuration = 5;
 		}
 	}
 
 	@SubscribeEvent
-
 	public void renderGameOverlay(RenderGameOverlayEvent.Post event) {
-		if(event.getType() != RenderGameOverlayEvent.ElementType.ALL) {
+		if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) {
 			return;
 		}
 
-		if(this.hitmarkerDuration-- > 0) {
+		if (this.hitmarkerDuration--> 0) {
 			ScaledResolution scaledResolution = new ScaledResolution(mc);
 			int centerX = scaledResolution.getScaledWidth() / 2;
 			int centerY = scaledResolution.getScaledHeight() / 2;

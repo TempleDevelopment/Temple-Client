@@ -8,7 +8,7 @@ import xyz.templecheats.templeclient.features.module.Module;
 
 public class AutoWalk extends Module {
     public AutoWalk() {
-        super("AutoWalk","Automatically walks towards the direction your aiming at", Keyboard.KEY_NONE, Category.Movement);
+        super("AutoWalk", "Automatically walks", Keyboard.KEY_NONE, Category.Movement);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class AutoWalk extends Module {
             KeyBinding.setKeyBindState(mc.gameSettings.keyBindForward.getKeyCode(), true);
 
             if (isInWater()) {
-                KeyBinding.setKeyBindState(mc.gameSettings.keyBindJump.getKeyCode(), true); // Swim upwards
+                KeyBinding.setKeyBindState(mc.gameSettings.keyBindJump.getKeyCode(), true);
             } else {
                 KeyBinding.setKeyBindState(mc.gameSettings.keyBindJump.getKeyCode(), false);
             }

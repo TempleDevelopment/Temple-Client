@@ -9,13 +9,13 @@ import xyz.templecheats.templeclient.util.autocrystal.PlayerInfo;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public class ACSubThread implements Callable<CrystalInfo.PlaceInfo> {
+public class ACSubThread implements Callable < CrystalInfo.PlaceInfo > {
     private final ACSettings settings;
 
-    private final List<BlockPos> possibleLocations;
+    private final List < BlockPos > possibleLocations;
     private final PlayerInfo target;
 
-    public ACSubThread(ACSettings setting, List<BlockPos> possibleLocations, PlayerInfo target) {
+    public ACSubThread(ACSettings setting, List < BlockPos > possibleLocations, PlayerInfo target) {
         this.settings = setting;
 
         this.possibleLocations = possibleLocations;

@@ -1,11 +1,13 @@
 package xyz.templecheats.templeclient.features.module.modules.client.hud;
 
 import net.minecraft.client.gui.ScaledResolution;
-import xyz.templecheats.templeclient.features.gui.font.FontUtils;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.features.module.modules.client.HUD;
 
 public class Notifications extends HUD.HudElement {
+    /*
+     * Variables
+     */
     private static String notificationText = "";
     private static long notificationTime;
     private float notificationFade;
@@ -15,7 +17,7 @@ public class Notifications extends HUD.HudElement {
     }
 
     @Override
-    protected void renderElement(ScaledResolution sr) {
+    public void renderElement(ScaledResolution sr) {
         updateFade();
         if (notificationFade > 0) {
             drawNotification(sr);
@@ -40,9 +42,9 @@ public class Notifications extends HUD.HudElement {
 
     private void drawNotification(ScaledResolution sr) {
         final String notification = notificationText;
-        this.setWidth(FontUtils.getStringWidth(notification));
-        this.setHeight(FontUtils.getFontHeight());
+        this.setWidth(font.getStringWidth(notification));
+        this.setHeight(font.getFontHeight());
 
-        FontUtils.drawString(notification, this.getX(), this.getY(), ClickGUI.INSTANCE.getStartColor(), true);
+        font.drawString(notification, this.getX(), this.getY(), ClickGUI.INSTANCE.getStartColor().getRGB(), true, 1.0f);
     }
 }

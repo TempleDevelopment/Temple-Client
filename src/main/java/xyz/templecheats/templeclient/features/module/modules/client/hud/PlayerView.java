@@ -12,7 +12,7 @@ public class PlayerView extends HUD.HudElement {
     }
 
     @Override
-    protected void renderElement(ScaledResolution sr) {
+    public void renderElement(ScaledResolution sr) {
         this.setWidth(40);
         this.setHeight(70);
 

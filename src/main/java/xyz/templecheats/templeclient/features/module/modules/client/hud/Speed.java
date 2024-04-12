@@ -4,11 +4,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
-import xyz.templecheats.templeclient.features.gui.font.FontUtils;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.features.module.modules.client.HUD;
 
 public class Speed extends HUD.HudElement {
+    /*
+     * Variables
+     */
     private Vec3d lastPos = Vec3d.ZERO;
 
     public Speed() {
@@ -16,7 +18,7 @@ public class Speed extends HUD.HudElement {
     }
 
     @Override
-    protected void renderElement(ScaledResolution sr) {
+    public void renderElement(ScaledResolution sr) {
         EntityPlayer player = Minecraft.getMinecraft().player;
         if (player == null) return;
 
@@ -25,10 +27,10 @@ public class Speed extends HUD.HudElement {
         double speedValue = (currentPos.distanceTo(lastTickPos)) * 20;
 
         final String speedText = "Speed ";
-        this.setWidth(FontUtils.getStringWidth(speedText + String.format("%.2f", speedValue)) + 10);
-        this.setHeight(FontUtils.getFontHeight());
+        this.setWidth(font.getStringWidth(speedText + String.format("%.2f", speedValue)) + 10);
+        this.setHeight(font.getFontHeight());
 
-        FontUtils.drawString(speedText, this.getX(), this.getY(), ClickGUI.INSTANCE.getStartColor(), true);
-        FontUtils.drawString(String.format("%.2f", speedValue), this.getX() + FontUtils.getStringWidth(speedText), this.getY(), 0xFFFFFF, true);
+        font.drawString(speedText, (float) this.getX(), (float) this.getY(), ClickGUI.INSTANCE.getStartColor().getRGB(), true, 1.0f);
+        font.drawString(String.format("%.2f", speedValue), (float) (this.getX() + font.getStringWidth(speedText)), (float) this.getY(), 0xFFFFFF, true, 1.0f);
     }
 }

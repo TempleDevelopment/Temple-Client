@@ -1,10 +1,13 @@
 package xyz.templecheats.templeclient.util.setting.impl;
 
 import com.google.gson.JsonObject;
+import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.Item;
+import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.buttons.BooleanButton;
+import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.buttons.Button;
 import xyz.templecheats.templeclient.util.setting.Setting;
 import xyz.templecheats.templeclient.util.setting.SettingHolder;
 
-public class BooleanSetting extends Setting<Boolean> {
+public class BooleanSetting extends Setting < Boolean > {
     private boolean value;
 
     public BooleanSetting(String name, SettingHolder parent, boolean defaultValue) {
@@ -43,12 +46,12 @@ public class BooleanSetting extends Setting<Boolean> {
     }
 
     @Override
-    public xyz.templecheats.templeclient.features.gui.clickgui.basic.Item createBasicButton(xyz.templecheats.templeclient.features.gui.clickgui.basic.Button parent) {
-        return new xyz.templecheats.templeclient.features.gui.clickgui.basic.properties.BooleanButton(this, parent);
+    public Item createBasicButton(Button parent) {
+        return new BooleanButton(this, parent);
     }
 
     @Override
-    public xyz.templecheats.templeclient.features.gui.clickgui.csgo.Item createCsgoButton(xyz.templecheats.templeclient.features.gui.clickgui.csgo.Button parent) {
-        return new xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.BooleanButton(this, parent);
+    public xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.Item createCsgoButton(xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.Button parent) {
+        return new xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.BooleanButton(this, parent);
     }
 }

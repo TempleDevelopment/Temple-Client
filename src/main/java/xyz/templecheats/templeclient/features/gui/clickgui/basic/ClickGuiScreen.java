@@ -1,5 +1,7 @@
 package xyz.templecheats.templeclient.features.gui.clickgui.basic;
 
+import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.Panel;
+import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.buttons.ModuleButton;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.manager.ModuleManager;
 
@@ -16,7 +18,7 @@ public class ClickGuiScreen extends ClientGuiScreen {
                 @Override
                 public void setupItems() {
                     ModuleManager.getModules().forEach(module -> {
-                        if(module.getCategory() == category) {
+                        if(module.getCategory() == category && !module.submodule) {
                             this.addButton(new ModuleButton(module));
                         }
                     });

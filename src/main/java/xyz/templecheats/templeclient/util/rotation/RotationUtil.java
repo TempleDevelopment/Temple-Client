@@ -16,10 +16,13 @@ public class RotationUtil {
 
         double u = MathHelper.sqrt(x * x + z * z);
 
-        float u2 = (float) (MathHelper.atan2(z, x) * (180D / Math.PI) - 90.0F);
-        float u3 = (float) (-MathHelper.atan2(y, u) * (180D / Math.PI));
+        float u2 = (float)(MathHelper.atan2(z, x) * (180D / Math.PI) - 90.0F);
+        float u3 = (float)(-MathHelper.atan2(y, u) * (180D / Math.PI));
 
-        return new float[]{u2, u3};
+        return new float[] {
+                u2,
+                u3
+        };
     }
 
     public static float[] rotations(BlockPos pos) {
@@ -31,10 +34,13 @@ public class RotationUtil {
 
         double u = MathHelper.sqrt(x * x + z * z);
 
-        float u2 = (float) (MathHelper.atan2(z, x) * (180D / Math.PI) - 90.0F);
-        float u3 = (float) (-MathHelper.atan2(y, u) * (180D / Math.PI));
+        float u2 = (float)(MathHelper.atan2(z, x) * (180D / Math.PI) - 90.0F);
+        float u3 = (float)(-MathHelper.atan2(y, u) * (180D / Math.PI));
 
-        return new float[]{u2, u3};
+        return new float[] {
+                u2,
+                u3
+        };
     }
     public static float[] getRotations(EntityLivingBase entity) {
         double x = entity.posX - mc.player.posX;
@@ -43,9 +49,12 @@ public class RotationUtil {
 
         double u = MathHelper.sqrt(x * x + z * z);
 
-        float yaw = (float) (MathHelper.atan2(z, x) * (180D / Math.PI) - 90.0F);
-        float pitch = (float) (-MathHelper.atan2(y, u) * (180D / Math.PI));
+        float yaw = (float)(MathHelper.atan2(z, x) * (180D / Math.PI) - 90.0F);
+        float pitch = (float)(-MathHelper.atan2(y, u) * (180D / Math.PI));
 
-        return new float[]{yaw, pitch};
+        return new float[] {
+                yaw,
+                pitch
+        };
     }
 }

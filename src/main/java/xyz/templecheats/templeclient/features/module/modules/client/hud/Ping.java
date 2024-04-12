@@ -3,7 +3,6 @@ package xyz.templecheats.templeclient.features.module.modules.client.hud;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.network.NetworkPlayerInfo;
-import xyz.templecheats.templeclient.features.gui.font.FontUtils;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.features.module.modules.client.HUD;
 
@@ -13,15 +12,15 @@ public class Ping extends HUD.HudElement {
     }
 
     @Override
-    protected void renderElement(ScaledResolution sr) {
+    public void renderElement(ScaledResolution sr) {
         final String pingText = "Ping ";
         NetworkPlayerInfo playerInfo = Minecraft.getMinecraft().getConnection().getPlayerInfo(Minecraft.getMinecraft().player.getUniqueID());
         final int pingValue = playerInfo == null ? 0 : playerInfo.getResponseTime();
 
-        this.setWidth(FontUtils.getStringWidth(pingText + pingValue));
-        this.setHeight(FontUtils.getFontHeight());
+        this.setWidth(font.getStringWidth(pingText + pingValue));
+        this.setHeight(font.getFontHeight());
 
-        FontUtils.drawString(pingText, this.getX(), this.getY(), ClickGUI.INSTANCE.getStartColor(), true);
-        FontUtils.drawString(String.valueOf(pingValue), this.getX() + FontUtils.getStringWidth(pingText), this.getY(), 0xFFFFFF, true);
+        font.drawString(pingText, this.getX(), this.getY(), ClickGUI.INSTANCE.getStartColor().getRGB(), true, 1.0f);
+        font.drawString(String.valueOf(pingValue), this.getX() + font.getStringWidth(pingText), this.getY(), 0xFFFFFF, true, 1.0f);
     }
 }

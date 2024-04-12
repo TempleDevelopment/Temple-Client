@@ -13,12 +13,14 @@ import xyz.templecheats.templeclient.features.module.Module;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 public final class Blink extends Module {
-
-    private final Queue<Packet<?>> packets = new ConcurrentLinkedQueue<>();
+    /*
+     * Variables
+     */
+    private final Queue < Packet < ? >> packets = new ConcurrentLinkedQueue < > ();
     private EntityOtherPlayerMP entity;
 
     public Blink() {
-        super("Blink","Holds packets until disabled", Keyboard.KEY_NONE, Category.Player);
+        super("Blink", "Holds packets until disabled", Keyboard.KEY_NONE, Category.Player);
     }
 
     @Override
@@ -35,11 +37,10 @@ public final class Blink extends Module {
         }
     }
 
-
     @Listener
     public void sendPacket(PacketEvent.Send event) {
         if (event.getStage() == EventStageable.EventStage.PRE) {
-            final Packet<?> packet = event.getPacket();
+            final Packet < ? > packet = event.getPacket();
 
             if (Minecraft.getMinecraft().world == null || Minecraft.getMinecraft().isSingleplayer()) {
                 return;
@@ -62,7 +63,7 @@ public final class Blink extends Module {
                 Minecraft.getMinecraft().world.removeEntity(this.entity);
             }
             if (!this.packets.isEmpty()) {
-                for (Packet<?> packet : this.packets) {
+                for (Packet < ? > packet : this.packets) {
                     Minecraft.getMinecraft().player.connection.sendPacket(packet);
                 }
                 this.packets.clear();

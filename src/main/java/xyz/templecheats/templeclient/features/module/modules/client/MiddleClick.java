@@ -11,11 +11,13 @@ import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.friend.Friend;
 
 public class MiddleClick extends Module {
-
+    /*
+     * Variables
+     */
     private boolean isButtonPressed = false;
 
     public MiddleClick() {
-        super("MiddleClick", "Adds a player to your friend list when you middle click them", Keyboard.KEY_NONE, Category.Client);
+        super("MiddleClick", "Actions for middle clicking", Keyboard.KEY_NONE, Category.Client);
     }
 
     @Override

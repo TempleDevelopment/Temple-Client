@@ -3,6 +3,8 @@ package xyz.templecheats.templeclient.features.gui.clickgui.basic;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Mouse;
+import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.Panel;
+import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.Item;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 
@@ -49,7 +51,7 @@ public class ClientGuiScreen extends GuiScreen {
 //    @Override
 //    public void drawScreen(int unscaledMouseX, int unscaledMouseY, float partialTicks) {
 //        this.drawDefaultBackground();
-//        this.panels.forEach(panel -> panel.drawScreen(mouseX, mouseY, partialTicks));
+//        this.panels.forEach(panels -> panels.drawScreen(mouseX, mouseY, partialTicks));
 //    }
 
     @Override

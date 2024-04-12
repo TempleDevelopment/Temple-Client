@@ -8,8 +8,10 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.gui.clickgui.hud.HudEditorScreen;
+import xyz.templecheats.templeclient.features.gui.font.CFont;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.hud.*;
+import xyz.templecheats.templeclient.features.module.modules.client.hud.notification.NotificationsRewrite;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.setting.SettingHolder;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
@@ -33,22 +35,24 @@ public class HUD extends Module {
     /**
      * Variables
      */
-    private final List<HudElement> hudElements = new ArrayList<>();
+    private final List < HudElement > hudElements = new ArrayList < > ();
 
     public HUD() {
-        super("HUD", "Shows HUD Variants in your HUD", Keyboard.KEY_GRAVE, Category.Client);
+        super("HUD", "In-Game Heads up Display", Keyboard.KEY_GRAVE, Category.Client);
         INSTANCE = this;
 
-        this.registerSettings(hudScale, clamping);
+        this.registerSettings(clamping, hudScale);
 
         this.setToggled(true);
 
         this.hudElements.add(new Armor());
         this.hudElements.add(new Coords());
+        this.hudElements.add(new Durability());
         this.hudElements.add(new FPS());
         this.hudElements.add(new Friends());
         this.hudElements.add(new Inventory());
         this.hudElements.add(new ModuleList());
+        this.hudElements.add(new NotificationsRewrite());
         this.hudElements.add(new Notifications());
         this.hudElements.add(new Ping());
         this.hudElements.add(new PlayerView());
@@ -62,27 +66,28 @@ public class HUD extends Module {
 
     @SubscribeEvent
     public void onRender(RenderGameOverlayEvent.Post event) {
-        if(event.getType() != RenderGameOverlayEvent.ElementType.TEXT || Panic.isPanic) {
+        if (event.getType() != RenderGameOverlayEvent.ElementType.TEXT || Panic.isPanic) {
             return;
         }
 
         GlStateManager.pushMatrix();
         GlStateManager.scale(this.hudScale.doubleValue(), this.hudScale.doubleValue(), 0);
         this.hudElements.forEach(element -> {
-            if(!element.isEnabled()) {
+            if (!element.isEnabled()) {
                 return;
             }
 
-            if(mc.currentScreen instanceof HudEditorScreen && element.getWidth() > -1 && element.getHeight() > -1) {
-                RenderUtil.drawRect((float) element.getX(), (float) element.getY(), (float) (element.getX() + element.getWidth()), (float) (element.getY() + element.getHeight()), element.isDragging() ? 0x802D2D2D : 0x80000000);
+            if (mc.currentScreen instanceof HudEditorScreen && element.getWidth() > -1 && element.getHeight() > -1) {
+                RenderUtil.drawRect((float) element.getX(), (float) element.getY(), (float)(element.getX() + element.getWidth()), (float)(element.getY() + element.getHeight()), element.isDragging() ? 0x802D2D2D : 0x80000000);
             }
 
             final ScaledResolution sr = new ScaledResolution(mc);
             final double screenWidth = sr.getScaledWidth() / this.hudScale.doubleValue();
             final double screenHeight = sr.getScaledHeight() / this.hudScale.doubleValue();
 
-            if(this.clamping.booleanValue()) {
-                element.setX(MathHelper.clamp(element.getX(), 0, screenWidth - element.getWidth()));
+            if (this.clamping.booleanValue()) {
+                // TODO load this shit from coordinates config
+                element.setX(MathHelper.clamp(element.getX(), 0, screenWidth - element.getWidth())); // person coding this is retarded af
                 element.setY(MathHelper.clamp(element.getY(), 0, screenHeight - element.getHeight()));
             }
 
@@ -93,13 +98,14 @@ public class HUD extends Module {
         GlStateManager.popMatrix();
     }
 
-    public List<HudElement> getHudElements() {
+    public List < HudElement > getHudElements() {
         return this.hudElements;
     }
 
     public static abstract class HudElement extends SettingHolder {
         protected static final Minecraft mc = Minecraft.getMinecraft();
         private final String description;
+        public final CFont font = FontSettings.INSTANCE.getFont().setSize(18);
         private double x = 100, y = 100, width = -1, height = -1;
         private boolean enabled, dragging, leftOfCenter, topOfCenter;
 
@@ -108,7 +114,7 @@ public class HUD extends Module {
             this.description = description;
         }
 
-        protected abstract void renderElement(ScaledResolution sr);
+        public abstract void renderElement(ScaledResolution sr);
 
         public String getDescription() {
             return this.description;
@@ -135,7 +141,7 @@ public class HUD extends Module {
         }
 
         public void setWidth(double width) {
-            if(!this.leftOfCenter && width != this.width && width >= 0 && this.width >= 0) {
+            if (!this.leftOfCenter && width != this.width && width >= 0 && this.width >= 0) {
                 final double screenWidth = new ScaledResolution(mc).getScaledWidth() / ClickGUI.INSTANCE.scale.doubleValue();
 
                 final double newWidth = Math.max(width, 0);
@@ -152,7 +158,7 @@ public class HUD extends Module {
         }
 
         public void setHeight(double height) {
-            if(!this.topOfCenter && height != this.height && height >= 0 && this.height >= 0) {
+            if (!this.topOfCenter && height != this.height && height >= 0 && this.height >= 0) {
                 final double screenHeight = new ScaledResolution(mc).getScaledHeight() / ClickGUI.INSTANCE.scale.doubleValue();
 
                 final double newHeight = Math.max(height, 0);

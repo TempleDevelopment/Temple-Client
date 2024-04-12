@@ -1,10 +1,13 @@
 package xyz.templecheats.templeclient.util.setting.impl;
 
 import com.google.gson.JsonObject;
+import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.Item;
+import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.buttons.Button;
+import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.buttons.EnumButton;
 import xyz.templecheats.templeclient.util.setting.Setting;
 import xyz.templecheats.templeclient.util.setting.SettingHolder;
 
-public class EnumSetting<T extends Enum<T>> extends Setting<T> {
+public class EnumSetting < T extends Enum < T >> extends Setting < T > {
     private T value;
 
     public EnumSetting(String name, SettingHolder parent, T defaultValue) {
@@ -42,7 +45,7 @@ public class EnumSetting<T extends Enum<T>> extends Setting<T> {
     @Override
     public void deserialize(JsonObject jsonObject) {
         String valueName = jsonObject.getAsJsonPrimitive(this.name).getAsString();
-        for (T enumValue : this.value.getDeclaringClass().getEnumConstants()) {
+        for (T enumValue: this.value.getDeclaringClass().getEnumConstants()) {
             if (enumValue.name().equals(valueName)) {
                 this.value = enumValue;
                 return;
@@ -51,12 +54,12 @@ public class EnumSetting<T extends Enum<T>> extends Setting<T> {
     }
 
     @Override
-    public xyz.templecheats.templeclient.features.gui.clickgui.basic.Item createBasicButton(xyz.templecheats.templeclient.features.gui.clickgui.basic.Button parent) {
-        return new xyz.templecheats.templeclient.features.gui.clickgui.basic.properties.EnumButton<>(this, parent);
+    public Item createBasicButton(Button parent) {
+        return new EnumButton< >(this, parent);
     }
 
     @Override
-    public xyz.templecheats.templeclient.features.gui.clickgui.csgo.Item createCsgoButton(xyz.templecheats.templeclient.features.gui.clickgui.csgo.Button parent) {
-        return new xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.EnumButton<>(this, parent);
+    public xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.Item createCsgoButton(xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.Button parent) {
+        return new xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.enumB.EnumButton< >(this, parent);
     }
 }

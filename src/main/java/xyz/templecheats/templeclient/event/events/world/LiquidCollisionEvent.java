@@ -8,19 +8,19 @@ import xyz.templecheats.templeclient.event.EventStageable;
 public class LiquidCollisionEvent extends EventStageable {
     private AxisAlignedBB bb = BlockLiquid.NULL_AABB;
     private final BlockPos pos;
-    
+
     public LiquidCollisionEvent(BlockPos pos) {
         this.pos = pos;
     }
-    
+
     public AxisAlignedBB getBoundingBox() {
         return bb;
     }
-    
+
     public void setBoundingBox(AxisAlignedBB bb) {
         this.bb = bb;
     }
-    
+
     public BlockPos getBlockPos() {
         return pos;
     }

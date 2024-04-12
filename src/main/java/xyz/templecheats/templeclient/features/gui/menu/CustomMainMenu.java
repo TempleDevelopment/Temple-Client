@@ -40,7 +40,7 @@ public class CustomMainMenu extends GuiMainMenu {
         String username = session.getUsername();
         drawString(this.fontRenderer, "Logged in as: " + username, 0, 0, new Color(0xFFFFFF).getRGB());
 
-        drawString(this.fontRenderer, "Made by PhilipPanda", 0, 10,  new Color(0xFFADD8E6).getRGB());
+        drawString(this.fontRenderer, "Made by PhilipPanda", 0, 10, new Color(0xFFADD8E6).getRGB());
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(IMAGE_LOCATION);
         int imageWidth = 30;

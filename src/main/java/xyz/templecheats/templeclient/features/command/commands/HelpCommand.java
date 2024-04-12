@@ -17,11 +17,12 @@ public class HelpCommand extends Command {
 
         Minecraft.getMinecraft().player.sendMessage(new TextComponentString(templePrefix + "Available Commands:"));
 
-        Minecraft.getMinecraft().player.sendMessage(new TextComponentString(commandPrefix + ".bind - Binds a module to a key (ex: .bind freecam r)"));
+        Minecraft.getMinecraft().player.sendMessage(new TextComponentString(commandPrefix + ".bind - Binds a module to a key"));
         Minecraft.getMinecraft().player.sendMessage(new TextComponentString(commandPrefix + ".coords - Copies your coordinates to your clipboard"));
         Minecraft.getMinecraft().player.sendMessage(new TextComponentString(commandPrefix + ".friend - Adds, removes & lists your friends"));
         Minecraft.getMinecraft().player.sendMessage(new TextComponentString(commandPrefix + ".help - Shows this help message"));
         Minecraft.getMinecraft().player.sendMessage(new TextComponentString(commandPrefix + ".ip - Copies current server ip to your clipboard"));
         Minecraft.getMinecraft().player.sendMessage(new TextComponentString(commandPrefix + ".clickgui - Adjusts the scale of the ClickGUI."));
+        Minecraft.getMinecraft().player.sendMessage(new TextComponentString(commandPrefix + ".namemc - Opens the NameMC profile of a player"));
     }
 }

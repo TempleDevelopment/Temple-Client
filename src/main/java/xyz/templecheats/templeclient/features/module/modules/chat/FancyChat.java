@@ -16,25 +16,30 @@ public class FancyChat extends Module {
     private final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.Uwu);
 
     public FancyChat() {
-        super("FancyChat", "Translates chat to different languages", 0, Category.Chat);
+        super("FancyChat", "Makes your text look gamer", 0, Category.Chat);
 
         registerSettings(mode);
     }
 
     @SubscribeEvent
     public void onChat(ClientChatEvent event) {
+        String message = event.getMessage();
+        if (message.startsWith("/") || message.startsWith(".")) {
+            return;
+        }
+
         switch (mode.value()) {
             case Uwu:
-                event.setMessage(translateToUwu(event.getMessage()));
+                event.setMessage(translateToUwu(message));
                 break;
             case MorseCode:
-                event.setMessage(translateToMorse(event.getMessage()));
+                event.setMessage(translateToMorse(message));
                 break;
             case Reverse:
-                event.setMessage(translateToReverse(event.getMessage()));
+                event.setMessage(translateToReverse(message));
                 break;
             case Byte:
-                event.setMessage(translateToByte(event.getMessage()));
+                event.setMessage(translateToByte(message));
                 break;
         }
     }

@@ -37,17 +37,16 @@ public class Snow {
     }
 
     public void drawSnow(ScaledResolution res) {
-        Gui.drawRect(getX(), getY(), getX()+ size, getY()+ size, 0x99C9C5C5);
+        Gui.drawRect(getX(), getY(), getX() + size, getY() + size, 0x99C9C5C5);
 
         setY(getY() + speed);
 
         if (getY() > res.getScaledHeight() + 10 || getY() < -10) {
-            setY(-10);
-
             Random random = new Random();
-
-            speed = random.nextInt(10) + 1;
-            size = random.nextInt(4) + 1;
+            setY(-10);
+            setX(random.nextInt(res.getScaledWidth()));
+            speed = random.nextInt(3) + 1;
+            size = random.nextInt(2) + 1;
         }
     }
 }

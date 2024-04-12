@@ -13,10 +13,13 @@ import xyz.templecheats.templeclient.features.module.Module;
 import java.util.Random;
 
 public class Nuker extends Module {
+    /*
+     * Variables
+     */
     private static final Random random = new Random();
 
     public Nuker() {
-        super("Nuker","Automatically mines blocks within reach", Keyboard.KEY_NONE, Category.World);
+        super("Nuker", "Destroy blocks around you", Keyboard.KEY_NONE, Category.World);
     }
 
     @SubscribeEvent
@@ -38,7 +41,7 @@ public class Nuker extends Module {
             BlockPos targetPos = playerPos.add(offsetX, offsetY, offsetZ);
 
             IBlockState state = mc.world.getBlockState(targetPos);
-            mc.playerController.onPlayerDamageBlock(targetPos, EnumFacing.UP); // You can adjust EnumFacing as needed
+            mc.playerController.onPlayerDamageBlock(targetPos, EnumFacing.UP);
             mc.player.swingArm(EnumHand.MAIN_HAND);
         }
     }

@@ -12,7 +12,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class Particle {
     private final Vector2f pos;
     private static final Random random = new Random();
-    private float size;
+    private final float size;
     private final Vector2f velocity;
 
     public Particle(Vector2f velocity, float x, float y, float size) {
@@ -56,26 +56,26 @@ public class Particle {
             this.pos.setX(0.0f);
         }
         if (this.pos.getX() < 0.0f) {
-            this.pos.setX((float)Display.getWidth());
+            this.pos.setX((float) Display.getWidth());
         }
         if (this.pos.getY() > Display.getHeight()) {
             this.pos.setY(0.0f);
         }
         if (this.pos.getY() < 0.0f) {
-            this.pos.setY((float)Display.getHeight());
+            this.pos.setY((float) Display.getHeight());
         }
     }
 
     public static class Util {
 
-        private final List<Particle> particles;
+        private final List < Particle > particles;
 
-        public Util(int in) {
-            particles = new ArrayList<>();
+        public Util(int in ) {
+            particles = new ArrayList < > ();
             addParticle(in);
         }
 
-        public void addParticle(int in) {
+        public void addParticle(int in ) {
             for (int i = 0; i < in; ++i) particles.add(getParticle());
         }
 
@@ -94,7 +94,7 @@ public class Particle {
 
             glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-            for (Particle particle : particles) {
+            for (Particle particle: particles) {
                 particle.setup(2, 0.1f);
                 glPointSize(particle.size);
                 glBegin(GL_POINTS);

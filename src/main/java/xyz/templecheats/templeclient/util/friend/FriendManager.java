@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FriendManager {
-    private List<Friend> friends;
+    private List < Friend > friends;
 
     public FriendManager() {
-        this.friends = new ArrayList<>();
+        this.friends = new ArrayList < > ();
     }
 
     public void addFriend(String name) {
@@ -22,7 +22,7 @@ public class FriendManager {
         return this.friends.stream().anyMatch(friend -> friend.getName().equalsIgnoreCase(name));
     }
 
-    public List<Friend> getFriends() {
+    public List < Friend > getFriends() {
         return this.friends;
     }
 }

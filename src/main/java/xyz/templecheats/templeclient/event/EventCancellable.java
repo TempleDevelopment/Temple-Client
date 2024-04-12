@@ -3,8 +3,7 @@ public class EventCancellable extends EventStageable {
 
     private boolean canceled;
 
-    public EventCancellable() {
-    }
+    public EventCancellable() {}
 
     public EventCancellable(EventStage stage) {
         super(stage);

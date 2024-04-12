@@ -9,11 +9,13 @@ import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 
 public class Log4jAlert extends Module {
-
+    /*
+     * Settings
+     */
     private final BooleanSetting DisconnectOnReceive = new BooleanSetting("Disconnect", this, false);
 
     public Log4jAlert() {
-        super("Log4jAlert", "Alerts you when someone sends a log4j exploit in chat", Keyboard.KEY_NONE, Category.Miscelleaneous);
+        super("Log4jAlert", "Alerts you when someone sends a log4j exploit in chat", Keyboard.KEY_NONE, Category.Misc);
         this.registerSettings(DisconnectOnReceive);
     }
 

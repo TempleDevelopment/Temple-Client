@@ -5,11 +5,18 @@ import net.minecraft.inventory.ClickType;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.module.Module;
+import xyz.templecheats.templeclient.manager.ModuleManager;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 
 public class AutoTotem extends Module {
+    /*
+     * Settings
+     */
     private final IntSetting healthThreshold = new IntSetting("Health", this, 1, 20, 10);
 
+    /*
+     * Variables
+     */
     private int delay = 0;
     private int totems;
     private int totemsOffHand;
@@ -17,7 +24,7 @@ public class AutoTotem extends Module {
     private ItemStack originalOffhandItem = ItemStack.EMPTY;
 
     public AutoTotem() {
-        super("AutoTotem","Automatically places a totem in your offhand", Keyboard.KEY_NONE, Category.Combat);
+        super("AutoTotem", "Automatically places a totem in your offhand", Keyboard.KEY_NONE, Category.Combat);
 
         registerSettings(healthThreshold);
     }
@@ -73,5 +80,10 @@ public class AutoTotem extends Module {
     public void onEnable() {
         totemSwitchDelay = 0;
         originalOffhandItem = ItemStack.EMPTY;
+        super.onEnable();
+        Offhand offhand = (Offhand) ModuleManager.getModuleByName("Offhand");
+        if (offhand.isEnabled()) {
+            offhand.disable();
+        }
     }
 }

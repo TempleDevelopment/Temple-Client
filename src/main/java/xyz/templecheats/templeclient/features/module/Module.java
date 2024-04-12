@@ -4,14 +4,27 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.features.module.modules.client.hud.Notifications;
+import xyz.templecheats.templeclient.features.module.modules.client.hud.notification.NotificationType;
+import xyz.templecheats.templeclient.features.module.modules.client.hud.notification.NotificationsRewrite;
+import xyz.templecheats.templeclient.util.color.impl.GradientShader;
 import xyz.templecheats.templeclient.util.setting.SettingHolder;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+
 public class Module extends SettingHolder {
-    private final String description;
-    public final Category category;
-    public boolean toggled;
-    public int KeyCode;
+    /*
+     * Variables
+     */
     public static final Minecraft mc = Minecraft.getMinecraft();
+    public ArrayList<Module> submodules = new ArrayList<>();
+    private final String description;
+    public Category category;
+    public int KeyCode;
+    public boolean enableByDefault;
+    public boolean toggled;
+    public boolean submodule = false;
+    public boolean parent = false;
     private boolean queueEnable;
 
     public Module(String name, String description, int keyCode, Category c) {
@@ -19,6 +32,33 @@ public class Module extends SettingHolder {
         this.description = description;
         this.KeyCode = keyCode;
         this.category = c;
+    }
+
+    public Module(String name, String description, Category c, boolean parent) {
+        super(name);
+        this.description = description;
+        this.category = c;
+        this.parent = parent;
+    }
+
+    public Module(String name, String description, int keyCode, Category c, boolean submodule) {
+        super(name);
+        this.description = description;
+        this.KeyCode = keyCode;
+        this.category = c;
+        this.submodule = submodule;
+
+        for (Class<? extends Module> clazz : modules()) {
+            try {
+                Module sub = clazz.getConstructor().newInstance();
+
+                sub.category = category;
+                submodules.add(sub);
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                     NoSuchMethodException e) {
+                TempleClient.logger.error("Cant create new instance of submodule of " + name + " module!", e, e.getCause());
+            }
+        }
     }
 
     public String getDescription() {
@@ -33,13 +73,13 @@ public class Module extends SettingHolder {
         return KeyCode;
     }
     public final void onUpdateInternal() {
-        if(mc.player != null) {
-            if(this.queueEnable) {
+        if (mc.player != null) {
+            if (this.queueEnable) {
                 this.queueEnable = false;
                 this.onEnable();
             }
 
-            if(this.isToggled()) {
+            if (this.isToggled()) {
                 this.onUpdate();
             }
         }
@@ -54,7 +94,9 @@ public class Module extends SettingHolder {
     public void onRenderWorld(float partialTicks) {}
     public void onEnable() {}
 
-    public void onDisable() {}
+    public void onDisable() {
+        GradientShader.finish();
+    }
 
     public String getHudInfo() {
         return "";
@@ -62,12 +104,15 @@ public class Module extends SettingHolder {
 
     public void enable() {
         this.toggled = true;
-        MinecraftForge.EVENT_BUS.register(this);
+        if (this.isEnabled() && !this.enableByDefault) {
+            MinecraftForge.EVENT_BUS.register(this);
+        }
         TempleClient.eventBus.addEventListener(this);
 
-        if(mc.player != null) {
+        if (mc.player != null) {
             this.onEnable();
             Notifications.showNotification(this.getName() + " has been enabled");
+            NotificationsRewrite.addMessage(this.getName(),  " has been enable", NotificationType.INFO);
         } else {
             this.queueEnable = true;
         }
@@ -78,9 +123,10 @@ public class Module extends SettingHolder {
         MinecraftForge.EVENT_BUS.unregister(this);
         TempleClient.eventBus.removeEventListener(this);
 
-        if(mc.player != null) {
+        if (mc.player != null) {
             this.onDisable();
             Notifications.showNotification(this.getName() + " has been disabled");
+            NotificationsRewrite.addMessage(this.getName(),  " has been disabled", NotificationType.INFO);
         }
     }
 
@@ -89,9 +135,9 @@ public class Module extends SettingHolder {
     }
 
     public void setToggled(boolean toggled) {
-        if(toggled == this.toggled) return;
+        if (toggled == this.toggled) return;
 
-        if(toggled) {
+        if (toggled) {
             this.enable();
         } else {
             this.disable();
@@ -113,7 +159,7 @@ public class Module extends SettingHolder {
     public enum Category {
         Chat,
         Combat,
-        Miscelleaneous,
+        Misc,
         Movement,
         Player,
         Render,

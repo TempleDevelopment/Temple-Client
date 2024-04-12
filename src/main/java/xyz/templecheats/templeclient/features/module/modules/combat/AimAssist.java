@@ -8,14 +8,27 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.features.module.Module;
+import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
+import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 
 import java.util.Comparator;
 
 public class AimAssist extends Module {
+    /*
+     * Settings
+     */
+    private final BooleanSetting visibility = new BooleanSetting("Visible-Only", this, true);
+    private final DoubleSetting smoothing = new DoubleSetting("Smoothing-Factor", this, 1.0f, 50.0f, 5.0f);
+
+    /*
+     * Variables
+     */
     private EntityLivingBase renderTarget;
     public AimAssist() {
-        super("AimAssist","Locks on target", Keyboard.KEY_NONE, Category.Combat);
+        super("AimAssist", "Locks on target", Keyboard.KEY_NONE, Category.Combat);
+        registerSettings(smoothing, visibility);
     }
+
 
     @SubscribeEvent
     public void onUpdate(RenderWorldLastEvent e) {
@@ -29,9 +42,13 @@ public class AimAssist extends Module {
 
         this.renderTarget = target;
 
-        if (target != null && mc.player.canEntityBeSeen(target)) {
-            mc.player.rotationYaw = rotations(target)[0];
-            mc.player.rotationPitch = rotations(target)[1];
+        if (target != null) {
+            if (!mc.player.canEntityBeSeen(target) && visibility.booleanValue()) return;
+            float[] targetRotations = rotations(target);
+            float targetYaw = targetRotations[0];
+            float targetPitch = targetRotations[1];
+            mc.player.rotationYaw += (targetYaw - mc.player.rotationYaw) / smoothing.floatValue();
+            mc.player.rotationPitch += (targetPitch - mc.player.rotationPitch) / smoothing.floatValue();
         }
     }
 
@@ -42,14 +59,17 @@ public class AimAssist extends Module {
 
         double u = MathHelper.sqrt(x * x + z * z);
 
-        float u2 = (float) (MathHelper.atan2(z, x) * (180D / Math.PI) - 90.0F);
-        float u3 = (float) (-MathHelper.atan2(y, u) * (180D / Math.PI));
+        float u2 = (float)(MathHelper.atan2(z, x) * (180D / Math.PI) - 90.0F);
+        float u3 = (float)(-MathHelper.atan2(y, u) * (180D / Math.PI));
 
-        return new float[]{u2, u3};
+        return new float[] {
+                u2,
+                u3
+        };
     }
     @Override
     public String getHudInfo() {
-        if(this.renderTarget != null) {
+        if (this.renderTarget != null) {
             return this.renderTarget.getName();
         }
 

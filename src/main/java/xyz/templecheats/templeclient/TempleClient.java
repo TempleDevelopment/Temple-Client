@@ -1,3 +1,8 @@
+/************************************************************************************************
+ *                                               Temple Client                                  *
+ *                (c) 2023-2024 Temple Client Development Team. All rights reserved.            *
+ ************************************************************************************************/
+
 package xyz.templecheats.templeclient;
 
 import net.minecraft.client.Minecraft;
@@ -16,10 +21,8 @@ import xyz.templecheats.templeclient.config.ConfigManager;
 import xyz.templecheats.templeclient.event.ForgeEventManager;
 import xyz.templecheats.templeclient.features.gui.font.FontUtils;
 import xyz.templecheats.templeclient.features.gui.menu.GuiEventsListener;
-import xyz.templecheats.templeclient.manager.CapeManager;
-import xyz.templecheats.templeclient.manager.CommandManager;
-import xyz.templecheats.templeclient.manager.ModuleManager;
-import xyz.templecheats.templeclient.manager.SongManager;
+import xyz.templecheats.templeclient.features.gui.menu.alt.AltManager;
+import xyz.templecheats.templeclient.manager.*;
 import xyz.templecheats.templeclient.util.friend.FriendManager;
 import xyz.templecheats.templeclient.util.keys.KeyUtil;
 import xyz.templecheats.templeclient.util.setting.SettingsManager;
@@ -27,15 +30,13 @@ import xyz.templecheats.templeclient.util.setting.SettingsManager;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 
-
 @Mod(modid = TempleClient.MODID, name = TempleClient.NAME, version = TempleClient.VERSION)
 public class TempleClient {
     public static final String MODID = "templeclient";
     public static final String NAME = "Temple Client";
-    public static final String VERSION = "1.8.7";
+    public static final String VERSION = "1.8.8";
     public static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
     public static String name = NAME + " " + VERSION;
-
     public static AnnotatedEventManager eventBus;
     public static SettingsManager settingsManager;
     public static ModuleManager moduleManager;
@@ -44,7 +45,10 @@ public class TempleClient {
     public static ConfigManager configManager;
     public static CapeManager capeManager;
     public static FriendManager friendManager;
+    public static AltManager altManager;
     public static SongManager SONG_MANAGER;
+    public static HoleManager holeManager = new HoleManager();
+    public static ThreadManager threadManager;
     public static Logger logger;
 
     @EventHandler
@@ -74,7 +78,10 @@ public class TempleClient {
 
         friendManager = new FriendManager();
 
+        altManager = new AltManager();
+
         SONG_MANAGER = new SongManager();
+        threadManager = new ThreadManager();
 
         MinecraftForge.EVENT_BUS.register(clientForgeEventManager);
         MinecraftForge.EVENT_BUS.register(commandManager);
@@ -82,7 +89,7 @@ public class TempleClient {
         MinecraftForge.EVENT_BUS.register(new KeyUtil());
         MinecraftForge.EVENT_BUS.register(new GuiEventsListener());
 
-        FontUtils.bootstrap();
+        FontUtils.setupFonts();
 
         configManager = new ConfigManager();
 
@@ -96,26 +103,24 @@ public class TempleClient {
     @SubscribeEvent
     public void onChat(ClientChatEvent event) {
 
-        if(event.getMessage().startsWith(".")) {
-            if(TempleClient.commandManager.executeCommand(event.getMessage())) {
+        if (event.getMessage().startsWith("."))
+            if (TempleClient.commandManager.executeCommand(event.getMessage()))
                 event.setCanceled(true);
-            }
-        }
     }
 
     public static void setSession(Session s) {
-        Class<? extends Minecraft> mc = Minecraft.getMinecraft().getClass();
+        Class < ? extends Minecraft > mc = Minecraft.getMinecraft().getClass();
 
         try {
             Field session = null;
 
-            for(Field f : mc.getDeclaredFields()) {
-                if(f.getType().isInstance(s)) {
+            for (Field f: mc.getDeclaredFields()) {
+                if (f.getType().isInstance(s)) {
                     session = f;
                 }
             }
 
-            if(session == null) {
+            if (session == null) {
                 throw new IllegalStateException("Session Null");
             }
 
@@ -125,7 +130,7 @@ public class TempleClient {
 
             name = "TempleClient 1.12.2 | User: " + Minecraft.getMinecraft().getSession().getUsername();
             Display.setTitle(name);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

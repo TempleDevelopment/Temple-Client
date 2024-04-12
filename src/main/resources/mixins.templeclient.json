@@ -3,22 +3,31 @@
   "package": "xyz.templecheats.templeclient.mixins",
   "refmap": "refmap.templeclient.json",
   "mixins": [
-    "IMixinCPacketPlayer",
-    "IMixinSPacketExplosion",
-    "MixinBlockLiquid",
-    "MixinEntity",
-    "MixinEntityPlayer",
-    "MixinNetworkManager"
+    "accessor.ICPacketUseEntity",
+    "accessor.IMixinCPacketPlayer",
+    "accessor.IMixinSPacketEntityVelocity",
+    "accessor.IMixinSPacketExplosion",
+    "block.MixinBlock",
+    "block.MixinBlockLiquid",
+    "block.MixinBlockRendererDispatcher",
+    "entity.MixinEntity",
+    "entity.MixinEntityPlayer",
+    "network.MixinNetworkManager"
   ],
   "client": [
-    "IMixinRenderManager",
-    "MixinAbstractClientPlayer",
-    "MixinEntityPlayerSP",
-    "MixinEntityRenderer",
-    "MixinGuiChat",
-    "MixinItemRenderer",
-    "MixinPotionOverlay",
-    "MixinWorldClient"
+    "accessor.ICPacketUseEntity",
+    "accessor.IEntityRenderer",
+    "accessor.IMixinRenderManager",
+    "entity.MixinEntityPlayerSP",
+    "gui.MixinGuiChat",
+    "gui.MixinPotionOverlay",
+    "player.MixinAbstractClientPlayer",
+    "render.MixinEntityRenderer",
+    "render.MixinItemRenderer",
+    "render.MixinLayerHeldItem",
+    "render.MixinRender",
+    "render.MixinRenderArmor",
+    "world.MixinWorldClient"
   ],
   "server": []
 }

@@ -12,7 +12,7 @@ public class Inventory extends HUD.HudElement {
     }
 
     @Override
-    protected void renderElement(ScaledResolution sr) {
+    public void renderElement(ScaledResolution sr) {
         this.setWidth(162);
         this.setHeight(54);
 
@@ -22,9 +22,9 @@ public class Inventory extends HUD.HudElement {
         int startX = (int) this.getX();
         int startY = (int) this.getY();
 
-        for(int i = 9; i < 36; i++) {
+        for (int i = 9; i < 36; i++) {
             final ItemStack itemStack = mc.player.inventory.mainInventory.get(i);
-            if(!itemStack.isEmpty()) {
+            if (!itemStack.isEmpty()) {
                 final int x = startX + (i % 9) * 18;
                 final int y = startY + ((i - 9) / 9) * 18;
 
@@ -34,5 +34,6 @@ public class Inventory extends HUD.HudElement {
         }
 
         RenderHelper.disableStandardItemLighting();
+        GlStateManager.popMatrix();
     }
 }

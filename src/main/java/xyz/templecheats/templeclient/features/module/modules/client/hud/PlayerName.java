@@ -2,7 +2,6 @@ package xyz.templecheats.templeclient.features.module.modules.client.hud;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import xyz.templecheats.templeclient.features.gui.font.FontUtils;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.features.module.modules.client.HUD;
 
@@ -15,13 +14,13 @@ public class PlayerName extends HUD.HudElement {
     }
 
     @Override
-    protected void renderElement(ScaledResolution sr) {
+    public void renderElement(ScaledResolution sr) {
         final String playerName = Minecraft.getMinecraft().player.getName();
         final String text = "Welcome " + playerName;
 
-        this.setWidth(FontUtils.getStringWidth(text));
-        this.setHeight(FontUtils.getFontHeight());
+        this.setWidth(font.getStringWidth(text));
+        this.setHeight(font.getFontHeight());
 
-        FontUtils.drawString(text, this.getX(), this.getY(), ClickGUI.INSTANCE.getStartColor(), true);
+        font.drawString(text, (float) this.getX(), (float) this.getY(), ClickGUI.INSTANCE.getStartColor().getRGB(), true, 1.0f);
     }
 }

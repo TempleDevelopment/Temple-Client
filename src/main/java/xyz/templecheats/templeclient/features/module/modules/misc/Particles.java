@@ -7,7 +7,7 @@ import xyz.templecheats.templeclient.features.module.Module;
 
 public class Particles extends Module {
     public Particles() {
-        super("Particles","Increases particle volume", Keyboard.KEY_NONE, Category.Miscelleaneous);
+        super("Particles", "Customizes particle volume and texture", Keyboard.KEY_NONE, Category.Misc);
     }
 
     @SubscribeEvent

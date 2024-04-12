@@ -9,7 +9,10 @@ import xyz.templecheats.templeclient.features.module.modules.client.HUD;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 
 public class Armor extends HUD.HudElement {
-    private final EnumSetting<DisplayMode> displayMode = new EnumSetting<>("Display", this, DisplayMode.Horizontal);
+    /*
+     * Settings
+     */
+    private final EnumSetting < DisplayMode > displayMode = new EnumSetting < > ("Display", this, DisplayMode.Horizontal);
 
     public Armor() {
         super("Armor", "Shows your Armor in the HUD");
@@ -18,7 +21,7 @@ public class Armor extends HUD.HudElement {
     }
 
     @Override
-    protected void renderElement(ScaledResolution sr) {
+    public void renderElement(ScaledResolution sr) {
         if (displayMode.value() == DisplayMode.Vertical) {
             this.setWidth(16);
             this.setHeight(84);
@@ -33,13 +36,13 @@ public class Armor extends HUD.HudElement {
         int startX = (int) this.getX();
         int startY = (int) this.getY();
 
-        for(ItemStack stack : Lists.reverse(mc.player.inventory.armorInventory)) {
-            if(!stack.isEmpty()) {
+        for (ItemStack stack: Lists.reverse(mc.player.inventory.armorInventory)) {
+            if (!stack.isEmpty()) {
                 mc.getRenderItem().renderItemAndEffectIntoGUI(stack, startX, startY);
                 mc.getRenderItem().renderItemOverlays(mc.fontRenderer, stack, startX, startY);
             }
 
-            if(displayMode.value() == DisplayMode.Vertical) {
+            if (displayMode.value() == DisplayMode.Vertical) {
                 startY += 21;
             } else {
                 startX += 21;
@@ -47,6 +50,7 @@ public class Armor extends HUD.HudElement {
         }
 
         RenderHelper.disableStandardItemLighting();
+        GlStateManager.popMatrix();
     }
 
     private enum DisplayMode {
