@@ -8,6 +8,8 @@ import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.setting.impl.StringSetting;
 import xyz.templecheats.templeclient.util.time.TimerUtil;
 
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font16;
+
 public class StringButton extends Item {
     private final Button parentButton;
     private final StringSetting setting;
@@ -28,9 +30,9 @@ public class StringButton extends Item {
 
         GlStateManager.pushMatrix();
         if(this.typing) {
-            parentButton.font16.drawString(this.currentString.getString() + typingIcon(), this.x + 2.3f, this.y + 4, -1, false, 1f);
+            font16.drawString(this.currentString.getString() + typingIcon(), this.x + 2.3f, this.y + 4, -1, false);
         } else {
-            parentButton.font16.drawString(this.setting.getName() + ": " + this.setting.value(), this.x + 2.3f, this.y + 4, -1,false, 1f);
+            font16.drawString(this.setting.getName() + ": " + this.setting.value(), this.x + 2.3f, this.y + 4, -1,false);
         }
         GlStateManager.popMatrix();
     }

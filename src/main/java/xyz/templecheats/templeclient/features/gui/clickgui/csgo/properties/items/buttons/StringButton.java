@@ -4,28 +4,23 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ChatAllowedCharacters;
 import xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.Item;
 import xyz.templecheats.templeclient.util.color.impl.RectBuilder;
-import xyz.templecheats.templeclient.util.color.impl.RoundedTexture;
 import xyz.templecheats.templeclient.util.math.Vec2d;
-import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.setting.impl.StringSetting;
 import xyz.templecheats.templeclient.util.time.TimerUtil;
 
 import java.awt.*;
 
-import static xyz.templecheats.templeclient.util.render.RenderUtil.drawHead;
-import static xyz.templecheats.templeclient.util.render.StencilUtil.*;
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.*;
 
 public class StringButton extends Item {
-    private final Button parentButton;
     private final StringSetting setting;
     private boolean typing;
     private CurrentString currentString = new StringButton.CurrentString("");
     private final TimerUtil idleTimer = new TimerUtil();
     private boolean idling;
 
-    public StringButton(String label, Button parentButton, StringSetting setting) {
+    public StringButton(String label, StringSetting setting) {
         super(label);
-        this.parentButton = parentButton;
         this.setting = setting;
         this.height = 21;
     }
@@ -36,16 +31,16 @@ public class StringButton extends Item {
                 .outlineColor(new Color(0x494949)).width(0.8)
                 .color(!isHovering(mouseX, mouseY) ? new Color(0x262626) : new Color(0x2A2A2A))
                 .radius(2.0).draw();
-        new RectBuilder(new Vec2d(x + 2, y + 5), new Vec2d(x + parentButton.font12.getStringWidth(this.setting.getName()) + 2, y + 8))
+        new RectBuilder(new Vec2d(x + 2, y + 5), new Vec2d(x + font12.getStringWidth(this.setting.getName()) + 2, y + 8))
                 .color(new Color(25, 25, 25))
                 .radius(2.0).draw();
 
         GlStateManager.pushMatrix();
-        parentButton.font12.drawString(this.setting.getName(), this.x + 2.3, this.y + 3, -1, false, 1f);
+        font12.drawString(this.setting.getName(), this.x + 2.3, this.y + 3, -1, false);
         if(this.typing) {
-            parentButton.font14.drawString(this.currentString.getString() + typingIcon(), this.x + 5f, this.y + 10, -1, false, 1f);
+            font14.drawString(this.currentString.getString() + typingIcon(), this.x + 5f, this.y + 10, -1, false);
         } else {
-            parentButton.font14.drawString(this.setting.value(), this.x + 5f, this.y + 10, -1,false, 1f);
+            font14.drawString(this.setting.value(), this.x + 5f, this.y + 10, -1,false);
         }
         GlStateManager.popMatrix();
     }

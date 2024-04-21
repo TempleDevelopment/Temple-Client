@@ -17,6 +17,9 @@ public class AimAssist extends Module {
     /*
      * Settings
      */
+    private final BooleanSetting modifyPitch = new BooleanSetting("Pitch", this, true);
+    private final BooleanSetting modifyYaw = new BooleanSetting("Yaw", this, true);
+
     private final BooleanSetting visibility = new BooleanSetting("Visible-Only", this, true);
     private final DoubleSetting smoothing = new DoubleSetting("Smoothing-Factor", this, 1.0f, 50.0f, 5.0f);
 
@@ -26,7 +29,7 @@ public class AimAssist extends Module {
     private EntityLivingBase renderTarget;
     public AimAssist() {
         super("AimAssist", "Locks on target", Keyboard.KEY_NONE, Category.Combat);
-        registerSettings(smoothing, visibility);
+        registerSettings(visibility, modifyPitch, modifyYaw, smoothing);
     }
 
 
@@ -47,8 +50,12 @@ public class AimAssist extends Module {
             float[] targetRotations = rotations(target);
             float targetYaw = targetRotations[0];
             float targetPitch = targetRotations[1];
-            mc.player.rotationYaw += (targetYaw - mc.player.rotationYaw) / smoothing.floatValue();
-            mc.player.rotationPitch += (targetPitch - mc.player.rotationPitch) / smoothing.floatValue();
+            if (modifyYaw.booleanValue()) {
+                mc.player.rotationYaw += (targetYaw - mc.player.rotationYaw) / smoothing.floatValue();
+            }
+            if (modifyPitch.booleanValue()) {
+                mc.player.rotationPitch += (targetPitch - mc.player.rotationPitch) / smoothing.floatValue();
+            }
         }
     }
 

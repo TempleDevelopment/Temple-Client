@@ -4,12 +4,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.Colors;
+import xyz.templecheats.templeclient.features.module.modules.combat.Aura;
+import xyz.templecheats.templeclient.features.module.modules.combat.AutoCrystal;
+import xyz.templecheats.templeclient.manager.ModuleManager;
 import xyz.templecheats.templeclient.util.setting.impl.*;
 import java.awt.*;
 
@@ -22,8 +26,8 @@ public class Target extends Module {
     /*
      * Settings
      */
-    private final EnumSetting < ESP > texture = new EnumSetting < > ("Texture", this, ESP.TRIANGLE_CAPTURE);
-    private final DoubleSetting scale = new DoubleSetting("Scnale", this, 0.3, 1.0, 0.75);
+    private final EnumSetting < ESP > texture = new EnumSetting < > ("Texture", this, ESP.TriangleCapture);
+    private final DoubleSetting scale = new DoubleSetting("Scale", this, 0.3, 1.0, 0.75);
     private final DoubleSetting maxSpin = new DoubleSetting("MaxSpin", this, 10.0, 30.0, 15.0);
     private final DoubleSetting opacity = new DoubleSetting("Opacity", this, 0.1, 1, 0.5);
 
@@ -41,6 +45,7 @@ public class Target extends Module {
     float defaultScale = 0.0F;
     float targetScale = scale.floatValue();
     long scaleAnimationStartTime = 0L;
+    private EntityLivingBase TARGET = null;
 
     public Target() {
         super("Target", "Renders a image at players core", Keyboard.KEY_NONE, Category.Render, true);
@@ -53,7 +58,7 @@ public class Target extends Module {
     }
 
     private void scaleAnimation() {
-        if (!isScaling /*&& TARGET != null*/ ) {
+        if (!isScaling && TARGET != null) {
             isScaling = true;
             scaleAnimationStartTime = System.currentTimeMillis();
         }
@@ -92,16 +97,21 @@ public class Target extends Module {
 
     @Override
     public void onUpdate() {
-        if (mc.player == null || mc.world == null /*|| TARGET == null*/ ) {
+        if (mc.player == null || mc.world == null || TARGET == null) {
             resetScale();
         }
+        EntityLivingBase aura = Aura.INSTANCE.isEnabled() ? Aura.INSTANCE.renderTarget : null;
+        EntityLivingBase ca = AutoCrystal.INSTANCE.isEnabled() ? AutoCrystal.INSTANCE.getTarget() : null;
+
+        TARGET = (aura != null) ? aura : ca;
+
         spinAnimation();
         scaleAnimation();
     }
 
     @Override
     public void onRenderWorld(float partialTicks) {
-        if (mc.player == null || mc.world == null) {
+        if (mc.player == null || mc.world == null || TARGET == null) {
             return;
         }
 
@@ -109,17 +119,15 @@ public class Target extends Module {
         int alpha = (int) Math.round(opacity.doubleValue() * 255);
         Color colorWithOpacity = new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), alpha);
 
-        for (Entity entity: mc.world.playerEntities) {
-            if (entity != Minecraft.getMinecraft().player && entity != null) {
-                spinTargetTexture(
-                        texture.value().getTexture(),
-                        entity,
-                        prevSpinStep,
-                        spinStep,
-                        defaultScale,
-                        colorWithOpacity
-                );
-            }
+        if (TARGET != Minecraft.getMinecraft().player && TARGET != null) {
+            spinTargetTexture(
+                    texture.value().getTexture(),
+                    TARGET,
+                    prevSpinStep,
+                    spinStep,
+                    defaultScale,
+                    colorWithOpacity
+            );
         }
     }
 
@@ -166,10 +174,10 @@ public class Target extends Module {
     }
 
     public enum ESP {
-        SQUARE_CAPTURE("textures/esp/square-capture.png"),
-        SQUARE_DASHED("textures/esp/square-dashes.png"),
-        TRIANGLE_CAPTURE("textures/esp/triangle-capture.png"),
-        TRIANGLE_DASHED("textures/esp/triangle-dashes.png");
+        SquareCapture("textures/esp/square-capture.png"),
+        SquareDashed("textures/esp/square-dashes.png"),
+        TriangleCapture("textures/esp/triangle-capture.png"),
+        TriangleDashed("textures/esp/triangle-dashes.png");
 
         private final ResourceLocation texture;
 

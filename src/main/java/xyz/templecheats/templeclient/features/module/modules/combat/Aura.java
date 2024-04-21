@@ -27,6 +27,7 @@ import java.util.Comparator;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Aura extends Module {
+    public static Aura INSTANCE;
     /*
      * Settings
      */
@@ -48,11 +49,12 @@ public class Aura extends Module {
      * Variables
      */
     private int waitCounter;
-    private EntityLivingBase target, renderTarget = null;
+    private EntityLivingBase target;
+    public EntityLivingBase renderTarget = null;
 
     public Aura() {
         super("Aura","Automatically attack entities nearby", Keyboard.KEY_NONE, Category.Combat);
-
+        INSTANCE = this;
         registerSettings(ignoreWalls, onlyCritical, requireWeapon, disableOnDeath, players, mobs, animals, waitTick, range, renderRange, renderSpeed, waitMode);
     }
 
@@ -86,7 +88,7 @@ public class Aura extends Module {
                 }
                 if (requireWeapon.booleanValue() && !hasSwordMainHand()) return;
                 this.target = mc.world.loadedEntityList.stream()
-                        .filter(entity -> entity instanceof EntityLivingBase && !entity.equals(mc.player) && (!(entity instanceof EntityOtherPlayerMP) || !((EntityOtherPlayerMP) entity).getGameProfile().equals(mc.player.getGameProfile())))
+                        .filter(entity -> entity instanceof EntityLivingBase && !entity.equals(mc.player) && !entity.isDead && (!(entity instanceof EntityOtherPlayerMP) || !((EntityOtherPlayerMP) entity).getGameProfile().equals(mc.player.getGameProfile())))
                         .map(entity -> (EntityLivingBase) entity)
                         .filter(entity -> {
                             double distance = entity.getDistance(mc.player);

@@ -1,21 +1,24 @@
 package xyz.templecheats.templeclient.features.module.modules.client.hud.notification;
 
+import xyz.templecheats.templeclient.features.gui.font.TempleIcon;
+
 public enum NotificationType {
-    SUCCESS("Success"),
-    INFO("Info"),
-    ERROR("Error"),
-    DEBUG("Debug");
+    SUCCESS(TempleIcon.SUCCESS),
+    INFO(TempleIcon.INFO),
+    WARNING(TempleIcon.WARNING),
+    ERROR(TempleIcon.ERROR);
 
-    public final String typeName;
+    private final TempleIcon icon;
 
-    NotificationType(String typeName) {
-        this.typeName = typeName;
+    NotificationType(TempleIcon icon) {
+        this.icon = icon;
     }
 
-    public String getTypeName() {
-        return typeName;
+    public TempleIcon getIcon() {
+        return icon;
     }
 }
+
 
 
 

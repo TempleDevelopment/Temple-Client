@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.templecheats.templeclient.features.module.modules.client.Colors;
 import xyz.templecheats.templeclient.features.module.modules.render.*;
+import xyz.templecheats.templeclient.features.module.modules.render.esp.sub.Hand;
 import xyz.templecheats.templeclient.features.module.modules.render.esp.sub.Shader;
 
 import javax.vecmath.Vector3f;
@@ -25,8 +26,8 @@ public abstract class MixinEntityRenderer {
 
     @Inject(method = "renderWorldPass", at = @At("RETURN"))
     private void renderWorldPassPost(int pass, float partialTicks, long finishTimeNano, CallbackInfo ci) {
-        if (Shader.INSTANCE.isEnabled() && Shader.INSTANCE.hand.booleanValue()) {
-            Shader.INSTANCE.drawHand(partialTicks, pass);
+        if (Hand.INSTANCE.isEnabled()) {
+            Hand.INSTANCE.drawHand(partialTicks, pass);
         }
     }
 
@@ -57,6 +58,24 @@ public abstract class MixinEntityRenderer {
     private float noRenderNausea(float original) {
         if (NoRender.preventNausea()) return 0.0f;
         return original;
+    }
+
+    @ModifyVariable(method={"orientCamera"}, ordinal=3, at=@At(value="STORE", ordinal=0), require=1)
+    public double changeCameraDistanceHook(double range) {
+        if (ViewClip.INSTANCE.isEnabled()) {
+            return ViewClip.INSTANCE.distance.doubleValue();
+        } else {
+            return range;
+        }
+    }
+
+    @ModifyVariable(method={"orientCamera"}, ordinal=7, at=@At(value="STORE", ordinal=0), require=1)
+    public double orientCameraHook(double range) {
+        if (ViewClip.INSTANCE.isEnabled()) {
+            return ViewClip.INSTANCE.distance.doubleValue();
+        } else {
+            return range;
+        }
     }
 
     @Redirect(method = "setupCameraTransform", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/EntityRenderer;hurtCameraEffect(F)V"))

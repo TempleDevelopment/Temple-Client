@@ -6,6 +6,7 @@ package xyz.templecheats.templeclient.features.module.modules.combat;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
@@ -46,10 +47,12 @@ import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 import xyz.templecheats.templeclient.util.time.TimerUtil;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static net.minecraft.network.play.client.CPacketUseEntity.Action.ATTACK;
 
 public class AutoCrystal extends Module {
+    public static AutoCrystal INSTANCE;
     /*
      * Settings
      */
@@ -102,9 +105,10 @@ public class AutoCrystal extends Module {
 
     public AutoCrystal() {
         super("AutoCrystal", "Automatically places and explodes end crystals for crystal pvp", Keyboard.KEY_NONE, Category.Combat);
-        this.registerSettings(antiWeakness, autoSwitch, instant, noGapSwitch, raytrace, rotate, setDead, wait,
+        INSTANCE = this;
+        this.registerSettings(antiWeakness, autoSwitch, instant, inhibit, noGapSwitch, predict, raytrace, rotate, setDead, wait,
                 attackSpeed, armourFacePlace, facePlaceValue, maxTargets, timeout,
-                enemyRange, inhibit, predict, defaultOpacityVal, maxSelfDmg, minDmg, minFacePlaceDmg, range, wallRange, fill, outline, opacity, crystalPriority, server);
+                enemyRange, defaultOpacityVal, maxSelfDmg, minDmg, minFacePlaceDmg, range, wallRange, fill, outline, opacity, crystalPriority, server);
     }
 
     @SubscribeEvent
@@ -180,8 +184,7 @@ public class AutoCrystal extends Module {
             }
         }
     }
-
-
+    private boolean crystalPlacedThisTick = false;
     @Listener
     public void onEntityDelete(EntityEvent.Delete event) {
         if (this.instant.booleanValue() && this.lastCrystal != null && this.curPos == null && event.getEntity() instanceof EntityEnderCrystal) {
@@ -201,12 +204,16 @@ public class AutoCrystal extends Module {
                         return;
                     }
 
-                    this.placeCrystalInternal(this.curPos = pos);
-                    this.lastCrystal = null;
+                    if (!crystalPlacedThisTick) {
+                        this.placeCrystalInternal(pos);
+                        this.lastCrystal = null;
+                        crystalPlacedThisTick = true;
+                    }
                 }
             }
         }
     }
+
 
     @Listener
     public void onPacketRecieve(PacketEvent.Receive event) {
@@ -223,12 +230,11 @@ public class AutoCrystal extends Module {
                 packetUseEntity.setEntityId(spawnPacket.getEntityID());
                 packetUseEntity.setAction(ATTACK);
                 mc.getConnection().sendPacket((Packet<?>) packetUseEntity);
-                mc.getConnection().sendPacket(new CPacketAnimation(EnumHand.MAIN_HAND));
-                if (lastPos != null && lastPos.equals(pos)) {
-                    mc.getConnection().sendPacket(new CPacketPlayerTryUseItemOnBlock(lastPos, EnumFacing.UP, offhand ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, 0.5F, 1.0F, 0.5F));
+                if (lastPos != null && lastPos.equals(placedPos)) {
+                    mc.getConnection().sendPacket(new CPacketPlayerTryUseItemOnBlock(lastPos, EnumFacing.UP, offhand ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, 0.5f, 1.0f, 0.5f));
                 }
+                mc.player.swingArm(offhand ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
             }
-            mc.player.swingArm(EnumHand.OFF_HAND);
             if (setDead.booleanValue()) {
                 mc.world.removeEntityFromWorld(spawnPacket.getEntityID());
             }
@@ -470,6 +476,14 @@ public class AutoCrystal extends Module {
         } else {
             finished = false;
         }
+    }
+
+    public EntityLivingBase getTarget() {
+        AtomicReference <EntityLivingBase> target = new AtomicReference<>();
+        targets.forEach(it -> {
+            target.set(it.target.entity);
+        });
+        return target.get();
     }
 
     public enum Priority {

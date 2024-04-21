@@ -39,7 +39,7 @@ public class Hole extends Module {
     public Hole() {
         super("Hole", "Highlights holes", Keyboard.KEY_NONE, Category.Render, true);
 
-        registerSettings(range, speed, mode, slideAnimation);
+        registerSettings(slideAnimation, range, speed, mode);
     }
 
     private boolean differentRenderType(final HoleManager.HolePos pos) {

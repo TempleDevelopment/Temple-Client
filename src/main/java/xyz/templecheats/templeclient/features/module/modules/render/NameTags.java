@@ -1,5 +1,6 @@
 package xyz.templecheats.templeclient.features.module.modules.render;
 
+import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
 import xyz.templecheats.templeclient.TempleClient;
 import com.google.common.collect.Lists;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -16,6 +17,7 @@ import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
+import xyz.templecheats.templeclient.event.events.render.Render3DPrePreEvent;
 import xyz.templecheats.templeclient.features.gui.font.CFont;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.Colors;
@@ -38,7 +40,7 @@ public class NameTags extends Module {
     private final BooleanSetting customFont = new BooleanSetting("Custom Font", this, false);
     private final BooleanSetting items = new BooleanSetting("Items", this, true);
     private final Set < EntityPlayer > players = new TreeSet < > (Comparator.comparing(player -> mc.player.getDistance((EntityPlayer) player)).reversed());
-    private final CFont font = FontSettings.INSTANCE.getFont().setSize(18);
+    private final CFont font = FontSettings.getFont(18);
     public NameTags() {
         super("Nametags", "Renders nametags above entities", Keyboard.KEY_NONE, Category.Render);
         registerSettings(border, customFont, items);
@@ -107,9 +109,9 @@ public class NameTags extends Module {
         GL11.glDisable(GL11.GL_BLEND);
 
         if (customFont.booleanValue()) {
-            font.drawString(name, -totalWidth, 0, 0xFFFFFF, true, 1.0f);
-            font.drawString(health, -totalWidth + this.getStringWidth(name), 0, this.getHealthColor(entity), true, 1.0f);
-            font.drawString(ping, -totalWidth + this.getStringWidth(name + health), 0, this.getPingColor(entity), true, 1.0f);
+            font.drawString(name, -totalWidth, 0, 0xFFFFFF, true);
+            font.drawString(health, -totalWidth + this.getStringWidth(name), 0, this.getHealthColor(entity), true);
+            font.drawString(ping, -totalWidth + this.getStringWidth(name + health), 0, this.getPingColor(entity), true);
         } else {
             mc.fontRenderer.drawString(name, -totalWidth, 0, 0xFFFFFF, true);
             mc.fontRenderer.drawString(health, -totalWidth + this.getStringWidth(name), 0, this.getHealthColor(entity), true);
@@ -173,18 +175,14 @@ public class NameTags extends Module {
             if (!customFont.booleanValue()) {
                 mc.fontRenderer.drawString(duraString, x, y + (-y - 10), stack.getItem().getRGBDurabilityForDisplay(stack), true);
             } else
-                font.drawString(duraString, x, y + (-y - 10), stack.getItem().getRGBDurabilityForDisplay(stack), true, 1.0f);
+                font.drawString(duraString, x, y + (-y - 10), stack.getItem().getRGBDurabilityForDisplay(stack), true);
         }
-
-        GL11.glPushMatrix();
-        GL11.glDepthMask(true);
         GlStateManager.pushMatrix();
+        GL11.glDepthMask(true);
         GlStateManager.clear(256);
         GlStateManager.disableDepth();
         GlStateManager.enableDepth();
         RenderHelper.enableStandardItemLighting();
-        GlStateManager.popMatrix();
-        GL11.glPopMatrix();
         mc.getRenderItem().zLevel = -100.0F;
         GlStateManager.scale(1, 1, 0.01F);
         mc.getRenderItem().renderItemAndEffectIntoGUI(stack, x, (y / 2) - 12);
@@ -195,6 +193,7 @@ public class NameTags extends Module {
         GlStateManager.enableAlpha();
         GlStateManager.disableBlend();
         GlStateManager.disableLighting();
+        GlStateManager.popMatrix();
     }
 
     private void drawRect(float left, float top, float right, float bottom, int r, int g, int b, int a) {

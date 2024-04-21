@@ -279,4 +279,12 @@ public class ConfigManager {
             e.printStackTrace();
         }
     }
+
+    public void resetModule(Module module) {
+        final File moduleConfigFile = new File(this.modulesDirectory, module.getName() + ".json");
+        if (moduleConfigFile.exists()) {
+            moduleConfigFile.delete();
+        }
+        loadAll();
+    }
 }

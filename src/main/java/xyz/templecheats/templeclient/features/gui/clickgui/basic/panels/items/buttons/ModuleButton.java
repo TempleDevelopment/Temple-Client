@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.Panel.calculateRotation;
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font18;
 
 public class ModuleButton extends Button implements IContainer {
     private final Module module;
@@ -53,7 +54,7 @@ public class ModuleButton extends Button implements IContainer {
         super.drawScreen(mouseX, mouseY, partialTicks);
         if(!this.items.isEmpty()) {
             if (module.submodule) {
-                font18.drawString(!this.open ? "+" : "-", this.x - 1.0f + (float) getWidth() - 8.0f, this.y + 4.0f, -1, false, 1.0f);
+                font18.drawString(!this.open ? "+" : "-", this.x - 1.0f + (float) getWidth() - 8.0f, this.y + 4.0f, -1, false);
             }
             if(ClickGUI.INSTANCE.gears.booleanValue() && !module.submodule) {
                 GlStateManager.pushMatrix();
@@ -103,7 +104,7 @@ public class ModuleButton extends Button implements IContainer {
                 final float height = (float) font18.getFontHeight();
 
                 RenderUtil.drawRect(startX - 1, startY - 1, startX + width, startY + height, 0x88000000);
-                font18.drawString(description, startX, startY, -1, false, 1.0f);
+                font18.drawString(description, startX, startY, -1, false);
             }
         } else {
             this.timeHovering = 0;

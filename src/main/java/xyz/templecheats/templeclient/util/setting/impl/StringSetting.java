@@ -55,6 +55,6 @@ public class StringSetting extends Setting<String> {
 
     @Override
     public xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.Item createCsgoButton(xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.Button parent) {
-        return new xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.StringButton(name, parent, this);
+        return new xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.StringButton(name, this);
     }
 }

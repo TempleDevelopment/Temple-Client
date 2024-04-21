@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.client.renderer.*;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -16,9 +17,12 @@ import org.lwjgl.opengl.GL11;
 import xyz.templecheats.templeclient.features.module.modules.client.Colors;
 import xyz.templecheats.templeclient.mixins.accessor.IMixinRenderManager;
 import xyz.templecheats.templeclient.util.Globals;
+import xyz.templecheats.templeclient.util.color.impl.RoundedTexture;
 import xyz.templecheats.templeclient.util.math.Vec2d;
 
+import static java.lang.Math.atan;
 import static org.lwjgl.opengl.GL11.*;
+import static xyz.templecheats.templeclient.util.render.StencilUtil.*;
 
 import java.awt.*;
 
@@ -589,7 +593,12 @@ public class RenderUtil implements Globals {
         tessellator.draw();
     }
 
-    public static void drawHead(Entity entity, Vec2d pos1, Vec2d pos2) {
+    public static void drawHead(Entity entity, Vec2d pos1, Vec2d pos2, float radius) {
+        GlStateManager.pushMatrix();
+        initStencilToWrite();
+        new RoundedTexture().drawRoundTextured((float) pos1.x, (float) pos1.y, (float) pos2.minus(pos1.x).x, (float) pos2.minus(pos1.y).y, radius , 1.0f);
+        readStencilBuffer(1);
+
         if (entity instanceof AbstractClientPlayer) {
             AbstractClientPlayer player = (AbstractClientPlayer) entity;
             ResourceLocation skin = player.getLocationSkin();
@@ -618,6 +627,47 @@ public class RenderUtil implements Globals {
 
             tessellator.draw();
         }
+        uninitStencilBuffer();
+        GlStateManager.popMatrix();
+    }
+
+    public static void drawPlayer(EntityPlayer player, float playerScale, float x, float y) {
+        GlStateManager.pushAttrib();
+        GlStateManager.pushMatrix();
+        GlStateManager.color(1.0f, 1.0f, 1.0f);
+        RenderHelper.enableStandardItemLighting();
+        GlStateManager.enableAlpha();
+        GlStateManager.shadeModel(7424);
+        GlStateManager.enableAlpha();
+        GlStateManager.enableDepth();
+        GlStateManager.rotate(0.0f, 0.0f, 5.0f, 0.0f);
+        GlStateManager.enableColorMaterial();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, 50.0f);
+        GlStateManager.scale(-50.0f * playerScale, 50.0f * playerScale, 50.0f * playerScale);
+        GlStateManager.rotate(180.0f, 0.0f, 0.0f, 1.0f);
+        GlStateManager.rotate(135.0f, 0.0f, 1.0f, 0.0f);
+        RenderHelper.enableStandardItemLighting();
+        GlStateManager.rotate(-135.0f, 0.0f, 1.0f, 0.0f);
+        GlStateManager.rotate((float) ((-atan(y / 40.0f)) * 20.0f), 1.0f, 0.0f, 0.0f);
+        GlStateManager.translate(0.0f, 0.0f, 0.0f);
+        RenderManager renderManager = mc.getRenderManager();
+        try {
+            renderManager.setPlayerViewY(180.0f);
+            renderManager.renderEntity(player, 0.0, 0.0, 0.0, 0.0f, 1.0f, false);
+        } catch (Exception ignored) {
+        }
+        GlStateManager.popMatrix();
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        GlStateManager.disableTexture2D();
+        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+        GlStateManager.depthFunc(515);
+        GlStateManager.resetColor();
+        GlStateManager.disableDepth();
+        GlStateManager.popMatrix();
+        GlStateManager.popAttrib();
     }
 
     public static void bind(final ResourceLocation resourceLocation) {

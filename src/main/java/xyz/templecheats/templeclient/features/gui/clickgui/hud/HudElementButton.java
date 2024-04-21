@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font18;
+
 public class HudElementButton extends Button {
     /*
      * Variables
@@ -120,7 +122,7 @@ public class HudElementButton extends Button {
                 final float height = (float) font18.getFontHeight();
 
                 RenderUtil.drawRect(startX - 1, startY - 1, startX + width, startY + height, 0x88000000);
-                font18.drawString(description, startX, startY, -1, false, 1.0f);
+                font18.drawString(description, startX, startY, -1, false);
             }
         } else {
             this.timeHovering = 0;

@@ -78,6 +78,10 @@ public class ChatCrypt extends Module {
     @SubscribeEvent
     public void onChat(ClientChatEvent event) {
         String s = event.getMessage();
+
+        if (s.startsWith("/")) {
+            return;
+        }
         s = encrypt(s);
         if (s.length() > 256) {
             System.out.println("Encrypted message is too long.");

@@ -8,6 +8,8 @@ import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font16;
+
 public class IntSlider extends Item {
     private final Button parentButton;
     private final IntSetting setting;
@@ -33,7 +35,7 @@ public class IntSlider extends Item {
             RenderUtil.drawRect(x, y, (float) (this.x + (percentBar * (this.width + 7.4f))), y + height, 0x22000000);
         }
 
-        parentButton.font16.drawString(getLabel() + TextFormatting.GRAY + " " + value, this.x + 2.3, this.y + 4, 0xFFFFFFFF, false, 1.0f);
+        font16.drawString(getLabel() + TextFormatting.GRAY + " " + value, this.x + 2.3, this.y + 4, 0xFFFFFFFF, false);
 
         if(this.dragging) {
             int offset = (int) (MathHelper.clamp((mouseX - x) / (this.width + 7.4f), 0, 1) * range);

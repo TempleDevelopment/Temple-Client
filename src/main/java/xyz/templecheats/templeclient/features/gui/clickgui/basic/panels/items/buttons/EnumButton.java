@@ -6,6 +6,8 @@ import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font16;
+
 public class EnumButton<T extends Enum<T>> extends Button {
     private final Button parentButton;
     private final EnumSetting<T> setting;
@@ -25,7 +27,7 @@ public class EnumButton<T extends Enum<T>> extends Button {
 
         int textColor = ClickGUI.INSTANCE.getStartColor().getRGB();
         String displayText = getLabel() + TextFormatting.GRAY + " " + setting.value().toString();
-        font16.drawString(displayText, this.x + 2.3, this.y + 4, textColor, false, 1.0f);
+        font16.drawString(displayText, this.x + 2.3, this.y + 4, textColor, false);
     }
 
 

@@ -10,7 +10,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class RoundedTexture {
 
-    private final static ShaderUtil rectTexture = new ShaderUtil("roundedtex");
+    private final static ShaderUtil rectTexture = new ShaderUtil("texturerect");
 
     public void drawRoundTextured(float x, float y, float width, float height, float radius, float alpha) {
         resetColor();

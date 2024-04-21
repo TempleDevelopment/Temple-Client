@@ -37,13 +37,8 @@ public class CsgoGuiScreen extends GuiScreen {
 
     public boolean drag;
 
-    public int x, y;
-    public int oldX, oldY;
-    public int oldAbsY;
-
-    public int width, height;
-    public int minHeight;
-    public int absY;
+    public int x, y, oldX, oldY;
+    public int oldAbsY, width, height, minHeight, absY;
 
     public CsgoGuiScreen() {
         this.x = 250;
@@ -115,19 +110,14 @@ public class CsgoGuiScreen extends GuiScreen {
                 .color(new Color(0xFF131313)).outlineColor(new Color(0xFF282826)).width(1.5).radius(6.0).draw();
         new RectBuilder(new Vec2d(x + 109, absY), new Vec2d(x + width / 2, absY + minHeight))
                 .colorH(new Color(0xFF131313), new Color(0x0131313, true)).outlineColorH(new Color(0xFF282826), new Color(0x0131313, true)).width(1.5).draw();
-
+        new RectBuilder(new Vec2d(x, absY + minHeight - 40), new Vec2d(x + 110, absY + minHeight - 41))
+                .color(Color.DARK_GRAY).draw();
         // kys
-        GlStateManager.pushMatrix();
-        initStencilToWrite();
-        new RoundedTexture().drawRoundTextured(x + 6, absY + minHeight - 35, 25f, 25f, 6 , 1.0f);
-        readStencilBuffer(1);
-        drawHead(mc.player, new Vec2d(x + 6, absY + minHeight - 35), new Vec2d(x + 31, absY + minHeight - 10));
-        uninitStencilBuffer();
-        GlStateManager.popMatrix();
+        drawHead(mc.player, new Vec2d(x + 6, absY + minHeight - 35), new Vec2d(x + 31, absY + minHeight - 10), 6f);
 
-        CFont cFont = FontSettings.INSTANCE.getFont().setSize(16);
-        cFont.drawString(mc.player.getName(), x + 38, absY + minHeight - 32, -1, false, 1f);
-        cFont.drawString("UID: " + mc.player.getEntityId(), x + 38, absY + minHeight - 22, Color.DARK_GRAY, false, 1f);
+        CFont cFont = FontSettings.getFont(16);
+        cFont.drawString(mc.player.getName(), x + 38, absY + minHeight - 32, -1, false);
+        cFont.drawString("UID: " + mc.player.getEntityId(), x + 38, absY + minHeight - 22, Color.DARK_GRAY, false);
 
         GlStateManager.pushMatrix();
         Minecraft.getMinecraft().getTextureManager().bindTexture(LOGO);

@@ -6,13 +6,13 @@ public interface AbstractFont {
     float getStringWidth(String text);
     float getFontHeight();
 
-    void drawStringWithShadow(String text, float x, float y, int color, float scale);
-    void drawStringWithShadow(String text, float x, float y, Color color, float scale);
+    void drawStringWithShadow(String text, float x, float y, int color);
+    void drawStringWithShadow(String text, float x, float y, Color color);
 
-    void drawString(String text, float x, float y, Color color, boolean shadow, float scale);
-    void drawString(String text, float x, float y, int color, boolean shadow, float scale);
+    void drawString(String text, float x, float y, Color color, boolean shadow);
+    void drawString(String text, float x, float y, int color, boolean shadow);
 
-    void drawCenteredString(String text, float x, float y, Color color, boolean shadow, float scale);
+    void drawCenteredString(String text, float x, float y, Color color, boolean shadow);
 
     String trimStringToWidth(String text, int width);
 

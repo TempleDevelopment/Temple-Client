@@ -1,7 +1,6 @@
 package xyz.templecheats.templeclient.features.module.modules.world;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -21,12 +20,11 @@ import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
 import xyz.templecheats.templeclient.event.EventStageable;
 import xyz.templecheats.templeclient.event.events.player.MotionEvent;
 import xyz.templecheats.templeclient.features.module.Module;
-import xyz.templecheats.templeclient.util.color.impl.GradientShader;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
-import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
-import xyz.templecheats.templeclient.util.time.TimerUtil;
 import xyz.templecheats.templeclient.util.world.BlockPosWithFacing;
+import xyz.templecheats.templeclient.util.color.impl.GradientShader;
+import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 
 import java.awt.*;
 
@@ -37,7 +35,6 @@ public class Scaffold extends Module {
     private final BooleanSetting rotate = new BooleanSetting("Rotate", this, true);
     private final BooleanSetting autoSwap = new BooleanSetting("AutoSwap", this, true);
     private final BooleanSetting eChestHolding = new BooleanSetting("eChestHolding", this, true);
-
     private final BooleanSetting tower = new BooleanSetting("Tower", this, true);
     private final BooleanSetting render = new BooleanSetting("Render", this, true);
     private final DoubleSetting opacity = new DoubleSetting("RenderOpacity", this, 0.0, 1, 0.5);
@@ -48,13 +45,13 @@ public class Scaffold extends Module {
      * Variables
      */
     private BlockPosWithFacing currentBlock;
-    private TimerUtil timer;
+    private Timer timer;
 
     public Scaffold() {
-        super("Scaffold", "Automatically towers with blocks", Keyboard.KEY_NONE, Category.World);
+        super("Scaffold", "Automatically places blocks under your feet", Keyboard.KEY_NONE, Category.World);
 
-        registerSettings(rotate, autoSwap, eChestHolding, render, tower, opacity, fill, outline);
-        timer = new TimerUtil();
+        registerSettings(rotate, autoSwap, eChestHolding, render, tower, fill, outline, opacity);
+        timer = new Timer();
     }
 
     private boolean isBlockValid(Block block) {
@@ -75,6 +72,8 @@ public class Scaffold extends Module {
 
         return null;
     }
+
+    // Dayum Fuck Dis Shiet Code
     private BlockPosWithFacing checkNearBlocksExtended(BlockPos blockPos) { // TODO FUCKING OPTIMIZE!!!!!!
         BlockPosWithFacing ret = null;
 
@@ -201,12 +200,12 @@ public class Scaffold extends Module {
         double d5 = d3;
         double d6 = Math.sqrt(d4 * d4 + d5 * d5);
 
-        float f = (float)(Math.toDegrees(Math.atan2(d3, d)) - 90.0f);
-        float f2 = (float)(-Math.toDegrees(Math.atan2(d2, d6)));
+        float f = (float) (Math.toDegrees(Math.atan2(d3, d)) - 90.0f);
+        float f2 = (float) (-Math.toDegrees(Math.atan2(d2, d6)));
 
         float[] ret = new float[2];
-        ret[0] = mc.player.rotationYaw + MathHelper.wrapDegrees((float)(f - mc.player.rotationYaw));
-        ret[1] = mc.player.rotationPitch + MathHelper.wrapDegrees((float)(f2 - mc.player.rotationPitch));
+        ret[0] = mc.player.rotationYaw + MathHelper.wrapDegrees((float) (f - mc.player.rotationYaw));
+        ret[1] = mc.player.rotationPitch + MathHelper.wrapDegrees((float) (f2 - mc.player.rotationPitch));
 
         return ret;
     }
@@ -223,75 +222,164 @@ public class Scaffold extends Module {
             GradientShader.finish();
         }
     }
+
+    // didnt even bother tbh
     @Listener
     public void onMotionUpdate(MotionEvent event) {
-        if (event.getStage() != EventStageable.EventStage.PRE) {
-            return;
-        }
+        {
+            block31:
+            {
+                BlockPos blockPos;
+                Scaffold scaffold;
+                int n;
+                block37:
+                {
+                    block36:
+                    {
+                        block35:
+                        {
+                            block34:
+                            {
+                                block33:
+                                {
+                                    block30:
+                                    {
+                                        BlockPos blockPos2;
+                                        block32:
+                                        {
+                                            block29:
+                                            {
+                                                block28:
+                                                {
+                                                    block27:
+                                                    {
+                                                        block26:
+                                                        {
+                                                            if (this.countValidBlocks() <= 0) break block26;
+                                                            if (Double.compare(mc.player.posY, 257.0) <= 0)
+                                                                break block27;
+                                                        }
+                                                        this.currentBlock = null;
+                                                        return;
+                                                    }
+                                                    if (this.countValidBlocks() <= 0) break block28;
+                                                    if (autoSwap.booleanValue()) break block29;
+                                                    if (mc.player.getHeldItemMainhand().getItem() instanceof ItemBlock) break block29;
+                                                }
+                                            }
+                                            if (event.getStage() != EventStageable.EventStage.PRE) break block30;
+                                            this.currentBlock = null;
+                                            if (mc.player.isSneaking()) break block31;
+                                            int n2 = this.findBlockToPlace();
+                                            if (n2 == -1) break block31;
+                                            Item item = mc.player.inventory.getStackInSlot(n2).getItem();
+                                            if (!(item instanceof ItemBlock)) break block31;
+                                            Block block = ((ItemBlock) item).getBlock();
+                                            boolean bl = block.getDefaultState().isFullBlock();
+                                            double d = bl ? 1.0 : 0.01;
+                                            blockPos2 = new BlockPos(mc.player.posX, mc.player.posY - d, mc.player.posZ);
+                                            if (!mc.world.getBlockState(blockPos2).getMaterial().isReplaceable())
+                                                break block31;
+                                            if (bl) break block32;
+                                            if (!blockCheck(n2)) break block31;
+                                        }
+                                        Scaffold scaffold2 = this;
+                                        scaffold2.currentBlock = this.checkNearBlocksExtended(blockPos2);
+                                        if (scaffold2.currentBlock != null) {
+                                            if (this.rotate.booleanValue()) {
+                                                float[] rotations = getRotations(currentBlock.blockPos, currentBlock.enumFacing);
+                                                event.setYaw(rotations[0]);
+                                                event.setPitch(rotations[1]);
+                                                return;
+                                            }
+                                        }
+                                        break block31;
+                                    }
+                                    if (this.currentBlock == null) break block31;
+                                    n = mc.player.inventory.currentItem;
+                                    if (!(mc.player.getHeldItemMainhand().getItem() instanceof ItemBlock))
+                                        break block33;
+                                    if (this.isBlockValid(((ItemBlock) mc.player.getHeldItemMainhand().getItem()).getBlock()))
+                                        break block34;
+                                }
+                                if (autoSwap.booleanValue()) {
+                                    int n3 = this.findBlockToPlace();
+                                    if (n3 != -1) {
+                                        mc.player.inventory.currentItem = n3;
+                                        mc.player.connection.sendPacket(new CPacketHeldItemChange(mc.player.inventory.currentItem));
+                                    }
+                                }
+                            }
+                            if (!mc.player.movementInput.jump) break block35;
+                            if (mc.player.moveForward != 0.0f) break block35;
+                            if (mc.player.moveStrafing != 0.0f) break block35;
+                            if (!tower.booleanValue()) break block35;
+                            mc.player.setVelocity(0.0, 0.42, 0.0);
 
-        if (mc.player.isSneaking() || countValidBlocks() <= 0 || mc.player.posY > 256) {
-            this.currentBlock = null;
-            return;
-        }
+                            if (!timer.passed(1500)) break block36;
+                            mc.player.motionY = -0.28;
+                            Scaffold scaffold3 = this;
+                            scaffold = scaffold3;
+                            timer.reset();
+                            break block37;
+                        }
+                        timer.reset();
+                    }
+                    scaffold = this;
+                }
 
-        BlockPos blockPos = new BlockPos(mc.player.posX, mc.player.posY - 1.0, mc.player.posZ);
-        if (!mc.world.getBlockState(blockPos).getMaterial().isReplaceable()) {
-            return;
-        }
-
-        this.currentBlock = this.checkNearBlocksExtended(blockPos);
-        if (this.currentBlock == null) {
-            return;
-        }
-
-        if (rotate.booleanValue()) {
-            float[] rotations = getRotations(currentBlock.blockPos, currentBlock.enumFacing);
-            event.setYaw(rotations[0]);
-            event.setPitch(rotations[1]);
-        }
-
-        if (tower.booleanValue() && mc.player.movementInput.jump && mc.player.moveForward == 0.0f && mc.player.moveStrafing == 0.0f) {
-            handleTowerMovement();
-        }
-
-        placeBlockUnderPlayer();
-    }
-
-    private void handleTowerMovement() {
-        mc.player.setVelocity(0.0, 0.42, 0.0);
-        if (timer.hasReached(1500)) {
-            mc.player.motionY = -0.28;
-            timer.reset();
-        }
-    }
-
-    private void placeBlockUnderPlayer() {
-        int originalSlot = mc.player.inventory.currentItem;
-        if (autoSwap.booleanValue()) {
-            int blockSlot = findBlockToPlace();
-            if (blockSlot != -1 && blockSlot != originalSlot) {
-                mc.player.inventory.currentItem = blockSlot;
-                mc.player.connection.sendPacket(new CPacketHeldItemChange(blockSlot));
+                System.out.println("Watafak");
+                BlockPos blockPos3 = blockPos = scaffold.currentBlock.blockPos;
+                boolean bl = mc.world.getBlockState(blockPos).getBlock().onBlockActivated(mc.world, blockPos3, mc.world.getBlockState(blockPos3), mc.player, EnumHand.MAIN_HAND, EnumFacing.DOWN, 0.0f, 0.0f, 0.0f);
+                if (bl) {
+                    mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
+                }
+                mc.playerController.processRightClickBlock(mc.player, mc.world, blockPos, this.currentBlock.enumFacing, new Vec3d((double) blockPos.getX() + Math.random(), mc.world.getBlockState((BlockPos) blockPos).getSelectedBoundingBox((World) mc.world, (BlockPos) blockPos).maxY - 0.01, (double) blockPos.getZ() + Math.random()), EnumHand.MAIN_HAND);
+                mc.player.swingArm(EnumHand.MAIN_HAND);
+                if (bl) {
+                    mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
+                }
+                mc.player.inventory.currentItem = n;
+                mc.player.connection.sendPacket(new CPacketHeldItemChange(mc.player.inventory.currentItem));
             }
         }
+    }
 
-        BlockPos blockPos = currentBlock.blockPos;
-        boolean actionResult = mc.world.getBlockState(blockPos).getBlock().onBlockActivated(mc.world, blockPos, mc.world.getBlockState(blockPos), mc.player, EnumHand.MAIN_HAND, EnumFacing.DOWN, 0.0f, 0.0f, 0.0f);
+    public class Timer {
+        private long time;
+        long startTime = System.currentTimeMillis();
+        long delay = 0L;
+        boolean paused = false;
 
-        if (actionResult) {
-            mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
+        public boolean isPassed() {
+            return !this.paused && System.currentTimeMillis() - this.startTime >= this.delay;
         }
 
-        mc.playerController.processRightClickBlock(mc.player, mc.world, blockPos, currentBlock.enumFacing, new Vec3d(blockPos.getX() + Math.random(), mc.world.getBlockState(blockPos).getSelectedBoundingBox(mc.world, blockPos).maxY - 0.01, blockPos.getZ() + Math.random()), EnumHand.MAIN_HAND);
-        mc.player.swingArm(EnumHand.MAIN_HAND);
-
-        if (actionResult) {
-            mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
+        public void setDelay(long l) {
+            this.delay = l;
         }
 
-        if (autoSwap.booleanValue() && originalSlot != mc.player.inventory.currentItem) {
-            mc.player.inventory.currentItem = originalSlot;
-            mc.player.connection.sendPacket(new CPacketHeldItemChange(originalSlot));
+        public long getTimePassed() {
+            return System.currentTimeMillis() - this.time;
+        }
+
+
+        public Timer() {
+            this.time = -1L;
+        }
+
+        public final boolean passed(final long delay) {
+            return passed(delay, false);
+        }
+
+        public boolean passed(final long delay, final boolean reset) {
+            if (reset) this.reset();
+            return System.currentTimeMillis() - this.time >= delay;
+        }
+
+        public final void reset() {
+            this.time = System.currentTimeMillis();
+            this.startTime = System.currentTimeMillis();
         }
     }
 }

@@ -60,6 +60,7 @@ dependencies {
         exclude module: 'commons-io'
         exclude module: 'gson'
     }
+
 }
 
 processResources {

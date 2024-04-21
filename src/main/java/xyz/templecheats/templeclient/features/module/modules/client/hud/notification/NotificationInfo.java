@@ -1,7 +1,7 @@
 package xyz.templecheats.templeclient.features.module.modules.client.hud.notification;
 
 import static net.minecraft.util.math.MathHelper.clamp;
-import static xyz.templecheats.templeclient.features.module.modules.client.hud.notification.NotificationsRewrite.*;
+import static xyz.templecheats.templeclient.features.module.modules.client.hud.notification.Notifications.*;
 
 public class NotificationInfo {
     String text;
@@ -9,7 +9,7 @@ public class NotificationInfo {
     NotificationType type;
     long spawnTime;
 
-    private final long KEEPTIME = (long) (INSTANCE.keepTime.doubleValue() * 1000L);
+    public long KEEPTIME = (long) (INSTANCE.keepTime.doubleValue() * 1000L);
     private final long SHOWTIME = (long) (INSTANCE.showTime.doubleValue() * 100L);
     private final long HIDETIME = (long) (INSTANCE.hideTime.doubleValue() * 100L);
 

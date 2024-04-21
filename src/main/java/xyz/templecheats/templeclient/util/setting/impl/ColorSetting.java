@@ -69,11 +69,11 @@ public class ColorSetting extends Setting<Color> {
 
     @Override
     public Item createBasicButton(Button parent) {
-        return new xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.buttons.ColorButton(this, parent);
+        return new xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.buttons.ColorButton(this);
     }
 
     @Override
     public xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.Item createCsgoButton(xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.Button parent) {
-        return new ColorButton(this, parent);
+        return new ColorButton(this);
     }
 }

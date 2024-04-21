@@ -18,7 +18,7 @@ public class FakePlayer extends Module {
     /*
      * Setting
      */
-    private final StringSetting name = new StringSetting("Name", this, "Temple-Client");
+    private final StringSetting name = new StringSetting("Name", this, "FakePlayer");
     private final BooleanSetting moveButton = new BooleanSetting("Move", this, false);
 
     /*
@@ -44,6 +44,7 @@ public class FakePlayer extends Module {
         fakePlayer.setEntityId(-1882);
         fakePlayer.copyLocationAndAnglesFrom(mc.player);
         fakePlayer.rotationYawHead = mc.player.rotationYawHead;
+        fakePlayer.inventory.copyInventory(mc.player.inventory);
         respawnLocation = mc.player.getPosition();
         mc.world.addEntityToWorld(fakePlayer.getEntityId(), fakePlayer);
     }

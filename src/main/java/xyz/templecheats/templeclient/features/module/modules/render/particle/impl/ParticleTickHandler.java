@@ -24,7 +24,7 @@ public class ParticleTickHandler {
     public int tickLiving = (int) random(100, 300);
     public int maxTickLiving = tickLiving;
 
-    public ParticleTickHandler(Vec3d posIn, double motionX, double motionY, double motionZ, double size, double gravityAmount, double inertiaAmount) {
+    public ParticleTickHandler(Vec3d posIn, double motionX, double motionY, double motionZ, double gravityAmount, double inertiaAmount) {
         this.pos = posIn;
         this.prevPos = posIn;
         this.motionX = motionX;

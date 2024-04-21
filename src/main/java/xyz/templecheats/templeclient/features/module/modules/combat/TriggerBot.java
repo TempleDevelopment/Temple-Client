@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -12,12 +13,9 @@ import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.features.module.Module;
 
 public class TriggerBot extends Module {
-    /*
-     * Variables
-     */
-    private Entity entity;
 
     private EntityLivingBase renderTarget;
+
     public TriggerBot() {
         super("TriggerBot", "Automatically attack entities that are on your crosshair", Keyboard.KEY_NONE, Category.Combat);
     }
@@ -28,14 +26,16 @@ public class TriggerBot extends Module {
 
         if (objectMouseOver != null) {
             if (objectMouseOver.typeOfHit == RayTraceResult.Type.ENTITY) {
-                entity = objectMouseOver.entityHit;
+
+                Entity entity = objectMouseOver.entityHit;
 
                 if (entity instanceof EntityPlayer && !TempleClient.friendManager.isFriend(entity.getName())) {
                     this.renderTarget = (EntityLivingBase) entity;
 
-                    if (Minecraft.getMinecraft().player.getCooledAttackStrength(0) == 1) {
-                        Minecraft.getMinecraft().playerController.attackEntity(Minecraft.getMinecraft().player, entity);
-                        Minecraft.getMinecraft().player.resetCooldown();
+                    if (mc.player.getCooledAttackStrength(0) == 1) {
+                        mc.playerController.attackEntity(Minecraft.getMinecraft().player, entity);
+                        mc.player.swingArm(EnumHand.MAIN_HAND);
+                        mc.player.resetCooldown();
                     }
                 } else {
                     this.renderTarget = null;
@@ -43,12 +43,11 @@ public class TriggerBot extends Module {
             }
         }
     }
+
     @Override
     public String getHudInfo() {
-        if (this.renderTarget != null) {
+        if(this.renderTarget !=null)
             return this.renderTarget.getName();
-        }
-
-        return "";
+        return"";
     }
 }

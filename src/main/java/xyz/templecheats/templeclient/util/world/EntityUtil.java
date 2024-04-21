@@ -2,6 +2,8 @@ package xyz.templecheats.templeclient.util.world;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
@@ -35,5 +37,8 @@ public class EntityUtil {
 
     public static boolean isMoving() {
         return (double) mc.player.moveForward != 0.0 || (double) mc.player.moveStrafing != 0.0;
+    }
+    public static int getDamagePercent(ItemStack stack) {
+        return (int) ((stack.getMaxDamage() - stack.getItemDamage()) / Math.max(0.1, stack.getMaxDamage()) * 100.0f);
     }
 }

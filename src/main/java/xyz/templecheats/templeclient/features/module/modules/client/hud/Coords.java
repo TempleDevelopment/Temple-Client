@@ -6,6 +6,8 @@ import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.features.module.modules.client.HUD;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font18;
+
 public class Coords extends HUD.HudElement {
     /*
      * Settings
@@ -27,9 +29,9 @@ public class Coords extends HUD.HudElement {
 
         String coordsString = TextFormatting.GRAY + "XYZ: " + TextFormatting.RESET + playerPos[0] + ", " + playerPos[1] + ", " + playerPos[2];
 
-        font.drawString(coordsString, this.getX(), this.getY() + font.getFontHeight() + 2, ClickGUI.INSTANCE.getStartColor().getRGB(), true, 1.0f);
+        font18.drawString(coordsString, this.getX(), this.getY() + font18.getFontHeight() + 2, ClickGUI.INSTANCE.getStartColor().getRGB(), true);
 
-        double width = font.getStringWidth(coordsString);
+        double width = font18.getStringWidth(coordsString);
 
         if (dimensionCoords.booleanValue()) {
             if (mc.player.dimension == 0) {
@@ -41,9 +43,9 @@ public class Coords extends HUD.HudElement {
 
                 String netherCoordsString = TextFormatting.GRAY + "Nether: " + TextFormatting.RESET + netherPos[0] + ", " + netherPos[1] + ", " + netherPos[2];
 
-                width = Math.max(width, font.getStringWidth(netherCoordsString));
+                width = Math.max(width, font18.getStringWidth(netherCoordsString));
 
-                font.drawString(netherCoordsString, this.getX(), this.getY(), 0xFFFFFF, true, 1.0f);
+                font18.drawString(netherCoordsString, this.getX(), this.getY(), 0xFFFFFF, true);
             } else if (mc.player.dimension == -1) {
                 float[] overworldPos = {
                         playerPos[0] * 8,
@@ -53,13 +55,13 @@ public class Coords extends HUD.HudElement {
 
                 String overworldCoordsString = TextFormatting.GRAY + "Overworld: " + TextFormatting.RESET + overworldPos[0] + ", " + overworldPos[1] + ", " + overworldPos[2];
 
-                width = Math.max(width, font.getStringWidth(overworldCoordsString));
+                width = Math.max(width, font18.getStringWidth(overworldCoordsString));
 
-                font.drawString(overworldCoordsString, this.getX(), this.getY(), 0xFFFFFF, true, 1.0f);
+                font18.drawString(overworldCoordsString, this.getX(), this.getY(), 0xFFFFFF, true);
             }
         }
 
         this.setWidth(width);
-        this.setHeight((font.getFontHeight() * 2) + 2);
+        this.setHeight((font18.getFontHeight() * 2) + 2);
     }
 }

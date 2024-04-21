@@ -9,10 +9,12 @@ import xyz.templecheats.templeclient.util.render.RenderUtil;
 
 import java.io.IOException;
 
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font16;
+
 public class BindButton extends Button {
     private final Module module;
     private boolean listening;
-    
+
     public BindButton(Module module) {
         super("Keybind");
         this.module = module;
@@ -23,9 +25,9 @@ public class BindButton extends Button {
     public void drawScreen(final int mouseX, final int mouseY, final float partialTicks) {
         RenderUtil.drawRect(x, y, x + width + 7.4F, y + height, !isHovering(mouseX, mouseY) ? 0x11555555 : 0x88555555);
         String s = listening ? "..." : Keyboard.getKeyName(module.getKey());
-        font16.drawString(getLabel() + " " + TextFormatting.GRAY + s, this.x + 2.3, this.y + 4, 0xFFFFFFFF, false, 1.0f);
+        font16.drawString(getLabel() + " " + TextFormatting.GRAY + s, this.x + 2.3, this.y + 4, 0xFFFFFFFF, false);
     }
-    
+
     @Override
     public void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) {
         super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -35,7 +37,7 @@ public class BindButton extends Button {
             }
         }
     }
-    
+
     @Override
     public void keyTyped(char typedChar, int keyCode) throws IOException {
         if(listening) {

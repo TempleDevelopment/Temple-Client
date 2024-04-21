@@ -13,13 +13,21 @@ import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.It
 import xyz.templecheats.templeclient.features.gui.font.CFont;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.features.module.modules.client.FontSettings;
+import xyz.templecheats.templeclient.util.color.impl.RectBuilder;
+import xyz.templecheats.templeclient.util.math.Vec2d;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font18;
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font20;
+import static xyz.templecheats.templeclient.util.color.ColorUtil.setAlpha;
+
 public abstract class Panel {
+    public static float[] counter1 = new float[]{1};
     private final List<Item> items = new ArrayList<>();
     private final Minecraft mc = Minecraft.getMinecraft();
     private final String label;
@@ -45,9 +53,12 @@ public abstract class Panel {
 
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drag(mouseX, mouseY);
+        counter1 = new float[]{1};
         float totalItemHeight = this.open ? this.getTotalItemHeight() - 2.0f : 0.0f;
-        RenderUtil.drawRect(this.x, (float) this.y - 1.5f, this.x + this.width, this.y + this.height - 6, 0x77000000);
-        RenderUtil.drawGradientRect(this.x, (float) this.y - 1.5f, this.x + this.width, this.y + this.height - 6, ClickGUI.INSTANCE.getStartColor().getRGB(), ClickGUI.INSTANCE.getEndColor().getRGB());
+
+        new RectBuilder(new Vec2d(this.x, (float) this.y - 1.5f), new Vec2d(this.x + this.width, this.y + this.height - 6))
+                .color(ClickGUI.INSTANCE.getStartColor())
+                .draw();
 
         if (ClickGUI.INSTANCE.particles.booleanValue()) {
             ClickGUI.INSTANCE.particleUtil.drawParticles();
@@ -58,8 +69,8 @@ public abstract class Panel {
         if(this.open) {
             RenderUtil.drawRect(this.x, (float) this.y + 12.5f, this.x + this.width, (float) (this.y + this.height) + totalItemHeight, 0x77000000);
         }
-        CFont font = FontSettings.INSTANCE.getFont().setSize(18);
-        font.drawString(this.getLabel(), (float) this.x + 3.0f, (float) this.y + 1.5f, -1, false, 1.0f);
+
+        font20.drawString(this.getLabel(), (float) this.x + 3.0f, (float) this.y, -1, false);
 
         if(!open) {
             if(this.angle > 0) {
@@ -81,6 +92,7 @@ public abstract class Panel {
         if(this.open) {
             float y = (float) (this.getY() + this.getHeight()) - 3.0f;
             for(Item item : getItems()) {
+                Panel.counter1[0] = counter1[0] + 0.5f;
                 item.setLocation((float) this.x + 2.0f, y);
                 item.setWidth(this.getWidth() - 4);
                 item.drawScreen(mouseX, mouseY, partialTicks);

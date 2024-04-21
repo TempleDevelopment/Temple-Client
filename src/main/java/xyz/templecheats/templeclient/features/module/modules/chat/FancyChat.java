@@ -10,11 +10,16 @@ import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 import java.util.Random;
 
 public class FancyChat extends Module {
-    private static final Random random = new Random();
-    private static final Char2ObjectMap<String> MORSE_CODE_MAP = new Char2ObjectOpenHashMap<>();
-
+    /*
+     * Settings
+     */
     private final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.Uwu);
 
+    /*
+     * Variables
+     */
+    private static final Char2ObjectMap<String> MORSE_CODE_MAP = new Char2ObjectOpenHashMap<>();
+    private static final Random random = new Random();
     public FancyChat() {
         super("FancyChat", "Makes your text look gamer", 0, Category.Chat);
 

@@ -24,8 +24,10 @@ public class ClickGUI extends Module {
 	 */
 	public final BooleanSetting gears = new BooleanSetting("Gears", this, true);
 	public final BooleanSetting particles = new BooleanSetting("Particles", this, false);
-	private final BooleanSetting rainbow = new BooleanSetting("Rainbow", this, false);
+	public final BooleanSetting tint = new BooleanSetting("Tint", this, true);
 	private final BooleanSetting scaledResolution = new BooleanSetting("Scaled Resolution", this, false);
+	public final EnumSetting<ColorMode> colorMode = new EnumSetting <>("Color Mode", this, ColorMode.Default);
+	public final EnumSetting<Way> way = new EnumSetting <>("Way", this, Way.Horizontal);
 	private final ColorSetting startColor = new ColorSetting("Start Color", this, Color.CYAN);
 	private final ColorSetting endColor = new ColorSetting("End Color", this, Color.CYAN);
 	public final IntSetting scrollSpeed = new IntSetting("Scroll Speed", this, 0, 100, 10);
@@ -41,15 +43,15 @@ public class ClickGUI extends Module {
 		super("ClickGUI", "Screen to configure modules", Keyboard.KEY_RSHIFT, Category.Client);
 		INSTANCE = this;
 
-		this.registerSettings(gears, particles, rainbow, scaledResolution,
+		this.registerSettings(gears, particles, tint, scaledResolution,
 				endColor, startColor, scrollSpeed,
 				scale,
-				theme);
+				colorMode, way, theme);
 	}
 
 	@Override
 	public void onUpdateConstant() {
-		if (this.rainbow.booleanValue()) {
+		if (colorMode.value() == ColorMode.Rainbow) {
 			rainbowUtil.updateRainbow();
 			rainbowColor = rainbowUtil.getRainbowColor();
 		}
@@ -64,8 +66,12 @@ public class ClickGUI extends Module {
 		return rainbowUtil.rainbowProgress(5, offset * 200, getStartColor().getRGB(), getEndColor().getRGB());
 	}
 
+	public int getClientColor(int speed, int offset) {
+		return rainbowUtil.rainbowProgress(speed, offset * 200, getStartColor().getRGB(), getEndColor().getRGB());
+	}
+
 	public Color getStartColor() {
-		if (this.rainbow.booleanValue()) {
+		if (colorMode.value() == ColorMode.Rainbow) {
 			return new Color(rainbowColor);
 		}
 
@@ -73,11 +79,23 @@ public class ClickGUI extends Module {
 	}
 
 	public Color getEndColor() {
-		if (this.rainbow.booleanValue()) {
+		if (colorMode.value() == ColorMode.Rainbow) {
 			return new Color(rainbowColor);
 		}
 
 		return endColor.getColor();
+	}
+
+	public enum ColorMode {
+		Default,
+		Static,
+		Gradient,
+		Rainbow
+	}
+
+	public enum Way {
+		Horizontal,
+		Vertical
 	}
 
 	public enum Theme {

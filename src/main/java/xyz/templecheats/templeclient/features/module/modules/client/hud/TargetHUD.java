@@ -1,75 +1,182 @@
 package xyz.templecheats.templeclient.features.module.modules.client.hud;
 
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RayTraceResult;
-import org.lwjgl.opengl.GL11;
-import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
-import xyz.templecheats.templeclient.features.module.modules.client.HUD;
+import xyz.templecheats.templeclient.event.ForgeEventManager;
+import xyz.templecheats.templeclient.features.gui.clickgui.hud.HudEditorScreen;
+import xyz.templecheats.templeclient.features.module.modules.client.*;
+import xyz.templecheats.templeclient.features.module.modules.combat.*;
+import xyz.templecheats.templeclient.util.color.impl.RectBuilder;
+import xyz.templecheats.templeclient.util.math.Vec2d;
 
 import java.awt.*;
 import java.util.Objects;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+
+import static net.minecraft.util.math.MathHelper.clamp;
+import static org.lwjgl.opengl.GL11.*;
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font12;
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font18;
+import static xyz.templecheats.templeclient.util.color.ColorUtil.setAlpha;
+import static xyz.templecheats.templeclient.util.math.MathUtil.lerp;
+import static xyz.templecheats.templeclient.util.math.MathUtil.round;
+import static xyz.templecheats.templeclient.util.render.RenderUtil.drawHead;
 
 public class TargetHUD extends HUD.HudElement {
+
+    private TargetInfo info = TargetInfo.BLANK;
+    private double healthProgress = 0.0;
     public TargetHUD() {
-        super("TargetHUD", "Draws a HUD featuring players name and health when aimed at");
+        super("TargetHUD", "Draws a HUD featuring target information");
+        registerSettings(outline, blur, color, outlineColor, outlineWidth, blurRadius);
     }
 
     @Override
     public void renderElement(ScaledResolution sr) {
-        boolean show = false;
-        double healthBarWidth = 0;
-        String enemyNickname = "";
-        double enemyHP = 0;
-        double enemyDistance = 0;
-        EntityPlayer entity = null;
-        RayTraceResult objectMouseOver = mc.objectMouseOver;
+        this.update();
 
-        if (objectMouseOver != null && objectMouseOver.typeOfHit == RayTraceResult.Type.ENTITY && objectMouseOver.entityHit instanceof EntityPlayer) {
-            entity = (EntityPlayer) objectMouseOver.entityHit;
-            enemyNickname = entity.getName();
-            enemyHP = entity.getHealth();
-            enemyDistance = entity.getDistance(mc.player);
-            show = true;
+        Vec2d pos1 = new Vec2d(-getWidth() * 0.5, -getHeight() * 0.5);
+        Vec2d pos2 = new Vec2d(getWidth() * 0.5, getHeight() * 0.5);
+
+        glPushMatrix();
+
+        glTranslated(getX() + getWidth() * 0.5, getY() + getHeight() * 0.5, 0.0);
+        glScaled(1.0, 1.0, 1.0);
+        if (info != TargetInfo.BLANK) {
+            drawTarget(pos1, pos2);
         }
+        glPopMatrix();
 
-        this.setWidth(140);
-        this.setHeight(40);
+        this.setWidth(120 + (font18.getStringWidth(info.name) / 2));
+        this.setHeight(38);
+    }
 
-        if (show && mc.world != null && mc.player != null) {
-            final float x = (float)(this.getX() + this.getWidth() + 1);
-            final float y = (float)(this.getY() + this.getHeight() - 30);
+    public void drawTarget(Vec2d pos1, Vec2d pos2) {
+        // Colors
+        Color highlightColor1 = setAlpha(ClickGUI.INSTANCE.getClientColor(0), 0.06);
+        Color highlightColor2 = setAlpha(highlightColor1, 0.0);
+        Color headBgColor = new Color(26, 26, 26);
+        Color bgColor = color.getColor();
+        Color bgOutline = outlineColor.getColor();
+        Color healthBarBgColor = new Color(12, 12, 12);
+        Color healthBarColor1 = setAlpha(ClickGUI.INSTANCE.getClientColor(0), 0.75);
+        Color healthBarColor2 = setAlpha(ClickGUI.INSTANCE.getClientColor(2), 0.75);
+        Color fontColor = new Color(-1);
 
-            final float health = Math.round(enemyHP);
-            double hpPercentage = health / 20;
+        double h = pos2.y - pos1.y;
 
-            hpPercentage = MathHelper.clamp(hpPercentage, 0, 1);
-            final double hpWidth = 97.0 * hpPercentage;
+        // Background
+        new RectBuilder(pos1, pos2).outlineColor(bgOutline).width(outline.booleanValue() ? outlineWidth.doubleValue() : 0).color(bgColor).radius(5.0).blur(blur.booleanValue() ? blurRadius.doubleValue() : 0).drawBlur().draw();
+        // Highlight
+        new RectBuilder(pos1.plus(1.0), pos2.minus(1.0)).colorV(highlightColor1, highlightColor2).radius(3.9).draw();
+        // Head background
+        new RectBuilder(pos1, pos1.plus(h)).color(headBgColor).radius(5.0).draw();
+        new RectBuilder(pos1.plus(h * 0.5, 0.0), pos1.plus(h)).color(headBgColor).draw();
+        // Shadow
+        new RectBuilder(pos1.plus(h, 0.0), pos1.plus(h + 5.0, h)).colorH(new Color(0, 0, 0, 90), new Color(0, 0, 0, 0)).draw();
 
-            final String healthStr = String.valueOf(Math.round(enemyHP));
+        Vec2d headPos1 = pos1.plus(3.0);
+        Vec2d headPos2 = pos1.plus(h).minus(3.0);
+        drawHead(info.entity, headPos1, headPos2, 6f);
 
-            Gui.drawRect((int)(x - 140.5), (int)(y - 9.5), (int)(x - 0.5), (int)(y + 30.5f), new Color(31, 31, 31, 255).getRGB());
-            Gui.drawRect((int)(x - 99.0f), (int)(y + 6.0f), (int)(x - 2.0f), (int)(y + 15.0f), new Color(40, 40, 40, 255).getRGB());
-            Gui.drawRect((int)(x - 99.0f), (int)(y + 6.0f), (int)(x - 99.0f + healthBarWidth), (int)(y + 15.0f), ClickGUI.INSTANCE.getStartColor().getRGB());
+        // Healthbar background
+        double healthBarCenter = lerp(pos1.y, pos2.y, 0.75);
+        Vec2d healthBgPos1 = new Vec2d(pos1.x + h + 4.0, healthBarCenter - 2.0);
+        Vec2d healthBgPos2 = new Vec2d(pos2.x - 4.0, healthBarCenter + 2.0);
+        new RectBuilder(healthBgPos1, healthBgPos2).color(healthBarBgColor).radius(100.0).blur(8).drawBlur().draw();
 
-            Gui.drawRect((int)(x - 99.0f), (int)(y + 6.0f), (int)(x - 99.0f + hpWidth), (int)(y + 15.0f), ClickGUI.INSTANCE.getStartColor().getRGB());
+        // Healthbar
+        double sliderX = lerp(healthBgPos1.x, healthBgPos2.x, healthProgress);
+        Vec2d healthSliderPos = new Vec2d(sliderX, healthBgPos2.y);
+        Vec2d textPos = new Vec2d(healthBgPos1.x, healthBgPos1.y);
+        new RectBuilder(healthBgPos1, healthSliderPos).colorH(healthBarColor1, healthBarColor2).radius(100.0).draw();
 
-            font.drawString(healthStr, x - 138.0f + 46.0f - mc.fontRenderer.getStringWidth(healthStr) / 2.0f, y + 19.5f, -1, true, 1.0f);
-            font.drawString("\u2764", x - 138.0f + 46.0f + mc.fontRenderer.getStringWidth(healthStr), y + 19.5f, ClickGUI.INSTANCE.getStartColor().getRGB(), true, 1.0f);
-            font.drawString(entity.getName(), x - 97, y - 5.0f, -1, true, 1.0f);
+        // Health and Name
+        font12.drawString("HP: " + info.displayHealth(), (float) textPos.x, (float) (textPos.y - font12.getFontHeight() - 3), fontColor, false);
+        font18.drawString(info.name, (float) textPos.x, (float) textPos.y - font18.getFontHeight() - 10, fontColor, false);
 
-            try {
-                this.drawHead(Objects.requireNonNull(mc.getConnection()).getPlayerInfo(entity.getUniqueID()).getLocationSkin(), (int)(x - 139), (int)(y - 8));
-            } catch (Exception ignored) {}
+        // Armor bar
+        double barSize = 7.8;
+        double barPadding = 2.0;
+        Vec2d armorBarStartPos = new Vec2d(pos2.x - 5 - barSize * 2 - barPadding * 3, pos1.y + 5.0);
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                Vec2d armorBarPos1 = armorBarStartPos.plus((barSize + barPadding) * i, (barSize + barPadding) * j);
+                Vec2d armorBarPos2 = armorBarPos1.plus(barSize);
+                new RectBuilder(armorBarPos1, armorBarPos2).color(headBgColor).radius(1.0).draw();
+                int index = (1 - i) * 2 + (1 - j);
+                if (info.entity instanceof EntityPlayer) {
+                    final EntityPlayer player = (EntityPlayer) info.entity;
+                    if (index < player.inventory.armorInventory.size()) {
+                        ItemStack stack = player.inventory.armorInventory.get(index);
+                        if (!stack.isEmpty()) {
+                            GlStateManager.pushMatrix();
+                            RenderHelper.enableGUIStandardItemLighting();
+
+                            glTranslatef((float) armorBarPos1.x, (float) armorBarPos1.y, 0.0f);
+                            glScaled(0.5, 0.5, 0.5);
+                            mc.getRenderItem().renderItemAndEffectIntoGUI(stack, 0, 0);
+                            mc.getRenderItem().renderItemOverlays(mc.fontRenderer, stack, 0, 0);
+
+                            RenderHelper.disableStandardItemLighting();
+                            GlStateManager.popMatrix();
+                        }
+                    }
+                }
+            }
         }
     }
 
-    private void drawHead(ResourceLocation skin, int width, int height) {
-        GL11.glColor4f(1, 1, 1, 1);
-        mc.getTextureManager().bindTexture(skin);
-        Gui.drawScaledCustomSizeModalRect(width, height, 8, 8, 8, 8, 37, 37, 64, 64);
+    public void update() {
+        EntityLivingBase entity = (mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.ENTITY && mc.objectMouseOver.entityHit instanceof EntityLivingBase) ? (EntityLivingBase) mc.objectMouseOver.entityHit : null;
+        EntityLivingBase ka = Aura.INSTANCE.isEnabled() ? Aura.INSTANCE.renderTarget : null;
+        EntityLivingBase ca = AutoCrystal.INSTANCE.isEnabled() ? AutoCrystal.INSTANCE.getTarget() : null;
+
+        // Java but write like kotlin syntax <3 - Kuro
+        // I hate this - ZANE
+        info = Stream.of(
+                        () -> (ca != null) ? new TargetInfo(ca.getName(), ca.getHealth() + ca.getAbsorptionAmount(), ca.getMaxHealth(), ca) : null,
+                        () -> (ka != null) ? new TargetInfo(ka.getName(), ka.getHealth() + ka.getAbsorptionAmount(), ka.getMaxHealth(), ka) : null,
+                        () -> (entity != null) ? new TargetInfo(entity.getName(), entity.getHealth() + entity.getAbsorptionAmount(), entity.getMaxHealth(), entity) : null,
+                        (Supplier<TargetInfo>) () -> (mc.currentScreen instanceof HudEditorScreen) ? TargetInfo.SELF : null
+                )
+                .map(Supplier::get)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(TargetInfo.BLANK);
+
+        healthProgress = lerp(healthProgress, info.healthProgress(), ForgeEventManager.deltaTime * 2.0);
+    }
+
+
+    private static class TargetInfo {
+        String name;
+        double health;
+        double maxHealth;
+        EntityLivingBase entity;
+
+        public TargetInfo(String name, double health, double maxHealth, EntityLivingBase entity) {
+            this.name = name;
+            this.health = health;
+            this.maxHealth = maxHealth;
+            this.entity = entity;
+        }
+
+        double healthProgress() {
+            return clamp(health / Math.max(0.1, maxHealth), 0.0, 1.0);
+        }
+
+        String displayHealth() {
+            return String.valueOf(round(health, 1));
+        }
+
+        static final TargetInfo BLANK = new TargetInfo("", 0.0, 1.0, null);
+        static final TargetInfo SELF = new TargetInfo("Temple Client", 20.0, 20.0, null);
     }
 }

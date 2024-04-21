@@ -1,11 +1,11 @@
 package xyz.templecheats.templeclient.features.module;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import xyz.templecheats.templeclient.TempleClient;
-import xyz.templecheats.templeclient.features.module.modules.client.hud.Notifications;
 import xyz.templecheats.templeclient.features.module.modules.client.hud.notification.NotificationType;
-import xyz.templecheats.templeclient.features.module.modules.client.hud.notification.NotificationsRewrite;
+import xyz.templecheats.templeclient.features.module.modules.client.hud.notification.Notifications;
 import xyz.templecheats.templeclient.util.color.impl.GradientShader;
 import xyz.templecheats.templeclient.util.setting.SettingHolder;
 
@@ -111,8 +111,7 @@ public class Module extends SettingHolder {
 
         if (mc.player != null) {
             this.onEnable();
-            Notifications.showNotification(this.getName() + " has been enabled");
-            NotificationsRewrite.addMessage(this.getName(),  " has been enable", NotificationType.INFO);
+            Notifications.addMessage(this.getName(), "Has been" + TextFormatting.GREEN + " enable", NotificationType.SUCCESS);
         } else {
             this.queueEnable = true;
         }
@@ -125,8 +124,7 @@ public class Module extends SettingHolder {
 
         if (mc.player != null) {
             this.onDisable();
-            Notifications.showNotification(this.getName() + " has been disabled");
-            NotificationsRewrite.addMessage(this.getName(),  " has been disabled", NotificationType.INFO);
+            Notifications.addMessage(this.getName(), "Has been" + TextFormatting.RED + " disabled", NotificationType.ERROR);
         }
     }
 

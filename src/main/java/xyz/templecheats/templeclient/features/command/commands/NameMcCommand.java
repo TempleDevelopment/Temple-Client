@@ -17,7 +17,7 @@ public class NameMcCommand extends Command {
     @Override
     public void execute(String[] args) {
         if (args.length < 2) {
-            Minecraft.getMinecraft().player.sendMessage(new TextComponentString(TextFormatting.RED + "[TempleClient] " + TextFormatting.RESET + "Name is required."));
+            Minecraft.getMinecraft().player.sendMessage(new TextComponentString(TextFormatting.RED + "[Temple] " + TextFormatting.RESET + "Name is required."));
             return;
         }
 

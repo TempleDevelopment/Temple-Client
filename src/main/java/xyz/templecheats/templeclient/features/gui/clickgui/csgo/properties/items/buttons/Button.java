@@ -13,11 +13,6 @@ import java.awt.*;
 
 public abstract class Button extends Item {
     private boolean state;
-    public final CFont font12 = FontSettings.INSTANCE.getFont().setSize(12);
-    public final CFont font14 = FontSettings.INSTANCE.getFont().setSize(14);
-    public final CFont font16 = FontSettings.INSTANCE.getFont().setSize(16);
-    public final CFont font18 = FontSettings.INSTANCE.getFont().setSize(18);
-    public final CFont font20 = FontSettings.INSTANCE.getFont().setSize(20);
     public Color[] color;
     public Button(String label) {
         super(label);

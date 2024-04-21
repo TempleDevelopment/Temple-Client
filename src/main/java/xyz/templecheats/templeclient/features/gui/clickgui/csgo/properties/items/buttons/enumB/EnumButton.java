@@ -15,6 +15,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font16;
+
 public class EnumButton<T extends Enum<T>> extends xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.Button {
     private final xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.Button parentButton;
     private final EnumSetting<T> setting;
@@ -28,6 +30,7 @@ public class EnumButton<T extends Enum<T>> extends xyz.templecheats.templeclient
         this.setting = setting;
         this.parentButton = parentButton;
         this.height = 22;
+        this.width = 188;
 
         for (T enumValue : setting.getValues()) {
             this.items.add(new EnumValueButton<>(enumValue));
@@ -41,8 +44,8 @@ public class EnumButton<T extends Enum<T>> extends xyz.templecheats.templeclient
             new RectBuilder(new Vec2d(x + getWidth() / 1.836, y + 6), new Vec2d(x + getWidth() - 8, y + 21))
                     .color(!this.isHovering(mouseX, mouseY) ? new Color(0xFF2A2927) : new Color(0x363636))
                     .radius(2.0).draw();
-            font16.drawString(getLabel(), x + 3 + 2 / 0.6, y + 10, 0xFFD2D2D2, false, 1.0f);
-            font16.drawString(setting.value().toString(), x + getWidth() / 1.8, y + 10, 0xFFD2D2D2, false, 1.0f);
+            font16.drawString(getLabel(), x + 3 + 2 / 0.6, y + 10, 0xFFD2D2D2, false);
+            font16.drawString(setting.value().toString(), x + getWidth() / 1.8, y + 10, 0xFFD2D2D2, false);
             mc.getTextureManager().bindTexture(new ResourceLocation("textures/icons/down.png"));
             Gui.drawScaledCustomSizeModalRect((int) (x + getWidth() - 23), (int) (y + 8), 0.0F, 0.0F, 7, 8, 7, 8, 7, 8);
             GlStateManager.popMatrix();
@@ -92,8 +95,10 @@ public class EnumButton<T extends Enum<T>> extends xyz.templecheats.templeclient
 
     @Override
     public int getHeight() {
-        return this.height;
+        int subItemsHeight = subOpen ? items.size() * 12 : 0;
+        return subOpen ? 22 + subItemsHeight : 22;
     }
+
 
     @Override
     public boolean getState() {

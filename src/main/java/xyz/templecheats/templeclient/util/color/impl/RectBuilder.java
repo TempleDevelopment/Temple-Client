@@ -17,10 +17,12 @@ public class RectBuilder {
     private final Vec2d pos1;
     private final Vec2d pos2;
     private final static ShaderUtil rectShader = new ShaderUtil("rect");
+    private final static ShaderUtil rectBlur = new ShaderUtil("blur-rect");
     private Quad<Color> colorIn = new Quad<>(Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE);
     private Quad<Color> colorOut = new Quad<>(Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE);
     private float roundRadius = 0.0f;
     private float outlineWidth = 0.0f;
+    private float blurRadius = 0.0f;
 
     public RectBuilder(Vec2d pos1, Vec2d pos2) {
         this.pos1 = pos1;
@@ -76,6 +78,61 @@ public class RectBuilder {
 
     public RectBuilder width(double value) {
         outlineWidth = (float) value;
+        return this;
+    }
+
+    public RectBuilder blur(double value) {
+        blurRadius = (float) value;
+        return this;
+    }
+
+    public RectBuilder drawBlur() {
+        float x1 = (float) pos1.x;
+        float y1 = (float) pos1.y;
+        float x2 = (float) pos2.x;
+        float y2 = (float) pos2.y;
+
+        if (x1 > x2) {
+            float i = x1;
+            x1 = x2;
+            x2 = i;
+        }
+
+        if (y1 > y2) {
+            float j = y1;
+            y1 = y2;
+            y2 = j;
+        }
+
+        float x = x1;
+        float y = y1;
+        float width = x2 - x1;
+        float height = y2 - y1;
+        float radius = Math.min(roundRadius, Math.min(width, height) / 2.0f);
+
+        resetColor();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glDisable(GL_ALPHA_TEST);
+        glAlphaFunc(GL_GREATER, 0.0001f);
+
+        rectBlur.attachShader();
+        rectBlur.setUniformf("size", width * (blurRadius / 2.5f), height * (blurRadius / 2.5f));
+        rectBlur.setUniformf("roundRadius", radius);
+        rectBlur.setUniformf("smoothFactor", 1.05f * blurRadius);
+
+        rectBlur.colorUniform("color1", colorIn.getFirst());
+        rectBlur.colorUniform("color2", colorIn.getThird());
+        rectBlur.colorUniform("color3", colorIn.getSecond());
+        rectBlur.colorUniform("color4", colorIn.getFourth());
+
+        float s = blurRadius / 2.5f;
+        rectBlur.render(x - s, y - s, width + s * 2.0f, height + s * 2.0f);
+        rectBlur.releaseShader();
+
+        GL11.glEnable(GL_ALPHA_TEST);
+        GlStateManager.disableBlend();
+
         return this;
     }
 

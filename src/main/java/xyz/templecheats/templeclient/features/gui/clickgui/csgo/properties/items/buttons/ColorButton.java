@@ -5,7 +5,8 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.SoundEvents;
 import xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.Item;
-import xyz.templecheats.templeclient.features.module.modules.client.hud.Notifications;
+import xyz.templecheats.templeclient.features.module.modules.client.hud.notification.NotificationType;
+import xyz.templecheats.templeclient.features.module.modules.client.hud.notification.Notifications;
 import xyz.templecheats.templeclient.util.color.ColorUtil;
 import xyz.templecheats.templeclient.util.color.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.color.impl.RoundedTexture;
@@ -21,22 +22,20 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font14;
 import static xyz.templecheats.templeclient.util.color.ColorUtil.*;
-import static xyz.templecheats.templeclient.util.render.RenderUtil.*;
 
 public class ColorButton extends Item {
     private boolean extended = false;
     private Color finalColor;
-    private final Button parentButton;
     private final ColorSetting setting;
     private boolean draggingPickerBase;
     private boolean draggingRGBSlider;
     private boolean draggingAlphaSlider;
     float[] color;
 
-    public ColorButton(ColorSetting setting, Button parentButton) {
+    public ColorButton(ColorSetting setting) {
         super(setting.name);
-        this.parentButton = parentButton;
         this.setting = setting;
         this.height = getExtended() ? 108 : 15;
         this.color = new float[]{0.0f, 0.0f, 0.0f};
@@ -66,7 +65,7 @@ public class ColorButton extends Item {
             drawFuncButton(pickerPosX, pickerPosY, mouseX, mouseY);
         }
         GlStateManager.pushMatrix();
-        parentButton.font14.drawString(this.setting.getName(), x + 2.3, y + 5, 0xFFFFFFFF, false, 1.0f);
+        font14.drawString(this.setting.getName(), x + 2.3, y + 5, 0xFFFFFFFF, false);
         GlStateManager.popMatrix();
     }
 
@@ -80,7 +79,7 @@ public class ColorButton extends Item {
             };
         }
         catch (Exception exception) {
-            Notifications.showNotification("Invalid color!");
+            Notifications.addMessage("Picker",  "Invalid color!", NotificationType.INFO);
         }
         if (this.draggingRGBSlider) {
             position = Math.min(Math.max(pickerPosX, mouseX), pickerPosX + getWidth());
@@ -137,16 +136,16 @@ public class ColorButton extends Item {
 
     private void drawFuncButton(float pickerPosX, float pickerPosY, final int mouseX, final int mouseY) {
         // Copy
-        new RectBuilder(new Vec2d(pickerPosX + 1, pickerPosY + 82), new Vec2d(pickerPosX + parentButton.font14.getStringWidth("Copy") + 4, pickerPosY + 85 + parentButton.font14.getFontHeight()))
+        new RectBuilder(new Vec2d(pickerPosX + 1, pickerPosY + 82), new Vec2d(pickerPosX + font14.getStringWidth("Copy") + 4, pickerPosY + 85 + font14.getFontHeight()))
                 .color(isCopyHover(mouseX, mouseY) ? new Color(50, 50, 50, 220) : new Color(65, 65, 65, 250))
                 .radius(1.0).draw();
-        parentButton.font14.drawString("copy", pickerPosX + 2.3f, pickerPosY + 84, -1, true, 1.0f);
+        font14.drawString("copy", pickerPosX + 2.3f, pickerPosY + 84, -1, true);
 
         // Paste
-        new RectBuilder(new Vec2d(pickerPosX + getWidth() - 1, pickerPosY + 82), new Vec2d(pickerPosX + getWidth() - parentButton.font14.getStringWidth("Paste") - 4, pickerPosY + 85 + parentButton.font14.getFontHeight()))
+        new RectBuilder(new Vec2d(pickerPosX + getWidth() - 1, pickerPosY + 82), new Vec2d(pickerPosX + getWidth() - font14.getStringWidth("Paste") - 4, pickerPosY + 85 + font14.getFontHeight()))
                 .color(isPasteHover(mouseX, mouseY) ? new Color(50, 50, 50, 220) : new Color(65, 65, 65, 250))
                 .radius(1.0).draw();
-        parentButton.font14.drawString("paste", pickerPosX + getWidth() - 2.3f - parentButton.font14.getStringWidth("paste"), pickerPosY + 84, -1, true, 1.0f);
+        font14.drawString("paste", pickerPosX + getWidth() - 2.3f - font14.getStringWidth("paste"), pickerPosY + 84, -1, true);
     }
 
     private void drawColorPickerRect(float left, float top, float right, float bottom, Color color) {
@@ -187,7 +186,7 @@ public class ColorButton extends Item {
         StringSelection selection = new StringSelection(hex);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(selection, selection);
-        Notifications.showNotification("Copied the color to your clipboard.");
+        Notifications.addMessage("Picker",  "Copied the color to your clipboard.", NotificationType.INFO);
     }
 
     private void handlePasteAction() {
@@ -199,12 +198,12 @@ public class ColorButton extends Item {
                 } else {
                     handleRGBPaste(clipboardContent);
                 }
-                Notifications.showNotification("Color Pasted: " + clipboardContent + "!");
+                Notifications.addMessage("Picker",  "Color Pasted: " + clipboardContent + "!", NotificationType.INFO);
             } else {
-                Notifications.showNotification("Invalid Color!");
+                Notifications.addMessage("Picker",  "Invalid Color!", NotificationType.INFO);
             }
         } catch (NumberFormatException e) {
-            Notifications.showNotification("Invalid color format! Use Hex (#FFFFFFFF) or RGB (255,255,255)");
+            Notifications.addMessage("Picker",  "Invalid color format! Use Hex (#FFFFFFFF) or RGB (255,255,255)", NotificationType.INFO);
         }
     }
 
@@ -222,7 +221,7 @@ public class ColorButton extends Item {
         if (color.length >= 3) {
             setting.setColor(new Color(Integer.parseInt(color[0]), Integer.parseInt(color[1]), Integer.parseInt(color[2])));
         } else {
-            Notifications.showNotification("Invalid RGB format!");
+            Notifications.addMessage("Picker",  "Invalid RGB format!", NotificationType.INFO);
         }
     }
 
@@ -230,18 +229,18 @@ public class ColorButton extends Item {
         float pickerPosX = x;
         float pickerPosY = y + 15;
         return mouseX >= pickerPosX + 1 &&
-                mouseX <= pickerPosX + parentButton.font14.getStringWidth("copy") + 4 &&
+                mouseX <= pickerPosX + font14.getStringWidth("copy") + 4 &&
                 mouseY >= pickerPosY + 82 &&
-                mouseY <= pickerPosY + 84 + parentButton.font14.getFontHeight();
+                mouseY <= pickerPosY + 84 + font14.getFontHeight();
     }
 
     public boolean isPasteHover(int mouseX, int mouseY) {
         float pickerPosX = x;
         float pickerPosY = y + 15;
-        return mouseX >= pickerPosX + getWidth() - 3 - parentButton.font14.getStringWidth("paste") &&
-                mouseX <= (pickerPosX + getWidth() - parentButton.font14.getStringWidth("paste")) + parentButton.font14.getStringWidth("paste")&&
+        return mouseX >= pickerPosX + getWidth() - 3 - font14.getStringWidth("paste") &&
+                mouseX <= (pickerPosX + getWidth() - font14.getStringWidth("paste")) + font14.getStringWidth("paste")&&
                 mouseY >= pickerPosY + 82 &&
-                mouseY <= pickerPosY + 84 + parentButton.font14.getFontHeight();
+                mouseY <= pickerPosY + 84 + font14.getFontHeight();
     }
 
     private boolean isPickerHover(final int mouseX, final int mouseY) {

@@ -24,7 +24,7 @@ public class Colors extends Module {
         super("Colors", "Configure various color settings", Keyboard.KEY_NONE, Category.Client);
         INSTANCE = this;
         setToggled(true);
-        this.registerSettings(step, speed, staticColor, friendColor, gradientColor1, gradientColor2, fogColor, lightMapColor);
+        this.registerSettings(staticColor, friendColor, gradientColor1, gradientColor2, fogColor, lightMapColor, step, speed);
     }
     /*
      * Settings
@@ -33,8 +33,8 @@ public class Colors extends Module {
     public final DoubleSetting speed = new DoubleSetting("Speed", this, 0, 5, 1);
     public final ColorSetting staticColor = new ColorSetting("Static", this, Color.CYAN);
     public final ColorSetting friendColor = new ColorSetting("Friend", this, Color.GREEN);
-    public final ColorSetting gradientColor1 = new ColorSetting("Gradient 1", this, Color.BLUE);
-    public final ColorSetting gradientColor2 = new ColorSetting("Gradient 2", this, Color.CYAN);
+    public ColorSetting gradientColor1 = new ColorSetting("Gradient 1", this, Color.BLUE);
+    public ColorSetting gradientColor2 = new ColorSetting("Gradient 2", this, Color.CYAN);
     public final ColorSetting fogColor = new ColorSetting("Fog", this, Color.RED);
     public final ColorSetting lightMapColor = new ColorSetting("LightMap", this, Color.RED);
     public final EnumSetting<Mode> theme = new EnumSetting<>("Mode", this, Mode.Gradient);
@@ -61,6 +61,11 @@ public class Colors extends Module {
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         doBindBlank();
+        if (theme.value() == Mode.Normal) {
+            if (gradientColor2 == gradientColor1) return;
+            gradientColor2 = staticColor;
+            gradientColor1 = staticColor;
+        }
     }
     public void doBindBlank() { //fix items turning white
         if (!(Block.rendering && Shader.rendering && PopChams.rendering && AutoCrystal.rendering)) {

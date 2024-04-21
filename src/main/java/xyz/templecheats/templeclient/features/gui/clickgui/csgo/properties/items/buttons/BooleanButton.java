@@ -7,10 +7,11 @@ import xyz.templecheats.templeclient.features.gui.clickgui.csgo.CsgoGuiScreen;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.util.color.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
-import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 
 import java.awt.*;
+
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font16;
 
 public class BooleanButton extends Button {
     private final Button parentButton;
@@ -25,21 +26,24 @@ public class BooleanButton extends Button {
     
     @Override
     public void drawScreen(final int mouseX, final int mouseY, final float partialTicks) {
+
+        int color = ClickGUI.INSTANCE.getClientColor(0);
+
         GlStateManager.pushMatrix();
         GlStateManager.enableDepth();
         GlStateManager.depthFunc(GL11.GL_LEQUAL);
         new RectBuilder(new Vec2d(x + 5, y + 5), new Vec2d(x + 13, y + 13))
-                .outlineColor(parentButton.color[0])
+                .outlineColor(new Color(color))
                 .width(0.9)
                 .color(new Color(45, 45, 45))
                 .radius(1.0)
                 .draw();
         new RectBuilder(new Vec2d(x + 6.5, y + 6.5), new Vec2d(x + 11.5, y + 11.5))
-                .color(this.getState() ? parentButton.color[0] : new Color(45, 45, 45, 0))
+                .color(this.getState() ? new Color(color) : new Color(45, 45, 45, 0))
                 .radius(0.5)
                 .draw();
 
-        font16.drawString(getLabel(), (int) x + 3 + (10 / 0.6), y + 6, new Color(208, 208, 208).getRGB(), false, 1.0f);
+        font16.drawString(getLabel(), (int) x + 3 + (10 / 0.6), y + 6, new Color(208, 208, 208).getRGB(), false);
         GlStateManager.disableDepth();
         GlStateManager.popMatrix();
     }

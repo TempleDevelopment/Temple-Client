@@ -6,16 +6,17 @@ import net.minecraft.init.SoundEvents;
 import xyz.templecheats.templeclient.features.gui.clickgui.basic.ClientGuiScreen;
 import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.Panel;
 import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.Item;
-import xyz.templecheats.templeclient.features.gui.font.CFont;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
-import xyz.templecheats.templeclient.features.module.modules.client.FontSettings;
-import xyz.templecheats.templeclient.util.render.RenderUtil;
+import xyz.templecheats.templeclient.util.color.impl.RectBuilder;
+import xyz.templecheats.templeclient.util.math.Vec2d;
+
+import java.awt.*;
+
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font18;
+import static xyz.templecheats.templeclient.util.color.ColorUtil.setAlpha;
 
 public abstract class Button extends Item {
     public boolean state;
-    public final CFont font18 = FontSettings.INSTANCE.getFont().setSize(18);
-    public final CFont font16 = FontSettings.INSTANCE.getFont().setSize(16);
-
     public Button(String label) {
         super(label);
         this.height = 15;
@@ -23,23 +24,35 @@ public abstract class Button extends Item {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        //  The original exeter
-        //RenderUtil.drawGradientRect(this.x, this.y, this.x + (float) this.width, this.y + (float) this.height, this.getState() ? (!this.isHovering(mouseX, mouseY) ? 2012955202 : 1442529858) : (!this.isHovering(mouseX, mouseY) ? 0x33555555 : -2007673515), this.getState() ? (!this.isHovering(mouseX, mouseY) ? -1426374078 : -1711586750) : (!this.isHovering(mouseX, mouseY) ? 0x55555555 : -1722460843));
-        
-        // Future
-        //RenderUtil.drawGradientRect(this.x, this.y, this.x + (float) this.width, this.y + (float) this.height, this.getState() ? (!this.isHovering(mouseX, mouseY) ? 0x77FB4242 : 0x55FB4242) : (!this.isHovering(mouseX, mouseY) ? 0x33555555 : 0x77AAAAAB), this.getState() ? (!this.isHovering(mouseX, mouseY) ? 0x77FB4242 : 0x55FB4242) : (!this.isHovering(mouseX, mouseY) ? 0x55555555 : 0x66AAAAAB));
+        Color c1 = ClickGUI.INSTANCE.getStartColor();
+        Color c2 = ClickGUI.INSTANCE.getEndColor();
 
-        if(this.getState()) {
-            RenderUtil.drawGradientRect(x, y, x + getWidth(), y + height, ClickGUI.INSTANCE.getStartColor().getRGB(), ClickGUI.INSTANCE.getEndColor().getRGB());
-
-            if(this.isHovering(mouseX, mouseY)) {
-                RenderUtil.drawRect(x, y, x + getWidth(), y + height, 0x22000000);
-            }
-        } else {
-            RenderUtil.drawGradientRect(x, y, x + getWidth(), y + height, !isHovering(mouseX, mouseY) ? 0x33555555 : 0x88555555, !isHovering(mouseX, mouseY) ? 0x55555555 : 0x99555555);
+        switch (ClickGUI.INSTANCE.colorMode.value()) {
+            case Static:
+                c1 = new Color(ClickGUI.INSTANCE.getClientColor(10, (int) Panel.counter1[0]));
+                c2 = new Color(ClickGUI.INSTANCE.getClientColor(10, (int) (Panel.counter1[0] + 1)));
+                break;
+            case Default:
+                c1 = ClickGUI.INSTANCE.getStartColor();
+                c2 = c1;
+                break;
+            case Gradient:
+                c1 = ClickGUI.INSTANCE.getStartColor();
+                c2 = ClickGUI.INSTANCE.getEndColor();
+                break;
         }
-        
-        font18.drawString(this.getLabel(), this.x + 2.0f, this.y + 4.0f, this.getState() ? -1 : -5592406, false, 1.0f);
+
+        Color color1 = getState() ? isHovering(mouseX, mouseY) ? setAlpha(c1, 210) : c1 : isHovering(mouseX, mouseY) ? new Color(0x88555555, true) : new Color(0x33555555, true);
+        Color color2 = getState() ? isHovering(mouseX, mouseY) ? setAlpha(c2, 210) : c2 : isHovering(mouseX, mouseY) ? new Color(0x99555555, true) : new Color(0x55555555, true);
+
+        RectBuilder rectBuilder = new RectBuilder(new Vec2d(x, y), new Vec2d(x + getWidth(), y + height));
+        if (ClickGUI.INSTANCE.way.value() == ClickGUI.Way.Horizontal) {
+            rectBuilder.colorH(color1, color2);
+        } else {
+            rectBuilder.colorV(color1, color2);
+        }
+        rectBuilder.draw();
+        font18.drawString(this.getLabel(), this.x + 2.0f, this.y + 4.0f, this.getState() ? -1 : -5592406, false);
     }
 
     @Override
@@ -49,17 +62,17 @@ public abstract class Button extends Item {
             Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
         }
     }
-    
+
     public void toggle() {
         this.state = !this.state;
     }
-    
+
     public boolean getState() {
         return this.state;
     }
 
     public abstract ClientGuiScreen getClientScreen();
-    
+
     protected boolean isHovering(int mouseX, int mouseY) {
         for(Panel panel : this.getClientScreen().getPanels()) {
             if(!panel.drag) continue;

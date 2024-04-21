@@ -34,8 +34,8 @@ public class ChinaHat extends Module {
     private final BooleanSetting outline = new BooleanSetting("Outline", this, false);
     private final DoubleSetting outlineWidth = new DoubleSetting("Outline Width", outline.parent, 1.0, 5.0, 2.0);
     private final IntSetting outlineOpacity = new IntSetting("Outline Opacity", outline.parent, 0, 255, 255);
-    private final IntSetting fillOpacity1 = new IntSetting("fill1 Opacity", outline.parent, 0, 255, 255);
-    private final IntSetting fillOpacity2 = new IntSetting("fill2 Opacity", outline.parent, 0, 255, 255);
+    private final IntSetting fillOpacity1 = new IntSetting("Fill 1 Opacity", outline.parent, 0, 255, 255);
+    private final IntSetting fillOpacity2 = new IntSetting("Fill 2 Opacity", outline.parent, 0, 255, 255);
 
     public ChinaHat() {
         super("ChinaHat", "Draw a traditional hats of some East and South Asian countries", Keyboard.KEY_NONE, Category.Render);

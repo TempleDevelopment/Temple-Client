@@ -14,7 +14,7 @@ public class AutoClicker extends Module {
      * Settings
      */
     private final IntSetting cps = new IntSetting("CPS", this, 1, 100, 10);
-    private final EnumSetting < ClickType > clickType = new EnumSetting < > ("Click Type", this, ClickType.LeftClick);
+    private final EnumSetting < ClickType > clickType = new EnumSetting < > ("Type", this, ClickType.LeftClick);
 
     /*
      * Variables

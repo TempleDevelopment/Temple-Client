@@ -1,13 +1,13 @@
 package xyz.templecheats.templeclient.features.module.modules.render.particle.sub;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.Colors;
 import xyz.templecheats.templeclient.features.module.modules.render.particle.impl.ParticleTickHandler;
+import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
@@ -21,9 +21,10 @@ import static xyz.templecheats.templeclient.util.math.MathUtil.random;
 
 public class HitParticle extends Module {
 
+    private final BooleanSetting self = new BooleanSetting("Self", this, true);
     private final EnumSetting<ParticleTickHandler.Textures> textures = new EnumSetting<>("Texture", this, ParticleTickHandler.Textures.Text);
     private final DoubleSetting size = new DoubleSetting("Size", this, 0.1, 5.0, 1.0);
-    private final IntSetting amount = new IntSetting("Amount", this, 3, 200, 30);
+    private final IntSetting amount = new IntSetting("Amount", this, 3, 50, 25);
     private final IntSetting maxAmount = new IntSetting("Max Amount", this, 100, 500, 250);
     private final DoubleSetting duration = new DoubleSetting("Duration", this, 5.0, 50.0, 30.0);
     private final DoubleSetting speedH = new DoubleSetting("Speed H", this, 0.1, 3.0, 1.0);
@@ -35,7 +36,7 @@ public class HitParticle extends Module {
 
     public HitParticle() {
         super("HitParticle", "Spawn particle when entities hurt.", Keyboard.KEY_NONE, Category.Render, true);
-        registerSettings(textures, size, amount, maxAmount, duration, speedH, speedV, inertia, gravity);
+        registerSettings(self, size, amount, maxAmount, duration, speedH, speedV, inertia, gravity, textures);
     }
     @Override
     public void onEnable() {
@@ -44,14 +45,16 @@ public class HitParticle extends Module {
 
     @Override
     public void onUpdate() {
-        if ( mc.player == null || mc.world == null ) {
+        if ( mc.player == null || mc.world == null) {
             return;
         }
-
-        for (Entity entity : mc.world.loadedEntityList) {
-            if (entity.hurtResistantTime > 1) {
+        for (EntityPlayer player : mc.world.playerEntities) {
+            if(!self.booleanValue() && player == mc.player){
+                continue;
+            }
+            if (player.hurtTime > 0) {
                 for (int i = 0; i < amount.intValue(); i++) {
-                    Vec3d vec = entity.getPositionVector().add(random(-0.5f, 0.5f), random(0.5f, entity.height), random(-0.5f, 0.5f));
+                    Vec3d vec = player.getPositionVector().add(random(-0.5f, 0.5f), random(0.5f, player.height), random(-0.5f, 0.5f));
 
                     Random random = new Random();
 
@@ -59,7 +62,7 @@ public class HitParticle extends Module {
                     double motionY = (random.nextDouble() - 0.5) * 0.2 * speedV.doubleValue();
                     double motionZ = (random.nextDouble() - 0.5) * 0.2 * speedH.doubleValue();
 
-                    Particle particle = new Particle(vec, motionX, motionY, motionZ, size.doubleValue(), gravity.doubleValue(), inertia.doubleValue());
+                    Particle particle = new Particle(vec, motionX, motionY, motionZ, gravity.doubleValue(), inertia.doubleValue());
                     particle.maxTickLiving = (int) (duration.doubleValue() * 10.0 + random.nextDouble() * 40.0);
 
                     hitParticle.add(particle);
@@ -79,13 +82,13 @@ public class HitParticle extends Module {
             double p1 = min(it.tickLiving, 10.0) / 10.0;
             double p2 = MathHelper.clamp((it.maxTickLiving - it.tickLiving) / 10, 0, 1);
             int alpha = (int) MathHelper.clamp((it.tickLiving <= 10 ? p1 : p2) * 255, 0, 255);
-            it.draw(size.floatValue(), setAlpha(Colors.INSTANCE.getColor(5), alpha), textures.value());
+            it.draw(size.floatValue(), setAlpha(Colors.INSTANCE.getColor(0), alpha), textures.value());
         });
     }
 
     private static class Particle extends ParticleTickHandler {
-        public Particle(Vec3d posIn, double motionX, double motionY, double motionZ, double size, double gravityAmount, double inertiaAmount) {
-            super(posIn, motionX, motionY, motionZ, size, gravityAmount, inertiaAmount);
+        public Particle(Vec3d posIn, double motionX, double motionY, double motionZ, double gravityAmount, double inertiaAmount) {
+            super(posIn, motionX, motionY, motionZ, gravityAmount, inertiaAmount);
         }
 
         @Override

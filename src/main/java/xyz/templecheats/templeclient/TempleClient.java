@@ -34,7 +34,7 @@ import java.lang.reflect.Field;
 public class TempleClient {
     public static final String MODID = "templeclient";
     public static final String NAME = "Temple Client";
-    public static final String VERSION = "1.8.8";
+    public static final String VERSION = "1.8.9";
     public static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
     public static String name = NAME + " " + VERSION;
     public static AnnotatedEventManager eventBus;
@@ -90,6 +90,7 @@ public class TempleClient {
         MinecraftForge.EVENT_BUS.register(new GuiEventsListener());
 
         FontUtils.setupFonts();
+        FontUtils.setupIcons();
 
         configManager = new ConfigManager();
 

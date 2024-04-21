@@ -53,8 +53,9 @@ public abstract class Panel {
             this.color[1] = 0xFF0C0C0C;
         }
         int step = (int) (mc.player.ticksExisted + mc.getRenderPartialTicks());
-        int color0 = rainbowUtil.rainbowProgress(5, step, color[0], color[1]);
-        int color1 = rainbowUtil.rainbowProgress(5, step / 10, color[0], color[1]);
+
+        int color0 = rainbowUtil.rainbowProgress(6, step, color[0], color[1]);
+        int color1 = rainbowUtil.rainbowProgress(6, step / 10, color[0]);
 
         new RectBuilder(new Vec2d(x + 10, y), new Vec2d(x + width - 5, y + height))
                 .outlineColorH(new Color(0x1F1F1F), new Color(35, 35, 35))
@@ -73,8 +74,8 @@ public abstract class Panel {
         Gui.drawScaledCustomSizeModalRect(this.x + 15, this.y + 6, 0.0F, 0.0F, 12, 12, 12, 12, 12.0F, 12.0F);
         GlStateManager.popMatrix();
 
-        final CFont font22 = FontSettings.INSTANCE.getFont().setSize(22);
-        font22.drawString(this.label, (float) (x + 33), (float) (y + 7), this.open ? -1 : new Color(76, 76, 76).getRGB(), true, 1.0F);
+        final CFont font22 = FontSettings.getFont(22);
+        font22.drawString(this.label, (float) (x + 33), (float) (y + 7), this.open ? -1 : new Color(76, 76, 76).getRGB(), true);
 
         if(this.open) {
             // sort the item A B C

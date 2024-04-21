@@ -48,37 +48,47 @@ public class CFont implements AbstractFont {
     }
 
     @Override
-    public void drawStringWithShadow(String text, float x, float y, int color, float scale) {
-        drawString(text, x, y, color, true, scale);
+    public void drawStringWithShadow(String text, float x, float y, int color) {
+        drawString(text, x, y, color, true);
     }
 
     @Override
-    public void drawStringWithShadow(String text, float x, float y, Color color, float scale) {
-        drawStringWithShadow(text, x, y, color.getRGB(), scale);
+    public void drawStringWithShadow(String text, float x, float y, Color color) {
+        drawStringWithShadow(text, x, y, color.getRGB());
     }
 
     @Override
-    public void drawString(String text, float x, float y, int color, boolean shadow, float scale) {
+    public void drawString(String text, float x, float y, int color, boolean shadow) {
         if (FontSettings.INSTANCE.isEnabled()) {
-            if (shadow) drawString(text, x + 0.5f, y + 0.5f, color, true, scale, false);
-            drawString(text, x, y, color, false, scale, false);
+            if (shadow) drawString(text, x + 0.5f, y + 0.5f, color, true, FontSettings.INSTANCE.smooth.booleanValue());
+            drawString(text, x, y, color, false, FontSettings.INSTANCE.smooth.booleanValue());
         } else {
             Minecraft.getMinecraft().fontRenderer.drawString(text, x, y, color, shadow);
         }
     }
 
-    public void drawString(String text, double x, double y, int color, boolean shadow, float scale) {
-        drawString(text, (float) x, (float) y, color, shadow, scale);
+    public void drawIcon(String text, float x, float y, int color, boolean shadow) {
+        if (shadow) drawString(text, x + 0.5f, y + 0.5f, color, true, FontSettings.INSTANCE.smooth.booleanValue());
+        drawString(text, x, y, color, false, FontSettings.INSTANCE.smooth.booleanValue());
+    }
+
+    public void drawIcon(String text, float x, float y, Color color, boolean shadow) {
+        if (shadow) drawString(text, x + 0.5f, y + 0.5f, color.getRGB(), true, FontSettings.INSTANCE.smooth.booleanValue());
+        drawString(text, x, y, color.getRGB(), false, FontSettings.INSTANCE.smooth.booleanValue());
+    }
+
+    public void drawString(String text, double x, double y, int color, boolean shadow) {
+        drawString(text, (float) x, (float) y, color, shadow);
     }
 
     @Override
-    public void drawString(String text, float x, float y, Color color, boolean shadow, float scale) {
-        drawString(text, x, y, color.getRGB(), shadow, scale);
+    public void drawString(String text, float x, float y, Color color, boolean shadow) {
+        drawString(text, x, y, color.getRGB(), shadow);
     }
 
     @Override
-    public void drawCenteredString(String text, float x, float y, Color color, boolean shadow, float scale) {
-        drawString(text, x - (getStringWidth(text) / 2), y, color.getRGB(), shadow, scale);
+    public void drawCenteredString(String text, float x, float y, Color color, boolean shadow) {
+        drawString(text, x - (getStringWidth(text) / 2), y, color.getRGB(), shadow);
     }
 
     @Override
@@ -95,7 +105,6 @@ public class CFont implements AbstractFont {
         int increment = reverse ? -1 : 1;
         boolean var8 = false;
         boolean var9 = false;
-
 
         for (int index = offset; index >= 0 && index < text.length() && lineWidth < (float) width; index += increment) {
             char character = text.charAt(index);
@@ -157,7 +166,7 @@ public class CFont implements AbstractFont {
         }
     }
 
-    public float drawString(String text, float x, float y, int color, boolean shadow, float scale, boolean smooth) {
+    public float drawString(String text, float x, float y, int color, boolean shadow, boolean smooth) {
         if (text == null) {
             return 0;
         }
@@ -362,7 +371,10 @@ public class CFont implements AbstractFont {
 
     @Override
     public float getFontHeight() {
-        return (float) (this.fontHeight - 8) / 2;
+        if (FontSettings.INSTANCE.isEnabled()) {
+            return (float) (this.fontHeight - 8) / 2;
+        } else
+            return Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT;
     }
 
     void generateColorCodes() {

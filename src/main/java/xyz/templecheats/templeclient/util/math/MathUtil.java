@@ -10,6 +10,8 @@ import net.minecraft.util.math.Vec3d;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Random;
+
 public final class MathUtil {
 
     public static final Minecraft mc = Minecraft.getMinecraft();
@@ -182,8 +184,22 @@ public final class MathUtil {
                 (b2 * c1 - b1 * c2) / delta, (a1 * c2 - a2 * c1) / delta
         };
     }
+
+    public static double lerp(double current, double target, double lerp) {
+        current -= (current - target) * clamp((float) lerp, 0, 1);
+        return current;
+    }
+
     public static float lerp(float current, float target, float lerp) {
         current -= (current - target) * clamp(lerp, 0, 1);
         return current;
+    }
+
+    public static float randomBetween(float min, float max) {
+        return min + (new Random().nextFloat() * (max - min));
+    }
+
+    public static int randomBetween(int min, int max) {
+        return min + (new Random().nextInt() * (max - min));
     }
 }

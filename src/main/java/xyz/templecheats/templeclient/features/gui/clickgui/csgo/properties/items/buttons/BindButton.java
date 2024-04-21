@@ -1,7 +1,6 @@
 package xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons;
 
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
@@ -9,18 +8,18 @@ import xyz.templecheats.templeclient.features.gui.clickgui.csgo.CsgoGuiScreen;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.color.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
-import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 
 import java.awt.*;
 import java.io.IOException;
 
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.*;
 import static xyz.templecheats.templeclient.util.math.MathUtil.lerp;
 
 public class BindButton extends Button {
     private final Module module;
     private boolean listening;
-    
+
     public BindButton(Module module) {
         super("Keybind");
         this.module = module;
@@ -53,7 +52,7 @@ public class BindButton extends Button {
                 .radius(1.2)
                 .draw();
 
-        font14.drawString(str, (float) ((x + 5 / 0.8) + font20.getStringWidth(module.getName()) + 5), y + font14.getFontHeight() - ((font14.getStringWidth(module.getDescription()) > 188 - 32) ? 16 : 12f), module.isEnabled() ? Color.WHITE : new Color(155, 155, 155), false, 1.0f);
+        font14.drawString(str, (float) ((x + 5 / 0.8) + font20.getStringWidth(module.getName()) + 5), y + font14.getFontHeight() - ((font14.getStringWidth(module.getDescription()) > 188 - 32) ? 16 : 12f), module.isEnabled() ? Color.WHITE : new Color(155, 155, 155), false);
         GlStateManager.disableDepth();
         GlStateManager.popMatrix();
     }
@@ -91,7 +90,7 @@ public class BindButton extends Button {
             listening = this.x + (5 / 0.8) + font20.getStringWidth(module.getName()) + 5 <= mouseX && mouseX <= this.x + (5 / 0.8) + font20.getStringWidth(module.getName()) + 25 && this.y + font14.getFontHeight() - ((font14.getStringWidth(module.getDescription()) > 188 - 32) ? 21 : 18) <= mouseY && mouseY <= this.y + ((font14.getStringWidth(module.getDescription()) > 188 - 32) ? 13 : 10) + font14.getFontHeight() - 12f;
         }
     }
-    
+
     @Override
     public void keyTyped(char typedChar, int keyCode) throws IOException {
         if(listening) {

@@ -8,15 +8,16 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.gui.clickgui.hud.HudEditorScreen;
-import xyz.templecheats.templeclient.features.gui.font.CFont;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.hud.*;
-import xyz.templecheats.templeclient.features.module.modules.client.hud.notification.NotificationsRewrite;
+import xyz.templecheats.templeclient.features.module.modules.client.hud.notification.Notifications;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.setting.SettingHolder;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
+import xyz.templecheats.templeclient.util.setting.impl.ColorSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,8 @@ public class HUD extends Module {
      */
     public final DoubleSetting hudScale = new DoubleSetting("HUD Scale", this, 0.5d, 2d, 1.0d);
     public final BooleanSetting clamping = new BooleanSetting("Clamping", this, true);
+    public final BooleanSetting icon = new BooleanSetting("Icon", this, true);
+    public final BooleanSetting sync = new BooleanSetting("Color Sync", this, true);
 
     /**
      * Variables
@@ -41,7 +44,7 @@ public class HUD extends Module {
         super("HUD", "In-Game Heads up Display", Keyboard.KEY_GRAVE, Category.Client);
         INSTANCE = this;
 
-        this.registerSettings(clamping, hudScale);
+        this.registerSettings(clamping, icon, sync, hudScale);
 
         this.setToggled(true);
 
@@ -52,7 +55,6 @@ public class HUD extends Module {
         this.hudElements.add(new Friends());
         this.hudElements.add(new Inventory());
         this.hudElements.add(new ModuleList());
-        this.hudElements.add(new NotificationsRewrite());
         this.hudElements.add(new Notifications());
         this.hudElements.add(new Ping());
         this.hudElements.add(new PlayerView());
@@ -103,9 +105,17 @@ public class HUD extends Module {
     }
 
     public static abstract class HudElement extends SettingHolder {
+        public final BooleanSetting fill = new BooleanSetting("Fill", this, true);
+        public final BooleanSetting outline = new BooleanSetting("Outline", this, true);
+        public final BooleanSetting blur = new BooleanSetting("Blur", this, false);
+        public final ColorSetting color = new ColorSetting("FillColor", this, new Color(0, 0, 0, 255));
+        public final ColorSetting outlineColor = new ColorSetting("OutlineColor", this, new Color(33, 33, 33, 255));
+        public final DoubleSetting outlineWidth = new DoubleSetting("Width", this, 0.1, 5.0, 1.0);
+        public final DoubleSetting blurRadius = new DoubleSetting("Radius", this, 2, 15.0, 10.0);
+
+
         protected static final Minecraft mc = Minecraft.getMinecraft();
         private final String description;
-        public final CFont font = FontSettings.INSTANCE.getFont().setSize(18);
         private double x = 100, y = 100, width = -1, height = -1;
         private boolean enabled, dragging, leftOfCenter, topOfCenter;
 

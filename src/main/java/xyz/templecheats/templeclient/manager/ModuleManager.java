@@ -2,10 +2,7 @@ package xyz.templecheats.templeclient.manager;
 
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import xyz.templecheats.templeclient.features.module.Module;
-import xyz.templecheats.templeclient.features.module.modules.chat.ChatCrypt;
-import xyz.templecheats.templeclient.features.module.modules.chat.FancyChat;
-import xyz.templecheats.templeclient.features.module.modules.chat.GreenText;
-import xyz.templecheats.templeclient.features.module.modules.chat.Spammer;
+import xyz.templecheats.templeclient.features.module.modules.chat.*;
 import xyz.templecheats.templeclient.features.module.modules.client.*;
 import xyz.templecheats.templeclient.features.module.modules.combat.*;
 import xyz.templecheats.templeclient.features.module.modules.misc.*;
@@ -16,6 +13,8 @@ import xyz.templecheats.templeclient.features.module.modules.render.*;
 import xyz.templecheats.templeclient.features.module.modules.render.esp.ESP;
 import xyz.templecheats.templeclient.features.module.modules.render.particle.Particle;
 import xyz.templecheats.templeclient.features.module.modules.render.xray.XRay;
+import xyz.templecheats.templeclient.features.module.modules.world.MobOwner;
+import xyz.templecheats.templeclient.features.module.modules.world.NewChunks;
 import xyz.templecheats.templeclient.features.module.modules.world.Scaffold;
 import xyz.templecheats.templeclient.features.module.modules.world.Nuker;
 
@@ -43,10 +42,13 @@ public class ModuleManager {
 
     public static void initMods() {
         // Chat
+        addMod(new Announcer());
+        addMod(new ArmorAlert());
         addMod(new ChatCrypt());
         addMod(new FancyChat());
         addMod(new GreenText());
         addMod(new Spammer());
+        addMod(new TotemPopNotify());
         // Combat
         addMod(new AutoDisconnect());
         addMod(new AutoCrystal());
@@ -68,7 +70,6 @@ public class ModuleManager {
         addMod(new FakePlayer());
         addMod(new Log4jAlert());
         addMod(new AutoMount());
-        addMod(new Hitmarker());
         // Client
         addMod(new MiddleClick());
         addMod(new Particles());
@@ -96,7 +97,9 @@ public class ModuleManager {
         addMod(new NameProtect());
         addMod(new FullBright());
         addMod(new ViewModel());
+        addMod(new ViewClip());
         addMod(new ChinaHat());
+        addMod(new Hitmarker());
         addMod(new NoRender());
         addMod(new Particle());
         addMod(new PopChams());
@@ -110,6 +113,8 @@ public class ModuleManager {
         // World
         addMod(new Scaffold());
         addMod(new Nuker());
+        addMod(new MobOwner());
+        addMod(new NewChunks());
         // Player
         addMod(new Freecam());
         addMod(new AutoEat());

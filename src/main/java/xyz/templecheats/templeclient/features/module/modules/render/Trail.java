@@ -27,7 +27,7 @@ public class Trail extends Module {
     private final DoubleSetting length = new DoubleSetting("Length", this, 1, 25, 10);
     private final BooleanSetting firstPerson = new BooleanSetting("FirstPerson", this, true);
     private final DoubleSetting lineWidth = new DoubleSetting("Line Width", this, 1.0, 10.0, 2.0);
-    private final EnumSetting < Mode > mode = new EnumSetting<>("Mode", this, Mode.Fill);
+    private final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.Fill);
     private final List<Point> points = new ArrayList<>();
     public final RainbowUtil rainbow = new RainbowUtil();
 
@@ -87,9 +87,9 @@ public class Trail extends Module {
 
         buffer.begin(GL11.GL_QUAD_STRIP, DefaultVertexFormats.POSITION_COLOR);
 
-        double x = ((IMixinRenderManager) mc.getRenderManager()).getRenderPosX();
-        double y = ((IMixinRenderManager) mc.getRenderManager()).getRenderPosY();
-        double z = ((IMixinRenderManager) mc.getRenderManager()).getRenderPosZ();
+        double x = mc.getRenderManager().viewerPosX;
+        double y = mc.getRenderManager().viewerPosY;
+        double z = mc.getRenderManager().viewerPosZ;
 
         int index = 0;
         for (Point point : points) {
@@ -119,9 +119,9 @@ public class Trail extends Module {
         GlStateManager.glLineWidth(lineWidth.floatValue());
         buffer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION_COLOR);
 
-        double x = ((IMixinRenderManager) mc.getRenderManager()).getRenderPosX();
-        double y = ((IMixinRenderManager) mc.getRenderManager()).getRenderPosY();
-        double z = ((IMixinRenderManager) mc.getRenderManager()).getRenderPosZ();
+        double x = mc.getRenderManager().viewerPosX;
+        double y = mc.getRenderManager().viewerPosY;
+        double z = mc.getRenderManager().viewerPosZ;
 
         int index = 0;
         for (Point point : points) {

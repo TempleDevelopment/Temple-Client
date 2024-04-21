@@ -31,9 +31,13 @@ public class CommandManager {
         registerCommand(new BindCommand());
         registerCommand(new ClickguiCommand());
         registerCommand(new CoordsCommand());
+        registerCommand(new DisconnectCommand());
+        registerCommand(new FakePlayerCommand());
         registerCommand(new FriendCommand());
         registerCommand(new HelpCommand());
         registerCommand(new IpCommand());
         registerCommand(new NameMcCommand());
+        registerCommand(new PanicCommand());
+        registerCommand(new ToggleCommand());
     }
 }

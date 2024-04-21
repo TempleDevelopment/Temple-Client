@@ -9,13 +9,16 @@ import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
 import xyz.templecheats.templeclient.event.events.network.PacketEvent;
 import xyz.templecheats.templeclient.event.events.player.MoveEvent;
 import xyz.templecheats.templeclient.features.module.Module;
+import xyz.templecheats.templeclient.features.module.modules.client.Colors;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.world.EntityUtil;
 
 public class Strafe extends Module {
+    public static Strafe INSTANCE;
+
     private final DoubleSetting speed = new DoubleSetting("Speed", this, 0, 10, 2.6);
-    private final BooleanSetting jump = new BooleanSetting("Jump", this, true);
+    public BooleanSetting jump = new BooleanSetting("Jump", this, true);
     private final BooleanSetting liquid = new BooleanSetting("Liquid", this, true);
 
     private double moveSpeed = 0;
@@ -24,8 +27,8 @@ public class Strafe extends Module {
 
     public Strafe() {
         super("Strafe", "Allows you to move faster (but strafe)", Keyboard.KEY_NONE, Category.Movement, true);
-
-        registerSettings(speed, jump, liquid);
+        INSTANCE = this;
+        registerSettings(jump, liquid, speed);
     }
 
     @SubscribeEvent

@@ -1,12 +1,13 @@
 package xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.buttons;
 
-import net.minecraft.client.renderer.GlStateManager;
 import xyz.templecheats.templeclient.features.gui.clickgui.basic.ClientGuiScreen;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 
 import java.awt.*;
+
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font16;
 
 public class BooleanButton extends Button {
     private final Button parentButton;
@@ -48,7 +49,7 @@ public class BooleanButton extends Button {
 
         RenderUtil.drawGradientRect(checkboxX, checkboxY, checkboxX + checkboxSize, checkboxY + checkboxSize, topColor, bottomColor);
 
-        font16.drawString(getLabel(), this.x + 2.3 + 8, this.y + 4, 0xFFFFFFFF, false, 1.0f);
+        font16.drawString(getLabel(), this.x + 2.3 + 8, this.y + 4, 0xFFFFFFFF, false);
     }
 
     @Override

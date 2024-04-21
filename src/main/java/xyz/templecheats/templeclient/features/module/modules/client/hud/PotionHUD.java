@@ -12,6 +12,8 @@ import xyz.templecheats.templeclient.features.module.modules.client.HUD;
 import java.util.ArrayList;
 import java.util.List;
 
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font18;
+
 public class PotionHUD extends HUD.HudElement {
 
     public static PotionHUD INSTANCE;
@@ -28,7 +30,7 @@ public class PotionHUD extends HUD.HudElement {
             String combinedText1 = getEffectText(effect1);
             String combinedText2 = getEffectText(effect2);
 
-            return Double.compare(font.getStringWidth(this.isTopOfCenter() ? combinedText2 : combinedText1), font.getStringWidth(this.isTopOfCenter() ? combinedText1 : combinedText2));
+            return Double.compare(font18.getStringWidth(this.isTopOfCenter() ? combinedText2 : combinedText1), font18.getStringWidth(this.isTopOfCenter() ? combinedText1 : combinedText2));
         });
 
         double y = 0;
@@ -38,17 +40,17 @@ public class PotionHUD extends HUD.HudElement {
         for (PotionEffect effect: effects) {
             String combinedText = getEffectText(effect);
 
-            double width = font.getStringWidth(combinedText) + 10;
-            double height = font.getFontHeight() + 2;
+            double width = font18.getStringWidth(combinedText) + 10;
+            double height = font18.getFontHeight() + 2;
             maxWidth = Math.max(maxWidth, width);
             totalHeight += height;
 
-            font.drawString(combinedText, (float) (this.getX() + (!this.isLeftOfCenter() ? this.getWidth() - font.getStringWidth(combinedText) : 0)), (float) (this.getY() + y), ClickGUI.INSTANCE.getStartColor().getRGB(), true, 1.0f);
+            font18.drawString(combinedText, (float) (this.getX() + (!this.isLeftOfCenter() ? this.getWidth() - font18.getStringWidth(combinedText) : 0)), (float) (this.getY() + y), ClickGUI.INSTANCE.getStartColor().getRGB(), true);
 
             y += height;
         }
 
-        this.setWidth(!effects.isEmpty() ? font.getStringWidth(getEffectText(this.isTopOfCenter() ? effects.get(0) : effects.get(effects.size() - 1))) : 0);
+        this.setWidth(!effects.isEmpty() ? font18.getStringWidth(getEffectText(this.isTopOfCenter() ? effects.get(0) : effects.get(effects.size() - 1))) : 0);
         this.setHeight(totalHeight);
     }
 

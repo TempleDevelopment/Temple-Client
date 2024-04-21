@@ -2,6 +2,7 @@ package xyz.templecheats.templeclient.util.color;
 
 import java.awt.Color;
 
+import static xyz.templecheats.templeclient.util.math.MathUtil.clamp;
 import static xyz.templecheats.templeclient.util.math.MathUtil.lerp;
 
 public class ColorUtil {
@@ -85,6 +86,14 @@ public class ColorUtil {
 
     public static Color setAlpha(Color color, int alpha) {
         return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
+    }
+
+    public static Color setAlpha(Color color, double alpha) {
+        return setAlpha(color, (int) (clamp((float) alpha, 0.0f, 1.0f) * 255.0));
+    }
+
+    public static Color setAlpha(int color, double alpha) {
+        return setAlpha(new Color(color), (int) (clamp((float) alpha, 0.0f, 1.0f) * 255.0));
     }
 
     public static Color getColor(Color color, float alpha) {

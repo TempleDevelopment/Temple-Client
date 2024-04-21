@@ -12,10 +12,13 @@ import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 
 import java.awt.*;
 
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font12;
+
 public class NormalButton extends Button {
     public NormalButton(String label) {
         super(label);
         this.height = 12;
+        this.width = 188;
     }
 
     @Override
@@ -31,7 +34,7 @@ public class NormalButton extends Button {
                 .color(new Color(0xFF2A2927))
                 .radius(2.0)
                 .draw();
-        font12.drawString(getLabel(), x + (getWidth() / 1.8), y + (4/0.6) - 1.5, !isHovering(mouseX, mouseY) ? 0xFFFFFFFF : ClickGUI.INSTANCE.getStartColor().getRGB(), false, 1.0f);
+        font12.drawString(getLabel(), x + (getWidth() / 1.8), y + (4/0.6) - 1.5, !isHovering(mouseX, mouseY) ? 0xFFFFFFFF : ClickGUI.INSTANCE.getStartColor().getRGB(), false);
         GlStateManager.disableDepth();
         GlStateManager.popMatrix();
     }

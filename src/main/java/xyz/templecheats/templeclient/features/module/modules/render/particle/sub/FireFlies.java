@@ -1,6 +1,5 @@
 package xyz.templecheats.templeclient.features.module.modules.render.particle.sub;
 
-import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -8,12 +7,10 @@ import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.Colors;
 import xyz.templecheats.templeclient.features.module.modules.render.particle.impl.ParticleTickHandler;
-import xyz.templecheats.templeclient.util.setting.impl.ColorSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -38,7 +35,7 @@ public class FireFlies extends Module {
 
     public FireFlies() {
         super("FireFlies", "Spawn random particle around u.", Keyboard.KEY_NONE, Category.Render, true);
-        registerSettings(textures, size, amount, maxAmount, duration, speedH, speedV, inertia, gravity);
+        registerSettings(size, amount, maxAmount, duration, speedH, speedV, inertia, gravity, textures);
     }
 
     @Override
@@ -62,7 +59,7 @@ public class FireFlies extends Module {
             double motionY = (random.nextDouble() - 0.5) * 0.2 * speedV.doubleValue();
             double motionZ = (random.nextDouble() - 0.5) * 0.2 * speedH.doubleValue();
 
-            FireFly fireFly = new FireFly(vec, motionX, motionY, motionZ, size.doubleValue(), gravity.doubleValue(), inertia.doubleValue());
+            FireFly fireFly = new FireFly(vec, motionX, motionY, motionZ, gravity.doubleValue(), inertia.doubleValue());
 
             fireFly.motionX *= random(0.5f, 1.5f);
             fireFly.motionY *= random(0.5f, 1.5f);
@@ -90,8 +87,8 @@ public class FireFlies extends Module {
     }
 
     private static class FireFly extends ParticleTickHandler {
-        public FireFly(Vec3d posIn, double motionX, double motionY, double motionZ, double size, double gravityAmount, double inertiaAmount) {
-            super(posIn, motionX, motionY, motionZ, size, gravityAmount, inertiaAmount);
+        public FireFly(Vec3d posIn, double motionX, double motionY, double motionZ, double gravityAmount, double inertiaAmount) {
+            super(posIn, motionX, motionY, motionZ, gravityAmount, inertiaAmount);
         }
 
         @Override
