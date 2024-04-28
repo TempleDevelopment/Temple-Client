@@ -1,11 +1,18 @@
 package xyz.templecheats.templeclient.util.autocrystal;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityEnderCrystal;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.util.CombatRules;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.Explosion;
 
 public class DamageUtil {
     private static final Minecraft mc = Minecraft.getMinecraft();
@@ -25,12 +32,50 @@ public class DamageUtil {
             double distancedSize = playerInfo.entity.getDistance(posX, posY, posZ) / (double) doubleExplosionSize;
             double blockDensity = playerInfo.entity.world.getBlockDensity(new Vec3d(posX, posY, posZ), playerInfo.entity.getEntityBoundingBox());
             double v = (1.0D - distancedSize) * blockDensity;
-            float damage = (float)((int)((v * v + v) / 2.0D * 7.0D * (double) doubleExplosionSize + 1.0D));
+            float damage = (float) ((int) ((v * v + v) / 2.0D * 7.0D * (double) doubleExplosionSize + 1.0D));
 
             finalDamage = getBlastReductionThreaded(playerInfo, getDamageMultiplied(damage));
         } catch (NullPointerException ignored) {}
 
         return finalDamage;
+    }
+
+    public static float calculateDamageThreaded(double posX, double posY, double posZ, EntityLivingBase playerInfo) {
+        float finalDamage = 1.0f;
+        try {
+            float doubleExplosionSize = 12.0F;
+            double distancedSize = playerInfo.getDistance(posX, posY, posZ) / (double) doubleExplosionSize;
+            double blockDensity = playerInfo.world.getBlockDensity(new Vec3d(posX, posY, posZ), playerInfo.getEntityBoundingBox());
+            double v = (1.0D - distancedSize) * blockDensity;
+            float damage = (float) ((int) ((v * v + v) / 2.0D * 7.0D * (double) doubleExplosionSize + 1.0D));
+
+            finalDamage = getBlastReductionThreaded(playerInfo, getDamageMultiplied(damage), new Explosion(mc.world, null, posX, posY, posZ, 6F, false, true));
+        } catch (NullPointerException ignored) {}
+
+        return finalDamage;
+    }
+
+    public static float getBlastReductionThreaded(final EntityLivingBase entity, final float damageI, final Explosion explosion) {
+        float damage = damageI;
+        if (entity instanceof EntityPlayer) {
+            final EntityPlayer ep = (EntityPlayer) entity;
+            final DamageSource ds = DamageSource.causeExplosionDamage(explosion);
+            damage = CombatRules.getDamageAfterAbsorb(damage, (float) ep.getTotalArmorValue(), (float) ep.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue());
+            int k = 0;
+            try {
+                k = EnchantmentHelper.getEnchantmentModifierDamage(ep.getArmorInventoryList(), ds);
+            } catch (Exception ex) {
+            }
+            final float f = MathHelper.clamp((float) k, 0.0f, 20.0f);
+            damage *= 1.0f - f / 25.0f;
+            if (entity.isPotionActive(MobEffects.RESISTANCE)) {
+                damage -= damage / 4.0f;
+            }
+            damage = Math.max(damage, 0.0f);
+            return damage;
+        }
+        damage = CombatRules.getDamageAfterAbsorb(damage, (float) entity.getTotalArmorValue(), (float) entity.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue());
+        return damage;
     }
 
     public static float getBlastReductionThreaded(PlayerInfo playerInfo, float damage) {

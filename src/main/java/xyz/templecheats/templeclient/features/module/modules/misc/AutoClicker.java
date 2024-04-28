@@ -1,6 +1,8 @@
 package xyz.templecheats.templeclient.features.module.modules.misc;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.math.RayTraceResult;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import xyz.templecheats.templeclient.features.module.Module;
@@ -14,7 +16,7 @@ public class AutoClicker extends Module {
      * Settings
      */
     private final IntSetting cps = new IntSetting("CPS", this, 1, 100, 10);
-    private final EnumSetting < ClickType > clickType = new EnumSetting < > ("Type", this, ClickType.LeftClick);
+    private final EnumSetting <ClickType> clickType = new EnumSetting < > ("Type", this, ClickType.LeftClick);
 
     /*
      * Variables
@@ -31,7 +33,11 @@ public class AutoClicker extends Module {
 
     @Override
     public void onUpdate() {
+        RayTraceResult objectMouseOver = Minecraft.getMinecraft().objectMouseOver;
         if (Mouse.isButtonDown(clickType.value().button)) {
+            if (objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK) {
+                return; //don't spam click if we're looking at a block (so we can break it)
+            }
             if (System.currentTimeMillis() - lastClick > (1d / cps.intValue()) * 1000) {
                 lastClick = System.currentTimeMillis();
                 if (hold < lastClick) {

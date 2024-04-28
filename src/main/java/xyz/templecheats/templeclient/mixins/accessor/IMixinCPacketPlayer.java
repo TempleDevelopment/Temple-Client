@@ -26,4 +26,7 @@ public interface IMixinCPacketPlayer {
 
     @Accessor("rotating")
     boolean isRotating();
+
+    @Accessor(value = "onGround")
+    void setOnGround(boolean onGround);
 }

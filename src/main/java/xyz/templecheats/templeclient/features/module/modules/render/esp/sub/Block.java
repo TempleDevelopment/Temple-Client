@@ -11,12 +11,11 @@ import org.lwjgl.opengl.GL11;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
-import xyz.templecheats.templeclient.util.color.impl.GradientShader;
+import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 
 import java.awt.*;
 
-//TODO: add linewidth setting
 public class Block extends Module {
     /*
      * Settings
@@ -24,12 +23,13 @@ public class Block extends Module {
     private final BooleanSetting outline = new BooleanSetting("Outline", this, true);
     private final BooleanSetting fill = new BooleanSetting("Fill", this, true);
     private final BooleanSetting hitSideOnly = new BooleanSetting("FaceOnly", this, true);
+    private final DoubleSetting lineWidth = new DoubleSetting("Line Width", this, 0.1, 5.0, 1.0);
     private final DoubleSetting opacity = new DoubleSetting("Opacity", this, 0.0, 1.0, 0.5);
     public static boolean rendering;
 
     public Block() {
         super("Block", "Highlights the block at your crosshair", Keyboard.KEY_NONE, Category.Render, true);
-        registerSettings(outline, fill, hitSideOnly, opacity);
+        registerSettings(outline, fill, hitSideOnly, lineWidth, opacity);
     }
 
     @SubscribeEvent
@@ -52,7 +52,7 @@ public class Block extends Module {
             }
         }
         if (outline.booleanValue()) {
-            GL11.glLineWidth(1.5F);
+            GL11.glLineWidth(lineWidth.floatValue());
             if (hitSideOnly.booleanValue()) {
                 RenderUtil.outlineFaceShader(pos, sideHit, Color.WHITE);
             } else {

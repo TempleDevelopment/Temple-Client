@@ -6,9 +6,9 @@ import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.features.module.modules.client.HUD;
 import xyz.templecheats.templeclient.manager.ModuleManager;
-import xyz.templecheats.templeclient.util.color.impl.RectBuilder;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
-import xyz.templecheats.templeclient.util.render.Easing;
+import xyz.templecheats.templeclient.util.render.animation.Easing;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.ColorSetting;
 

@@ -5,7 +5,7 @@ import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.features.gui.font.TempleIcon;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.features.module.modules.client.HUD;
-import xyz.templecheats.templeclient.util.color.impl.RectBuilder;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 

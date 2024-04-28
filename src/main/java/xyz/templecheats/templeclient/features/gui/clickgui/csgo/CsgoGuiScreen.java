@@ -3,6 +3,7 @@ package xyz.templecheats.templeclient.features.gui.clickgui.csgo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
@@ -16,8 +17,10 @@ import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.features.module.modules.client.FontSettings;
 import xyz.templecheats.templeclient.manager.ModuleManager;
-import xyz.templecheats.templeclient.util.color.impl.RectBuilder;
-import xyz.templecheats.templeclient.util.color.impl.RoundedTexture;
+import xyz.templecheats.templeclient.util.render.animation.Easing;
+import xyz.templecheats.templeclient.util.render.animation.Animation;
+import xyz.templecheats.templeclient.util.render.shader.impl.GaussianBlur;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
 
 import java.awt.*;
@@ -25,14 +28,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+import static xyz.templecheats.templeclient.util.math.MathUtil.coerceIn;
 import static xyz.templecheats.templeclient.util.render.RenderUtil.drawHead;
 import static xyz.templecheats.templeclient.util.render.StencilUtil.*;
 
 
 public class CsgoGuiScreen extends GuiScreen {
     private static final ResourceLocation LOGO = new ResourceLocation("textures/icons/logo.png");
-
+    private final Animation blurAnimation = new Animation(Easing.InOutCircle,600);
+    private final Animation zoomAnimation = new Animation(Easing.OutQuint, 300);
     private final ArrayList<Panel> navs = new ArrayList<>();
+    private boolean open = true;
     private static CsgoGuiScreen instance;
 
     public boolean drag;
@@ -51,6 +57,13 @@ public class CsgoGuiScreen extends GuiScreen {
         this.minHeight = 380;
 
         this.load();
+    }
+
+    @Override
+    public void onGuiClosed() {
+        open = !open;
+        blurAnimation.reset();
+        zoomAnimation.reset();
     }
     
     public void load() {
@@ -71,21 +84,46 @@ public class CsgoGuiScreen extends GuiScreen {
                 }
             });
         }
-        
     }
 
     @Override
     public void drawScreen(int unscaledMouseX, int unscaledMouseY, float partialTicks) {
         final int mouseX = (int) (unscaledMouseX / ClickGUI.INSTANCE.scale.doubleValue());
         final int mouseY = (int) (unscaledMouseY / ClickGUI.INSTANCE.scale.doubleValue());
-
         this.drag(mouseX, mouseY);
+
+        ScaledResolution sr = new ScaledResolution(mc);
+        float bProgress = (float) blurAnimation.getProgress();
+        float sProgress = (float) zoomAnimation.getProgress();
+
+        if(mc.currentScreen instanceof CsgoGuiScreen || open) {
+            blurAnimation.progress(1);
+            zoomAnimation.progress(ClickGUI.INSTANCE.scale.doubleValue());
+        }
+        if (ClickGUI.INSTANCE.blur.booleanValue()) {
+            float radius = coerceIn(ClickGUI.INSTANCE.radius.floatValue() * bProgress, (float) ClickGUI.INSTANCE.radius.min , (float) ClickGUI.INSTANCE.radius.max);
+            float compression = coerceIn(ClickGUI.INSTANCE.compression.floatValue() * bProgress, (float) ClickGUI.INSTANCE.compression.min , (float) ClickGUI.INSTANCE.compression.max);
+
+            GaussianBlur.startBlur();
+            this.drawDefaultBackground();
+            GaussianBlur.endBlur(radius, compression);
+        }
+        if (ClickGUI.INSTANCE.tint.booleanValue()) {
+            this.drawDefaultBackground();
+        }
+
+        if (ClickGUI.INSTANCE.particles.booleanValue()) {
+            ClickGUI.INSTANCE.particleUtil.drawParticles();
+            ScaledResolution scaledResolution = new ScaledResolution(mc);
+            ClickGUI.INSTANCE.snow.drawSnow(scaledResolution);
+        }
 
         GlStateManager.pushMatrix();
         GlStateManager.enableDepth();
         GlStateManager.depthFunc(GL11.GL_LEQUAL);
-        GlStateManager.scale(ClickGUI.INSTANCE.scale.doubleValue(), ClickGUI.INSTANCE.scale.doubleValue(), 1);
-
+        GL11.glTranslated((1 - sProgress) * (sr.getScaledWidth_double() / 2D), (1 - sProgress) * (sr.getScaledHeight_double() / 2D), 0D);
+        GL11.glScaled(ClickGUI.INSTANCE.scale.doubleValue() * sProgress, ClickGUI.INSTANCE.scale.doubleValue() * sProgress, ClickGUI.INSTANCE.scale.doubleValue() * sProgress);
+     
         final int scroll = Mouse.getDWheel();
         if (scroll > 0) {
             if(y < this.absY) {

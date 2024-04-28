@@ -1,10 +1,10 @@
-package xyz.templecheats.templeclient.util.color.impl;
+package xyz.templecheats.templeclient.util.render.shader.impl;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
-import xyz.templecheats.templeclient.util.color.ShaderUtil;
+import xyz.templecheats.templeclient.util.render.shader.ShaderUtil;
 import xyz.templecheats.templeclient.util.math.Quad;
 import xyz.templecheats.templeclient.util.math.Vec2d;
 
@@ -60,10 +60,6 @@ public class RectBuilder {
 
     public RectBuilder outlineColor(Color color) {
         return outlineColor(color, color, color, color);
-    }
-
-    public RectBuilder outlineColorV(Color top, Color bottom) {
-        return outlineColor(top, top, bottom, bottom);
     }
 
     public RectBuilder outlineColorH(Color left, Color right) {

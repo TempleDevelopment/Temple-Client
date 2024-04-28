@@ -8,7 +8,7 @@ import xyz.templecheats.templeclient.features.module.modules.combat.AutoCrystal;
 import xyz.templecheats.templeclient.features.module.modules.render.esp.sub.Block;
 import xyz.templecheats.templeclient.features.module.modules.render.PopChams;
 import xyz.templecheats.templeclient.features.module.modules.render.esp.sub.Shader;
-import xyz.templecheats.templeclient.util.color.RainbowUtil;
+import xyz.templecheats.templeclient.util.render.shader.RainbowUtil;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.setting.impl.ColorSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;

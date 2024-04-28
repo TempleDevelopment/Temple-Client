@@ -6,7 +6,7 @@ import xyz.templecheats.templeclient.features.module.modules.render.particle.sub
 
 public class Particle extends Module {
     public Particle() {
-        super("Particle", "Renders particles around you (might reduce preformence)", Category.Render, true);
+        super("Particle", "Renders particles around you (might reduce performance)", Category.Render, true);
         submodules.add(new FireFlies());
         submodules.add(new HitParticle());
     }

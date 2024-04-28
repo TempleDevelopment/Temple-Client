@@ -86,7 +86,10 @@ public class Aura extends Module {
                         waitCounter = 0;
                     }
                 }
-                if (requireWeapon.booleanValue() && !hasSwordMainHand()) return;
+                if (requireWeapon.booleanValue() && !hasSwordMainHand()) {
+                    renderTarget = null;
+                    return;
+                }
                 this.target = mc.world.loadedEntityList.stream()
                         .filter(entity -> entity instanceof EntityLivingBase && !entity.equals(mc.player) && !entity.isDead && (!(entity instanceof EntityOtherPlayerMP) || !((EntityOtherPlayerMP) entity).getGameProfile().equals(mc.player.getGameProfile())))
                         .map(entity -> (EntityLivingBase) entity)

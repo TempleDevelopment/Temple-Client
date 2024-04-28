@@ -17,7 +17,7 @@ import org.lwjgl.opengl.GL11;
 import xyz.templecheats.templeclient.features.module.modules.client.Colors;
 import xyz.templecheats.templeclient.mixins.accessor.IMixinRenderManager;
 import xyz.templecheats.templeclient.util.Globals;
-import xyz.templecheats.templeclient.util.color.impl.RoundedTexture;
+import xyz.templecheats.templeclient.util.render.shader.impl.RoundedTexture;
 import xyz.templecheats.templeclient.util.math.Vec2d;
 
 import static java.lang.Math.atan;

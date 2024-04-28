@@ -3,6 +3,7 @@ package xyz.templecheats.templeclient.util.math;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -134,9 +135,9 @@ public final class MathUtil {
     public static float wrap(float val) {
         val = val % 360.0f;
         if (val >= 180.0f)
-        val -= 360.0f;
+            val -= 360.0f;
         if (val < -180.0f)
-        val += 360.0f;
+            val += 360.0f;
         return val;
     }
 
@@ -154,6 +155,14 @@ public final class MathUtil {
 
     public static double parabolic(double from, double to, double incline) {
         return from + (to - from) / incline;
+    }
+
+    public static double getDistanceToCenter(EntityPlayer player, BlockPos pos) {
+        double deltaX = pos.getX() + 0.5 - player.posX;
+        double deltaY = pos.getY() + 0.5 - player.posY;
+        double deltaZ = pos.getZ() + 0.5 - player.posZ;
+
+        return MathHelper.sqrt((deltaX * deltaX) + (deltaY * deltaY) + (deltaZ * deltaZ));
     }
 
     public static double getDistance(Vec3d pos, double x, double y, double z) {
@@ -195,7 +204,20 @@ public final class MathUtil {
         return current;
     }
 
-    public static float randomBetween(float min, float max) {
+    public static float coerceIn(float value, float min, float max) {
+        return Math.min(Math.max(value, min), max);
+    }
+
+    public static float coerceIn(double value, double min, double max) {
+        return (float) Math.min(Math.max(value, min), max);
+    }
+
+    public static float calculateGaussianValue(float x, float sigma) {
+        double output = 1.0 / Math.sqrt(2.0 * Math.PI * (sigma * sigma));
+        return (float) (output * Math.exp(-(x * x) / (2.0 * (sigma * sigma))));
+    }
+
+        public static float randomBetween(float min, float max) {
         return min + (new Random().nextFloat() * (max - min));
     }
 

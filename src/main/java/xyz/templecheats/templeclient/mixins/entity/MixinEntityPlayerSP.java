@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.MoverType;
+import net.minecraftforge.common.MinecraftForge;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,6 +16,7 @@ import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.event.EventStageable;
 import xyz.templecheats.templeclient.event.events.player.MotionEvent;
 import xyz.templecheats.templeclient.event.events.player.MoveEvent;
+import xyz.templecheats.templeclient.event.events.player.RotationUpdateEvent;
 import xyz.templecheats.templeclient.features.module.modules.render.Freecam;
 import xyz.templecheats.templeclient.manager.ModuleManager;
 
@@ -25,9 +27,14 @@ public class MixinEntityPlayerSP extends MixinEntity {
 
     @Inject(method = "onUpdateWalkingPlayer", at = @At("HEAD"), cancellable = true)
     private void onUpdateWalkingPlayerHead(CallbackInfo callback) {
+        RotationUpdateEvent rotationUpdateEvent = new RotationUpdateEvent();
+        MinecraftForge.EVENT_BUS.post(rotationUpdateEvent);
+        if (rotationUpdateEvent.isCanceled()) {
+            callback.cancel();
+        }
         final EntityPlayerSP player = EntityPlayerSP.class.cast(this);
 
-        final MotionEvent event = new MotionEvent(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch, EventStageable.EventStage.PRE);
+        final MotionEvent event = new MotionEvent(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch, player.onGround, EventStageable.EventStage.PRE);
         TempleClient.eventBus.dispatchEvent(event);
         if (event.isCanceled()) {
             callback.cancel();
@@ -44,7 +51,7 @@ public class MixinEntityPlayerSP extends MixinEntity {
     private void onUpdateWalkingPlayerTail(CallbackInfo callback) {
         final EntityPlayerSP player = EntityPlayerSP.class.cast(this);
 
-        TempleClient.eventBus.dispatchEvent(new MotionEvent(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch, EventStageable.EventStage.POST));
+        TempleClient.eventBus.dispatchEvent(new MotionEvent(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch, player.onGround, EventStageable.EventStage.POST));
 
         player.rotationYaw = savedYaw;
         player.rotationPitch = savedPitch;

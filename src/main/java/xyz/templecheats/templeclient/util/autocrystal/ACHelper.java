@@ -20,19 +20,19 @@ public enum ACHelper {
     INSTANCE;
 
     private static final Minecraft mc = Minecraft.getMinecraft();
-    private static final List < CrystalInfo.PlaceInfo > EMPTY_LIST = new ArrayList < > ();
+    private static final List<CrystalInfo.PlaceInfo> EMPTY_LIST = new ArrayList<>();
 
     public static final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 
     private static final ExecutorService mainExecutors = Executors.newSingleThreadExecutor();
-    private Future < List < CrystalInfo.PlaceInfo >> mainThreadOutput;
+    private Future<List<CrystalInfo.PlaceInfo>> mainThreadOutput;
 
     private ACSettings settings = null;
-    private List < BlockPos > possiblePlacements = new ArrayList < > ();
-    private List < EntityEnderCrystal > targetableCrystals = new ArrayList < > ();
-    private final List < PlayerInfo > targetsInfo = new ArrayList < > ();
+    private List<BlockPos> possiblePlacements = new ArrayList<>();
+    private List<EntityEnderCrystal> targetableCrystals = new ArrayList<>();
+    private final List<PlayerInfo> targetsInfo = new ArrayList<>();
 
-    private List < BlockPos > threadPlacements = new ArrayList < > ();
+    private List<BlockPos> threadPlacements = new ArrayList<>();
 
     public void startCalculations(long timeout) {
         if (mainThreadOutput != null) {
@@ -41,7 +41,7 @@ public enum ACHelper {
         mainThreadOutput = mainExecutors.submit(new ACCalculate(settings, targetsInfo, threadPlacements, timeout));
     }
 
-    public List < CrystalInfo.PlaceInfo > getOutput(boolean wait) {
+    public List<CrystalInfo.PlaceInfo> getOutput(boolean wait) {
         if (mainThreadOutput == null) {
             return EMPTY_LIST;
         }
@@ -57,7 +57,7 @@ public enum ACHelper {
             }
         }
 
-        List < CrystalInfo.PlaceInfo > output = EMPTY_LIST;
+        List<CrystalInfo.PlaceInfo> output = EMPTY_LIST;
         try {
             output = mainThreadOutput.get();
         } catch (InterruptedException | ExecutionException ignored) {}
@@ -70,7 +70,7 @@ public enum ACHelper {
         this.settings = settings;
 
         final double entityRangeSq = (enemyDistance) * (enemyDistance);
-        List < EntityPlayer > targets = mc.world.playerEntities.stream()
+        List<EntityPlayer> targets = mc.world.playerEntities.stream()
                 .filter(entity -> self.entity.getDistanceSq(entity) <= entityRangeSq)
                 .filter(entity -> !EntityUtil.basicChecksEntity(entity))
                 .filter(entity -> entity.getHealth() > 0.0f)
@@ -78,16 +78,12 @@ public enum ACHelper {
 
         targetableCrystals = mc.world.loadedEntityList.stream()
                 .filter(entity -> entity instanceof EntityEnderCrystal)
-                .map(entity -> (EntityEnderCrystal) entity).collect(Collectors.toList());
-
-        targetableCrystals.removeIf(crystal -> {
-            float damage = DamageUtil.calculateDamageThreaded(crystal.posX, crystal.posY, crystal.posZ, self);
-            if (damage > settings.maxSelfDamage) {
-                return true;
-            } else {
-                return (damage > self.health) || self.entity.getDistanceSq(crystal) >= settings.breakRangeSq;
-            }
-        });
+                .map(entity -> (EntityEnderCrystal) entity)
+                .filter(crystal -> self.entity.getDistanceSq(crystal) < settings.breakRangeSq)
+                .filter(crystal -> {
+                    float damage = DamageUtil.calculateDamageThreaded(crystal.posX, crystal.posY, crystal.posZ, self);
+                    return damage < settings.maxSelfDamage && damage < self.health;
+                }).collect(Collectors.toList());
 
         possiblePlacements = CrystalUtil.findCrystalBlocks(settings.placeRange, settings.server);
 
@@ -117,7 +113,7 @@ public enum ACHelper {
         threadPlacements = CrystalUtil.findCrystalBlocksExcludingCrystals(settings.placeRange, settings.server);
 
         targetsInfo.clear();
-        for (EntityPlayer target: targets) {
+        for (EntityPlayer target : targets) {
             targetsInfo.add(new PlayerInfo(target, armourPercent));
         }
     }
@@ -138,11 +134,11 @@ public enum ACHelper {
         return settings;
     }
 
-    public List < BlockPos > getPossiblePlacements() {
+    public List<BlockPos> getPossiblePlacements() {
         return possiblePlacements;
     }
 
-    public List < EntityEnderCrystal > getTargetableCrystals() {
+    public List<EntityEnderCrystal> getTargetableCrystals() {
         return targetableCrystals;
     }
 }

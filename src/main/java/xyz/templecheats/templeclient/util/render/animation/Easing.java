@@ -1,16 +1,17 @@
 /*
  * This Easing was made by LavaHack, and was rewritten in java.
  */
-package xyz.templecheats.templeclient.util.render;
+package xyz.templecheats.templeclient.util.render.animation;
 
 import java.util.function.DoubleUnaryOperator;
 
+import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
 import static java.lang.StrictMath.pow;
 public enum Easing {
     Linear(x -> x),
     InSine(x -> 1 - Math.cos((x * Math.PI) / 2)),
-    OutSine(x -> Math.sin((x * Math.PI) / 2)),
+    OutSine(x -> sin((x * Math.PI) / 2)),
     InOutSine(x -> -(Math.cos(Math.PI * x) - 1) / 2),
     InQuad(x -> x * x),
     OutQuad(x -> 1 - (1 - x) * (1 - x)),
@@ -31,7 +32,9 @@ public enum Easing {
     OutCircle(it -> sqrt(1.0 - pow(it - 1.0, 2))),
     InOutCircle(it -> it < 0.5 ? (1.0 - sqrt(1.0 - 2 * it * 2 * it)) / 2 : (sqrt(1.0 - pow(-2 * it + 2, 2)) + 1) / 2.0),
     InSin(Math::sin),
-    OutSin(it -> 1.0 - Math.sin(1.0 - it));
+    OutSin(it -> 1.0 - sin(1.0 - it)),
+    OutElastic(it -> it == 0 ? 0 : it == 1 ? 1 : pow(2, -10 * it) * sin((it * 10 - 0.75) * ((2 * Math.PI) / 3)) * 0.5 + 1),
+    InBack(it -> (1.70158 + 1) * it * it * it - 1.70158 * it * it);
 
     private final DoubleUnaryOperator function;
 

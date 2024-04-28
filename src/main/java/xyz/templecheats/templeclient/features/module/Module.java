@@ -6,7 +6,7 @@ import net.minecraftforge.common.MinecraftForge;
 import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.features.module.modules.client.hud.notification.NotificationType;
 import xyz.templecheats.templeclient.features.module.modules.client.hud.notification.Notifications;
-import xyz.templecheats.templeclient.util.color.impl.GradientShader;
+import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
 import xyz.templecheats.templeclient.util.setting.SettingHolder;
 
 import java.lang.reflect.InvocationTargetException;

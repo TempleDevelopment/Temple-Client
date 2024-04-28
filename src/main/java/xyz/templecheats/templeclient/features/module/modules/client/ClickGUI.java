@@ -3,7 +3,7 @@ package xyz.templecheats.templeclient.features.module.modules.client;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import xyz.templecheats.templeclient.features.module.Module;
-import xyz.templecheats.templeclient.util.color.RainbowUtil;
+import xyz.templecheats.templeclient.util.render.shader.RainbowUtil;
 import xyz.templecheats.templeclient.util.setting.impl.*;
 import xyz.templecheats.templeclient.features.gui.clickgui.particles.Particle;
 import xyz.templecheats.templeclient.features.gui.clickgui.particles.Snow;
@@ -25,6 +25,9 @@ public class ClickGUI extends Module {
 	public final BooleanSetting gears = new BooleanSetting("Gears", this, true);
 	public final BooleanSetting particles = new BooleanSetting("Particles", this, false);
 	public final BooleanSetting tint = new BooleanSetting("Tint", this, true);
+	public final BooleanSetting blur = new BooleanSetting("Blur", this, false);
+	public final DoubleSetting radius = new DoubleSetting("Radius", this, 0.0, 10.0, 1.0);
+	public final DoubleSetting compression = new DoubleSetting("Compression", this, 0.0, 10.0, 1.0);
 	private final BooleanSetting scaledResolution = new BooleanSetting("Scaled Resolution", this, false);
 	public final EnumSetting<ColorMode> colorMode = new EnumSetting <>("Color Mode", this, ColorMode.Default);
 	public final EnumSetting<Way> way = new EnumSetting <>("Way", this, Way.Horizontal);
@@ -43,7 +46,7 @@ public class ClickGUI extends Module {
 		super("ClickGUI", "Screen to configure modules", Keyboard.KEY_RSHIFT, Category.Client);
 		INSTANCE = this;
 
-		this.registerSettings(gears, particles, tint, scaledResolution,
+		this.registerSettings(gears, blur, radius, compression, particles, tint, scaledResolution,
 				endColor, startColor, scrollSpeed,
 				scale,
 				colorMode, way, theme);

@@ -7,12 +7,13 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RayTraceResult;
-import xyz.templecheats.templeclient.event.ForgeEventManager;
 import xyz.templecheats.templeclient.features.gui.clickgui.hud.HudEditorScreen;
 import xyz.templecheats.templeclient.features.module.modules.client.*;
 import xyz.templecheats.templeclient.features.module.modules.combat.*;
-import xyz.templecheats.templeclient.util.color.impl.RectBuilder;
+import xyz.templecheats.templeclient.util.render.animation.Animation;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
+import xyz.templecheats.templeclient.util.render.animation.Easing;
 
 import java.awt.*;
 import java.util.Objects;
@@ -29,9 +30,10 @@ import static xyz.templecheats.templeclient.util.math.MathUtil.round;
 import static xyz.templecheats.templeclient.util.render.RenderUtil.drawHead;
 
 public class TargetHUD extends HUD.HudElement {
-
+    private final Animation animation = new Animation(Easing.InOutCircle, 300);
     private TargetInfo info = TargetInfo.BLANK;
     private double healthProgress = 0.0;
+
     public TargetHUD() {
         super("TargetHUD", "Draws a HUD featuring target information");
         registerSettings(outline, blur, color, outlineColor, outlineWidth, blurRadius);
@@ -45,9 +47,10 @@ public class TargetHUD extends HUD.HudElement {
         Vec2d pos2 = new Vec2d(getWidth() * 0.5, getHeight() * 0.5);
 
         glPushMatrix();
+        this.animation.progress(1);
 
-        glTranslated(getX() + getWidth() * 0.5, getY() + getHeight() * 0.5, 0.0);
-        glScaled(1.0, 1.0, 1.0);
+        glTranslated(getX() + getWidth() * animation.getProgress() / 2f, getY() + getHeight() * 0.5, 0.0);
+        glScaled(animation.getProgress(), animation.getProgress(), animation.getProgress());
         if (info != TargetInfo.BLANK) {
             drawTarget(pos1, pos2);
         }
@@ -66,7 +69,7 @@ public class TargetHUD extends HUD.HudElement {
         Color bgOutline = outlineColor.getColor();
         Color healthBarBgColor = new Color(12, 12, 12);
         Color healthBarColor1 = setAlpha(ClickGUI.INSTANCE.getClientColor(0), 0.75);
-        Color healthBarColor2 = setAlpha(ClickGUI.INSTANCE.getClientColor(2), 0.75);
+        Color healthBarColor2 = setAlpha(ClickGUI.INSTANCE.getClientColor(3), 0.75);
         Color fontColor = new Color(-1);
 
         double h = pos2.y - pos1.y;
@@ -93,6 +96,11 @@ public class TargetHUD extends HUD.HudElement {
 
         // Healthbar
         double sliderX = lerp(healthBgPos1.x, healthBgPos2.x, healthProgress);
+        double previousSliderX = sliderX;
+        if (previousSliderX <= healthBgPos2.x) {
+            sliderX = lerp(healthBgPos1.x, healthBgPos2.x, healthProgress);
+        }
+
         Vec2d healthSliderPos = new Vec2d(sliderX, healthBgPos2.y);
         Vec2d textPos = new Vec2d(healthBgPos1.x, healthBgPos1.y);
         new RectBuilder(healthBgPos1, healthSliderPos).colorH(healthBarColor1, healthBarColor2).radius(100.0).draw();
@@ -151,7 +159,10 @@ public class TargetHUD extends HUD.HudElement {
                 .findFirst()
                 .orElse(TargetInfo.BLANK);
 
-        healthProgress = lerp(healthProgress, info.healthProgress(), ForgeEventManager.deltaTime * 2.0);
+        if (info == TargetInfo.BLANK) {
+            animation.reset();
+        }
+        healthProgress = info.healthProgress() * animation.getProgress();
     }
 
 
@@ -169,7 +180,7 @@ public class TargetHUD extends HUD.HudElement {
         }
 
         double healthProgress() {
-            return clamp(health / Math.max(0.1, maxHealth), 0.0, 1.0);
+            return Math.min(health, clamp(health / Math.max(0.1, maxHealth), 0.0, 1.0));
         }
 
         String displayHealth() {

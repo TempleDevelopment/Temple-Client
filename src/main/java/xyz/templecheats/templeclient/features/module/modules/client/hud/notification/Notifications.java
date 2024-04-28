@@ -1,18 +1,11 @@
 package xyz.templecheats.templeclient.features.module.modules.client.hud.notification;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
-import xyz.templecheats.templeclient.features.gui.font.CFont;
-import xyz.templecheats.templeclient.features.gui.font.TempleIcon;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.features.module.modules.client.HUD;
-import xyz.templecheats.templeclient.util.color.impl.RectBuilder;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
-import xyz.templecheats.templeclient.util.render.Easing;
-import xyz.templecheats.templeclient.util.setting.impl.ColorSetting;
+import xyz.templecheats.templeclient.util.render.animation.Easing;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 
@@ -61,9 +54,8 @@ public class Notifications extends HUD.HudElement {
             initialX = getX();
         }
 
-        Iterator <NotificationInfo> iterator = notificationList.iterator();
-        while (iterator.hasNext()) {
-            NotificationInfo notification = iterator.next();
+        for (int i = 0; i < notificationList.size(); i++) {
+            NotificationInfo notification = notificationList.get(i);
             double progress = notification.getProgress();
             double offsetX = lerp(initialX + sr.getScaledWidth(), initialX, Math.pow(progress, 2.3));
 
@@ -76,7 +68,8 @@ public class Notifications extends HUD.HudElement {
 
             // Remove the notification if it should be removed
             if (notification.shouldRemove()) {
-                iterator.remove();
+                notificationList.remove(i);
+                i--;
             }
         }
     }

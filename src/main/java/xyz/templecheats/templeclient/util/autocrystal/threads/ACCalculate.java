@@ -15,16 +15,16 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-public class ACCalculate implements Callable < List < CrystalInfo.PlaceInfo >> {
+public class ACCalculate implements Callable<List<CrystalInfo.PlaceInfo>> {
 
     private final ACSettings settings;
 
-    private final List < PlayerInfo > targets;
-    private final List < BlockPos > blocks;
+    private final List<PlayerInfo> targets;
+    private final List<BlockPos> blocks;
 
     private final long globalTimeoutTime;
 
-    public ACCalculate(ACSettings settings, List < PlayerInfo > targets, List < BlockPos > blocks, long globalTimeoutTime) {
+    public ACCalculate(ACSettings settings, List<PlayerInfo> targets, List<BlockPos> blocks, long globalTimeoutTime) {
         this.settings = settings;
 
         this.targets = targets;
@@ -34,24 +34,24 @@ public class ACCalculate implements Callable < List < CrystalInfo.PlaceInfo >> {
     }
 
     @Override
-    public List < CrystalInfo.PlaceInfo > call() {
+    public List<CrystalInfo.PlaceInfo> call() {
         return getPlayers(startThreads());
     }
 
     @Nonnull
-    private List < Future < CrystalInfo.PlaceInfo >> startThreads() {
-        List < Future < CrystalInfo.PlaceInfo >> output = new ArrayList < > ();
+    private List<Future<CrystalInfo.PlaceInfo>> startThreads() {
+        List<Future<CrystalInfo.PlaceInfo>> output = new ArrayList<>();
 
-        for (PlayerInfo target: targets) {
+        for (PlayerInfo target : targets) {
             output.add(ACHelper.executor.submit(new ACSubThread(settings, blocks, target)));
         }
 
         return output;
     }
 
-    private List < CrystalInfo.PlaceInfo > getPlayers(List < Future < CrystalInfo.PlaceInfo >> input) {
-        List < CrystalInfo.PlaceInfo > place = new ArrayList < > ();
-        for (Future < CrystalInfo.PlaceInfo > future: input) {
+    private List<CrystalInfo.PlaceInfo> getPlayers(List<Future<CrystalInfo.PlaceInfo>> input) {
+        List<CrystalInfo.PlaceInfo> place = new ArrayList<>();
+        for (Future<CrystalInfo.PlaceInfo> future : input) {
             while (!future.isDone() && !future.isCancelled()) {
                 if (System.currentTimeMillis() > globalTimeoutTime) {
                     break;

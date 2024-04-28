@@ -8,7 +8,7 @@ import xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items
 import xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.Panel;
 import xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.Button;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
-import xyz.templecheats.templeclient.util.color.impl.RectBuilder;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 

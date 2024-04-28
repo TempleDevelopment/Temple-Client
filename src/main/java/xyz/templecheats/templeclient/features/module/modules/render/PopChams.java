@@ -13,9 +13,9 @@ import xyz.templecheats.templeclient.event.events.network.PacketEvent;
 import xyz.templecheats.templeclient.event.events.player.ModelEvent;
 import xyz.templecheats.templeclient.event.events.render.Render3DEvent;
 import xyz.templecheats.templeclient.features.module.Module;
-import xyz.templecheats.templeclient.util.color.impl.GradientShader;
-import xyz.templecheats.templeclient.util.render.Animation;
-import xyz.templecheats.templeclient.util.render.Easing;
+import xyz.templecheats.templeclient.util.render.animation.Animation;
+import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
+import xyz.templecheats.templeclient.util.render.animation.Easing;
 import xyz.templecheats.templeclient.util.setting.impl.*;
 
 import java.util.List;
@@ -106,8 +106,8 @@ public class PopChams extends Module {
     @Listener
     public void onRender3D(Render3DEvent event) {
         this.chams.forEach(cham -> {
-            cham.animation.setState(true);
-            float animFac = (float) cham.animation.getAnimationFactor();
+            cham.animation.progress(movementHeight.floatValue());
+            float animFac = (float) cham.animation.getProgress();
             float alpha = startAlpha.intValue() / 255f;
             rendering = false;
             GradientShader.setup(Math.max(0.0f, alpha - (Math.min(Math.max(0.0f, animFac), alpha))));
@@ -188,7 +188,7 @@ public class PopChams extends Module {
             this.netHeadYaw = netHeadYaw;
             this.headPitch = headPitch;
             this.scale = scale;
-            this.animation = new Animation((float) duration.intValue(), false, easing.value());
+            this.animation = new Animation(easing.value(), duration.intValue());
         }
     }
 }

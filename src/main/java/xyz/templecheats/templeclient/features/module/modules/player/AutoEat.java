@@ -46,7 +46,7 @@ public class AutoEat extends Module {
             for (int i = 0; i < 9; i++) {
                 ItemStack stack = mc.player.inventory.getStackInSlot(i);
                 Item item = stack.getItem();
-                if (item instanceof ItemFood && (gapples.booleanValue() || item != Items.GOLDEN_APPLE) && (!poisonous.booleanValue() || item != Items.SPIDER_EYE && item != Items.ROTTEN_FLESH && item != Items.POISONOUS_POTATO && !(item == Items.FISH && stack.getMetadata() == 3) && item != Items.CHICKEN)) {
+                if (item instanceof ItemFood && (gapples.booleanValue() || item != Items.GOLDEN_APPLE) && (!poisonous.booleanValue() || item != Items.SPIDER_EYE && item != Items.ROTTEN_FLESH && item != Items.POISONOUS_POTATO && item != Items.CHORUS_FRUIT && !(item == Items.FISH && stack.getMetadata() == 3) && item != Items.CHICKEN)) {
                     previousSlot = mc.player.inventory.currentItem;
                     mc.player.inventory.currentItem = i;
                     KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);

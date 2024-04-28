@@ -8,8 +8,8 @@ import xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items
 import xyz.templecheats.templeclient.features.module.modules.client.hud.notification.NotificationType;
 import xyz.templecheats.templeclient.features.module.modules.client.hud.notification.Notifications;
 import xyz.templecheats.templeclient.util.color.ColorUtil;
-import xyz.templecheats.templeclient.util.color.impl.RectBuilder;
-import xyz.templecheats.templeclient.util.color.impl.RoundedTexture;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
+import xyz.templecheats.templeclient.util.render.shader.impl.RoundedTexture;
 import xyz.templecheats.templeclient.util.math.Vec2d;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.render.StencilUtil;

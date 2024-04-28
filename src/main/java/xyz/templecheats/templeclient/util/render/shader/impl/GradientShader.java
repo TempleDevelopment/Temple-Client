@@ -1,10 +1,10 @@
-package xyz.templecheats.templeclient.util.color.impl;
+package xyz.templecheats.templeclient.util.render.shader.impl;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.shader.Framebuffer;
 import xyz.templecheats.templeclient.features.module.modules.client.Colors;
 import xyz.templecheats.templeclient.util.Globals;
-import xyz.templecheats.templeclient.util.color.ShaderUtil;
+import xyz.templecheats.templeclient.util.render.shader.ShaderUtil;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 
 import java.awt.*;

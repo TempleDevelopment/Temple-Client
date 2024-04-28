@@ -1,5 +1,8 @@
 package xyz.templecheats.templeclient.util.color;
 
+import org.spongepowered.asm.mixin.Unique;
+
+import javax.vecmath.Vector3f;
 import java.awt.Color;
 
 import static xyz.templecheats.templeclient.util.math.MathUtil.clamp;
@@ -131,6 +134,24 @@ public class ColorUtil {
         int interpolatedAlpha = (int) lerp(alpha1, alpha2, amount);
 
         return (interpolatedAlpha << 24) | (interpolatedRed << 16) | (interpolatedGreen << 8) | interpolatedBlue;
+    }
+
+    public static Vector3f vector3F(Color ambientColor, int[] lightmapColors, int i) {
+        int alpha = ambientColor.getAlpha();
+        float modifier = (float) alpha / 255.0f;
+        int color = lightmapColors[i];
+        int[] bgr = toRGBAArray(color);
+        Vector3f values = new Vector3f((float) bgr[2] / 255.0f, (float) bgr[1] / 255.0f, (float) bgr[0] / 255.0f);
+        Vector3f newValues = new Vector3f((float) ambientColor.getRed() / 255.0f, (float) ambientColor.getGreen() / 255.0f, (float) ambientColor.getBlue() / 255.0f);
+        return mix(values, newValues, modifier);
+    }
+
+    private static int[] toRGBAArray(int colorBuffer) {
+        return new int[]{colorBuffer >> 16 & 0xFF, colorBuffer >> 8 & 0xFF, colorBuffer & 0xFF};
+    }
+
+    private static Vector3f mix(Vector3f first, Vector3f second, float factor) {
+        return new Vector3f(first.x * (1.0f - factor) + second.x * factor, first.y * (1.0f - factor) + second.y * factor, first.z * (1.0f - factor) + first.z * factor);
     }
 
     public static int getRed(final int hex) {

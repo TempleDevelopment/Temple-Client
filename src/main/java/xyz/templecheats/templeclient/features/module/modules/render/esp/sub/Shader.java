@@ -1,52 +1,43 @@
 package xyz.templecheats.templeclient.features.module.modules.render.esp.sub;
 
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.shader.Framebuffer;
-import net.minecraft.client.shader.ShaderGroup;
-import net.minecraft.client.shader.ShaderUniform;
-import net.minecraft.entity.item.EntityEnderCrystal;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.Entity;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL32;
-import scala.Array;
+
 import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
 import xyz.templecheats.templeclient.event.events.render.*;
 import xyz.templecheats.templeclient.features.module.Module;
-import xyz.templecheats.templeclient.mixins.accessor.IEntityRenderer;
-import xyz.templecheats.templeclient.mixins.accessor.IShaderGroup;
-import xyz.templecheats.templeclient.util.color.ShaderHelper;
-import xyz.templecheats.templeclient.util.color.impl.GradientShader;
-import xyz.templecheats.templeclient.util.render.RenderUtil;
+
+import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
 import xyz.templecheats.templeclient.util.setting.impl.*;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.LinkedHashSet;
 
 import static org.lwjgl.opengl.GL11.*;
+import static xyz.templecheats.templeclient.util.player.TargetUtil.updateEntityList;
 
 public class Shader extends Module {
     /*
      * Settings
      */
-    private final BooleanSetting crystal = new BooleanSetting("Crystals", this, false);
-    private final BooleanSetting player = new BooleanSetting("Players", this, false);
-    public final BooleanSetting hand = new BooleanSetting("Hand", this, false);
-    private final ColorSetting outlineColor = new ColorSetting("Color", this, Color.RED);
-    private final DoubleSetting lineWidth = new DoubleSetting("LineWidth", this, 0.0, 5.0, 1);
-    private final DoubleSetting opacity = new DoubleSetting("Opacity", this, 0.0, 1.0, 0.5);
+    private final BooleanSetting crystal = new BooleanSetting("Crystals" , this , false);
+    private final BooleanSetting self = new BooleanSetting("Self" , this , false);
+    private final BooleanSetting player = new BooleanSetting("Players" , this , false);
+    private final BooleanSetting items = new BooleanSetting("Items" , this , false);
+    private final BooleanSetting hostiles = new BooleanSetting("Hostiles" , this , false);
+    private final BooleanSetting animals = new BooleanSetting("Animals" , this , false);
+    private final DoubleSetting range = new DoubleSetting("Range", this, 8.0, 256.0, 32.0);
+    private final DoubleSetting lineWidth = new DoubleSetting("LineWidth" , this , 0.0 , 5.0 , 1);
+    private final DoubleSetting opacity = new DoubleSetting("Opacity" , this , 0.0 , 1.0 , 0.5);
+
+    private final LinkedHashSet<Entity> entityList = new LinkedHashSet<>();
     public static boolean rendering;
     public static Shader INSTANCE;
 
     public Shader() {
-        super("Shader", "Highlights players and crystals", Keyboard.KEY_NONE, Category.Render, true);
-        registerSettings(player, crystal, hand, outlineColor, lineWidth, opacity);
+        super("Shader" , "Highlights players and crystals" , Keyboard.KEY_NONE , Category.Render , true);
+        registerSettings(self, player, crystal, items, hostiles, animals, range, lineWidth, opacity);
         INSTANCE = this;
     }
 
@@ -56,50 +47,54 @@ public class Shader extends Module {
             event.setCanceled(true);
     }
 
+    @Override
+    public void onUpdate() {
+        updateEntityList(entityList, crystal.booleanValue(), self.booleanValue(), player.booleanValue(), items.booleanValue(), hostiles.booleanValue(), animals.booleanValue(), range.doubleValue());
+    }
+
     @Listener
     public void onRender3d(Render3DPreEvent event) {
         if (mc.gameSettings.thirdPersonView != 0 || mc.world == null) {
             return;
         }
         rendering = true;
-        for (final Entity entity : mc.world.loadedEntityList) {
-            if (entity != null && ((!entity.equals(mc.player) && entity instanceof EntityPlayer && player.booleanValue()) || (entity instanceof EntityEnderCrystal && crystal.booleanValue()))) {
-                GradientShader.setup((float) opacity.doubleValue());
-                try {
-                    glPushMatrix();
-                    glEnable(GL_BLEND);
-                    glDisable(GL_TEXTURE_2D);
-                    glDisable(GL_DEPTH_TEST);
-                    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-                    mc.getRenderManager().renderEntityStatic(entity, mc.getRenderPartialTicks(), false);
+        for (Entity entity : entityList) {
+            GradientShader.setup(opacity.floatValue());
+            try {
+                glPushMatrix();
+                glEnable(GL_BLEND);
+                glDisable(GL_TEXTURE_2D);
+                glDisable(GL_DEPTH_TEST);
+                glBlendFunc(GL_SRC_ALPHA , GL_ONE_MINUS_SRC_ALPHA);
 
-                    glEnable(GL_DEPTH_TEST);
-                    glEnable(GL_TEXTURE_2D);
-                    glDisable(GL_BLEND);
-                    glPopMatrix();
+                mc.getRenderManager().renderEntityStatic(entity, mc.getRenderPartialTicks(), false);
 
-                    glPushMatrix();
-                    glEnable(GL_BLEND);
-                    glDisable(GL_TEXTURE_2D);
-                    glDisable(GL_DEPTH_TEST);
-                    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-                    glEnable(GL_LINE_SMOOTH);
-                    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-                    glLineWidth(lineWidth.floatValue());
+                glEnable(GL_DEPTH_TEST);
+                glEnable(GL_TEXTURE_2D);
+                glDisable(GL_BLEND);
+                glPopMatrix();
 
-                    mc.getRenderManager().renderEntityStatic(entity, mc.getRenderPartialTicks(), false);
+                glPushMatrix();
+                glEnable(GL_BLEND);
+                glDisable(GL_TEXTURE_2D);
+                glDisable(GL_DEPTH_TEST);
+                glPolygonMode(GL_FRONT_AND_BACK , GL_LINE);
+                glEnable(GL_LINE_SMOOTH);
+                glHint(GL_LINE_SMOOTH_HINT , GL_NICEST);
+                glLineWidth(lineWidth.floatValue());
 
-                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-                    glEnable(GL_DEPTH_TEST);
-                    glEnable(GL_TEXTURE_2D);
-                    glDisable(GL_BLEND);
-                    glPopMatrix();
-                } catch (Exception ignoredException) {
-                }
-                GradientShader.finish();
-                rendering = false;
+                mc.getRenderManager().renderEntityStatic(entity, mc.getRenderPartialTicks(), false);
+
+                glPolygonMode(GL_FRONT_AND_BACK , GL_FILL);
+                glEnable(GL_DEPTH_TEST);
+                glEnable(GL_TEXTURE_2D);
+                glDisable(GL_BLEND);
+                glPopMatrix();
+            } catch (Exception ignoredException) {
             }
+            GradientShader.finish();
+            rendering = false;
         }
     }
 

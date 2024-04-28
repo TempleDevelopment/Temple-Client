@@ -48,12 +48,6 @@ public class ClientGuiScreen extends GuiScreen {
         GlStateManager.popMatrix();
     }
 
-//    @Override
-//    public void drawScreen(int unscaledMouseX, int unscaledMouseY, float partialTicks) {
-//        this.drawDefaultBackground();
-//        this.panels.forEach(panels -> panels.drawScreen(mouseX, mouseY, partialTicks));
-//    }
-
     @Override
     public void mouseClicked(int unscaledMouseX, int unscaledMouseY, int clickedButton) {
         final int mouseX = (int) (unscaledMouseX / this.getScale());

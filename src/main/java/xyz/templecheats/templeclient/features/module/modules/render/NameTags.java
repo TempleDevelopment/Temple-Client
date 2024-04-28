@@ -39,7 +39,7 @@ public class NameTags extends Module {
     private final BooleanSetting border = new BooleanSetting("Border", this, true);
     private final BooleanSetting customFont = new BooleanSetting("Custom Font", this, false);
     private final BooleanSetting items = new BooleanSetting("Items", this, true);
-    private final Set < EntityPlayer > players = new TreeSet < > (Comparator.comparing(player -> mc.player.getDistance((EntityPlayer) player)).reversed());
+    private final Set<EntityPlayer> players = new TreeSet<>(Comparator.comparing(player -> mc.player.getDistance((EntityPlayer) player)).reversed());
     private final CFont font = FontSettings.getFont(18);
     public NameTags() {
         super("Nametags", "Renders nametags above entities", Keyboard.KEY_NONE, Category.Render);

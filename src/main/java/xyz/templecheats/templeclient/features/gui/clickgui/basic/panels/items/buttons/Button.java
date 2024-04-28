@@ -7,7 +7,7 @@ import xyz.templecheats.templeclient.features.gui.clickgui.basic.ClientGuiScreen
 import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.Panel;
 import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.Item;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
-import xyz.templecheats.templeclient.util.color.impl.RectBuilder;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
 
 import java.awt.*;

@@ -12,10 +12,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.templecheats.templeclient.features.module.modules.client.Colors;
 import xyz.templecheats.templeclient.features.module.modules.render.*;
 import xyz.templecheats.templeclient.features.module.modules.render.esp.sub.Hand;
-import xyz.templecheats.templeclient.features.module.modules.render.esp.sub.Shader;
 
 import javax.vecmath.Vector3f;
 import java.awt.*;
+
+import static xyz.templecheats.templeclient.util.color.ColorUtil.vector3F;
 
 @Mixin(value = EntityRenderer.class)
 public abstract class MixinEntityRenderer {
@@ -128,34 +129,12 @@ public abstract class MixinEntityRenderer {
         if (Ambience.INSTANCE.isEnabled() && Ambience.INSTANCE.LightMapState.booleanValue()) {
             for (int i = 0; i < this.lightmapColors.length; ++i) {
                 Color ambientColor = Colors.INSTANCE.getLightMapColor();
-                Vector3f finalValues = temple_Client_Development$getVector3f(ambientColor, i);
+                Vector3f finalValues = vector3F(ambientColor, lightmapColors, i);
                 int red = (int) (finalValues.x * 255.0f);
                 int green = (int) (finalValues.y * 255.0f);
                 int blue = (int) (finalValues.z * 255.0f);
                 this.lightmapColors[i] = 0xFF000000 | red << 16 | green << 8 | blue;
             }
         }
-    }
-
-    // TODO: Move these thing to some where
-    @Unique
-    private Vector3f temple_Client_Development$getVector3f(Color ambientColor, int i) {
-        int alpha = ambientColor.getAlpha();
-        float modifier = (float) alpha / 255.0f;
-        int color = this.lightmapColors[i];
-        int[] bgr = temple_Client_Development$toRGBAArray(color);
-        Vector3f values = new Vector3f((float) bgr[2] / 255.0f, (float) bgr[1] / 255.0f, (float) bgr[0] / 255.0f);
-        Vector3f newValues = new Vector3f((float) ambientColor.getRed() / 255.0f, (float) ambientColor.getGreen() / 255.0f, (float) ambientColor.getBlue() / 255.0f);
-        return temple_Client_Development$mix(values, newValues, modifier);
-    }
-
-    @Unique
-    private int[] temple_Client_Development$toRGBAArray(int colorBuffer) {
-        return new int[]{colorBuffer >> 16 & 0xFF, colorBuffer >> 8 & 0xFF, colorBuffer & 0xFF};
-    }
-
-    @Unique
-    private Vector3f temple_Client_Development$mix(Vector3f first, Vector3f second, float factor) {
-        return new Vector3f(first.x * (1.0f - factor) + second.x * factor, first.y * (1.0f - factor) + second.y * factor, first.z * (1.0f - factor) + first.z * factor);
     }
 }

@@ -22,14 +22,16 @@ public class AimAssist extends Module {
 
     private final BooleanSetting visibility = new BooleanSetting("Visible-Only", this, true);
     private final DoubleSetting smoothing = new DoubleSetting("Smoothing-Factor", this, 1.0f, 50.0f, 5.0f);
+    private final DoubleSetting fov = new DoubleSetting("FOV", this, 1.0f, 360.0f, 40.0f);
+
 
     /*
      * Variables
      */
     private EntityLivingBase renderTarget;
     public AimAssist() {
-        super("AimAssist", "Locks on target", Keyboard.KEY_NONE, Category.Combat);
-        registerSettings(visibility, modifyPitch, modifyYaw, smoothing);
+        super("AimAssist", "Helps you aim", Keyboard.KEY_NONE, Category.Combat);
+        registerSettings(fov, smoothing, modifyPitch, modifyYaw, visibility);
     }
 
 
@@ -50,6 +52,11 @@ public class AimAssist extends Module {
             float[] targetRotations = rotations(target);
             float targetYaw = targetRotations[0];
             float targetPitch = targetRotations[1];
+            float yawDifference = Math.abs(targetYaw - mc.player.rotationYaw) % 360;
+            yawDifference = yawDifference > 180 ? 360 - yawDifference : yawDifference;
+
+            if (yawDifference >= fov.floatValue() / 2) return;
+
             if (modifyYaw.booleanValue()) {
                 mc.player.rotationYaw += (targetYaw - mc.player.rotationYaw) / smoothing.floatValue();
             }
@@ -74,6 +81,7 @@ public class AimAssist extends Module {
                 u3
         };
     }
+
     @Override
     public String getHudInfo() {
         if (this.renderTarget != null) {

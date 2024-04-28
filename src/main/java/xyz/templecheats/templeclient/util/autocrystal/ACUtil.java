@@ -6,14 +6,14 @@ import net.minecraft.util.math.BlockPos;
 import java.util.List;
 
 public class ACUtil {
-    public static CrystalInfo.PlaceInfo calculateBestPlacement(ACSettings settings, PlayerInfo target, List < BlockPos > possibleLocations) {
+    public static CrystalInfo.PlaceInfo calculateBestPlacement(ACSettings settings, PlayerInfo target, List<BlockPos> possibleLocations) {
         double x = settings.playerPos.x;
         double y = settings.playerPos.y;
         double z = settings.playerPos.z;
 
         BlockPos best = null;
         float bestDamage = 0f;
-        for (BlockPos pos: possibleLocations) {
+        for (BlockPos pos : possibleLocations) {
             if (target.entity.getDistanceSq((double) pos.getX() + 0.5, (double) pos.getY() + 1.0, (double) pos.getZ() + 0.5) <= settings.enemyRangeSq) {
                 float currentDamage = DamageUtil.calculateDamageThreaded(pos, target);
                 if (currentDamage == bestDamage) {
@@ -37,14 +37,14 @@ public class ACUtil {
         return null;
     }
 
-    public static CrystalInfo.BreakInfo calculateBestBreakable(ACSettings settings, PlayerInfo target, List < EntityEnderCrystal > crystals) {
+    public static CrystalInfo.BreakInfo calculateBestBreakable(ACSettings settings, PlayerInfo target, List<EntityEnderCrystal> crystals) {
         double x = settings.playerPos.x;
         double y = settings.playerPos.y;
         double z = settings.playerPos.z;
 
         EntityEnderCrystal best = null;
         float bestDamage = 0f;
-        for (EntityEnderCrystal crystal: crystals) {
+        for (EntityEnderCrystal crystal : crystals) {
             float currentDamage = DamageUtil.calculateDamageThreaded(crystal, target);
             if (currentDamage == bestDamage) {
                 if (best == null || crystal.getDistanceSq(x, y, z) < best.getDistanceSq(x, y, z)) {

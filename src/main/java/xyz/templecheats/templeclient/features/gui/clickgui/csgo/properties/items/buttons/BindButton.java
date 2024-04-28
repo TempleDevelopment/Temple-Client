@@ -6,7 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import xyz.templecheats.templeclient.features.gui.clickgui.csgo.CsgoGuiScreen;
 import xyz.templecheats.templeclient.features.module.Module;
-import xyz.templecheats.templeclient.util.color.impl.RectBuilder;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 

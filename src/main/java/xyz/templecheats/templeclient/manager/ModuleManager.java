@@ -13,10 +13,7 @@ import xyz.templecheats.templeclient.features.module.modules.render.*;
 import xyz.templecheats.templeclient.features.module.modules.render.esp.ESP;
 import xyz.templecheats.templeclient.features.module.modules.render.particle.Particle;
 import xyz.templecheats.templeclient.features.module.modules.render.xray.XRay;
-import xyz.templecheats.templeclient.features.module.modules.world.MobOwner;
-import xyz.templecheats.templeclient.features.module.modules.world.NewChunks;
-import xyz.templecheats.templeclient.features.module.modules.world.Scaffold;
-import xyz.templecheats.templeclient.features.module.modules.world.Nuker;
+import xyz.templecheats.templeclient.features.module.modules.world.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,6 +39,7 @@ public class ModuleManager {
 
     public static void initMods() {
         // Chat
+        addMod(new ChatAppend());
         addMod(new Announcer());
         addMod(new ArmorAlert());
         addMod(new ChatCrypt());
@@ -56,13 +54,15 @@ public class ModuleManager {
         addMod(new BowSpam());
         addMod(new AutoArmor());
         addMod(new AutoTotem());
-        addMod(new Surround());
-        addMod(new Velocity());
         addMod(new AimAssist());
+        addMod(new Surround());
+        addMod(new AutoTrap());
+        addMod(new Velocity());
         addMod(new TriggerBot());
         addMod(new Offhand());
         addMod(new Aura());
         // Miscellaneous
+        addMod(new ExtraTooltips());
         addMod(new AutoClicker());
         addMod(new Gamemode());
         addMod(new ExtraChest());
@@ -70,6 +70,7 @@ public class ModuleManager {
         addMod(new FakePlayer());
         addMod(new Log4jAlert());
         addMod(new AutoMount());
+        addMod(new SkinBlink());
         // Client
         addMod(new MiddleClick());
         addMod(new Particles());
@@ -95,6 +96,7 @@ public class ModuleManager {
         // Render
         addMod(new DeathEffect());
         addMod(new NameProtect());
+        addMod(new EnchantColor());
         addMod(new FullBright());
         addMod(new ViewModel());
         addMod(new ViewClip());
@@ -103,6 +105,7 @@ public class ModuleManager {
         addMod(new NoRender());
         addMod(new Particle());
         addMod(new PopChams());
+        addMod(new ItemPhysic());
         addMod(new NameTags());
         addMod(new Ambience());
         addMod(new Tracers());
@@ -111,14 +114,18 @@ public class ModuleManager {
         addMod(new XRay());
         addMod(new ESP());
         // World
+        addMod(new BaseFinder());
+        addMod(new ChunkAnimator());
         addMod(new Scaffold());
         addMod(new Nuker());
         addMod(new MobOwner());
         addMod(new NewChunks());
+        addMod(new FastBreak());
         // Player
         addMod(new Freecam());
         addMod(new AutoEat());
         addMod(new FastUse());
+        addMod(new XCarry());
         addMod(new Reach());
         addMod(new Blink());
     }

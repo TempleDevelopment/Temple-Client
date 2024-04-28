@@ -51,14 +51,14 @@ public class CrystalUtil {
         return material.isLiquid() || !material.isReplaceable();
     }
 
-    public static List < BlockPos > findCrystalBlocks(float placeRange, AutoCrystal.Server server) {
+    public static List<BlockPos> findCrystalBlocks(float placeRange, AutoCrystal.Server server) {
         return EntityUtil.getSphere(mc.player.getPosition(), placeRange, (int) placeRange, false, true, 0)
                 .stream()
                 .filter(pos -> CrystalUtil.canPlaceCrystal(pos, server, false))
                 .collect(Collectors.toList());
     }
 
-    public static List < BlockPos > findCrystalBlocksExcludingCrystals(float placeRange, AutoCrystal.Server server) {
+    public static List<BlockPos> findCrystalBlocksExcludingCrystals(float placeRange, AutoCrystal.Server server) {
         return EntityUtil.getSphere(mc.player.getPosition(), placeRange, (int) placeRange, false, true, 0)
                 .stream()
                 .filter(pos -> CrystalUtil.canPlaceCrystal(pos, server, true))

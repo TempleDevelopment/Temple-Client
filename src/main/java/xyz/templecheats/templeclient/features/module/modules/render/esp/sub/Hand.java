@@ -13,14 +13,13 @@ import org.lwjgl.opengl.GL32;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.mixins.accessor.IEntityRenderer;
 import xyz.templecheats.templeclient.mixins.accessor.IShaderGroup;
-import xyz.templecheats.templeclient.util.color.ShaderHelper;
-import xyz.templecheats.templeclient.util.color.impl.GradientShader;
+import xyz.templecheats.templeclient.util.render.shader.ShaderHelper;
+import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.ColorSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 
 import java.awt.*;
-import java.util.Collections;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;

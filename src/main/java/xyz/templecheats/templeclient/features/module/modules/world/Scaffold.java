@@ -23,10 +23,8 @@ import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.world.BlockPosWithFacing;
-import xyz.templecheats.templeclient.util.color.impl.GradientShader;
+import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
-
-import java.awt.*;
 
 public class Scaffold extends Module {
     /*
@@ -49,7 +47,6 @@ public class Scaffold extends Module {
 
     public Scaffold() {
         super("Scaffold", "Automatically places blocks under your feet", Keyboard.KEY_NONE, Category.World);
-
         registerSettings(rotate, autoSwap, eChestHolding, render, tower, fill, outline, opacity);
         timer = new Timer();
     }
@@ -74,52 +71,35 @@ public class Scaffold extends Module {
     }
 
     // Dayum Fuck Dis Shiet Code
-    private BlockPosWithFacing checkNearBlocksExtended(BlockPos blockPos) { // TODO FUCKING OPTIMIZE!!!!!!
-        BlockPosWithFacing ret = null;
+    // is it good now?
+    private BlockPosWithFacing checkNearBlocksExtended(BlockPos blockPos) {
+        int[][] positionsToCheck = {
+                {0, 0, 0},   // Current position
+                {-1, 0, 0},  // Position to the left
+                {1, 0, 0},   // Position to the right
+                {0, 0, 1},   // Position to the front
+                {0, 0, -1},  // Position to the back
+                {-2, 0, 0},  // Distant position to the left
+                {2, 0, 0},   // Distant position to the right
+                {0, 0, 2},   // Distant position to the front
+                {0, 0, -2},  // Distant position to the back
+                {0, -1, 0},  // Position below
+                {1, -1, 0},  // Position below to the right
+                {-1, -1, 0}, // Position below to the left
+                {0, -1, 1},  // Position below to the front
+                {0, -1, -1}  // Position below to the back
+        };
 
-        ret = checkNearBlocks(blockPos);
-        if (ret != null) return ret;
+        for (int[] offset : positionsToCheck) {
+            BlockPosWithFacing ret = checkNearBlocks(blockPos.add(offset[0], offset[1], offset[2]));
+            if (ret != null) {
+                return ret;
+            }
+        }
 
-        ret = checkNearBlocks(blockPos.add(-1, 0, 0));
-        if (ret != null) return ret;
-
-        ret = checkNearBlocks(blockPos.add(1, 0, 0));
-        if (ret != null) return ret;
-
-        ret = checkNearBlocks(blockPos.add(0, 0, 1));
-        if (ret != null) return ret;
-
-        ret = checkNearBlocks(blockPos.add(0, 0, -1));
-        if (ret != null) return ret;
-
-        ret = checkNearBlocks(blockPos.add(-2, 0, 0));
-        if (ret != null) return ret;
-
-        ret = checkNearBlocks(blockPos.add(2, 0, 0));
-        if (ret != null) return ret;
-
-        ret = checkNearBlocks(blockPos.add(0, 0, 2));
-        if (ret != null) return ret;
-
-        ret = checkNearBlocks(blockPos.add(0, 0, -2));
-        if (ret != null) return ret;
-
-        ret = checkNearBlocks(blockPos.add(0, -1, 0));
-        BlockPos blockPos2 = blockPos.add(0, -1, 0);
-
-        if (ret != null) return ret;
-
-        ret = checkNearBlocks(blockPos2.add(1, 0, 0));
-        if (ret != null) return ret;
-
-        ret = checkNearBlocks(blockPos2.add(-1, 0, 0));
-        if (ret != null) return ret;
-
-        ret = checkNearBlocks(blockPos2.add(0, 0, 1));
-        if (ret != null) return ret;
-
-        return checkNearBlocks(blockPos2.add(0, 0, -1));
+        return null;
     }
+
 
     private int findBlockToPlace() {
         if (mc.player.getHeldItemMainhand().getItem() instanceof ItemBlock) {
@@ -130,9 +110,7 @@ public class Scaffold extends Module {
         int n = 0;
         int n2 = 0;
 
-        while (true) {
-            if (n2 >= 9) break;
-
+        while (n2 < 9) {
             if (mc.player.inventory.getStackInSlot(n).getCount() != 0) {
                 if (mc.player.inventory.getStackInSlot(n).getItem() instanceof ItemBlock) {
                     if (!eChestHolding.booleanValue() ||
@@ -166,9 +144,7 @@ public class Scaffold extends Module {
         int n = 36;
         int n2 = 0;
 
-        while (true) {
-            if (n >= 45) break;
-
+        while (n < 45) {
             if (mc.player.inventoryContainer.getSlot(n).getHasStack()) {
                 ItemStack itemStack = mc.player.inventoryContainer.getSlot(n).getStack();
                 if (itemStack.getItem() instanceof ItemBlock) {
@@ -218,7 +194,6 @@ public class Scaffold extends Module {
                 RenderUtil.boxShader(currentBlock.blockPos);
             if (outline.booleanValue())
                 RenderUtil.outlineShader(currentBlock.blockPos);
-
             GradientShader.finish();
         }
     }

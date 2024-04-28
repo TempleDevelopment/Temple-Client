@@ -3,7 +3,7 @@ package xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.item
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ChatAllowedCharacters;
 import xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.Item;
-import xyz.templecheats.templeclient.util.color.impl.RectBuilder;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
 import xyz.templecheats.templeclient.util.setting.impl.StringSetting;
 import xyz.templecheats.templeclient.util.time.TimerUtil;

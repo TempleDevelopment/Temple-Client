@@ -7,6 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import xyz.templecheats.templeclient.util.render.enums.TextureModifiers;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -96,22 +97,26 @@ public class ParticleTickHandler {
     }
 
     public boolean blockPos(double x, double y, double z) {
-        Set<Block> excludedBlocks = new HashSet<>(Arrays.asList(
-                Blocks.AIR, Blocks.WATER, Blocks.LAVA, Blocks.BED, Blocks.CAKE, Blocks.TALLGRASS,
-                Blocks.FLOWER_POT, Blocks.RED_FLOWER, Blocks.YELLOW_FLOWER, Blocks.SAPLING, Blocks.VINE,
-                Blocks.ACACIA_FENCE, Blocks.ACACIA_FENCE_GATE, Blocks.BIRCH_FENCE, Blocks.BIRCH_FENCE_GATE,
-                Blocks.DARK_OAK_FENCE, Blocks.DARK_OAK_FENCE_GATE, Blocks.JUNGLE_FENCE, Blocks.JUNGLE_FENCE_GATE,
-                Blocks.NETHER_BRICK_FENCE, Blocks.OAK_FENCE, Blocks.OAK_FENCE_GATE, Blocks.SPRUCE_FENCE,
-                Blocks.SPRUCE_FENCE_GATE, Blocks.ENCHANTING_TABLE, Blocks.END_PORTAL_FRAME, Blocks.DOUBLE_PLANT,
-                Blocks.STANDING_SIGN, Blocks.WALL_SIGN, Blocks.SKULL, Blocks.DAYLIGHT_DETECTOR,
-                Blocks.DAYLIGHT_DETECTOR_INVERTED, Blocks.STONE_SLAB, Blocks.WOODEN_SLAB, Blocks.CARPET,
-                Blocks.DEADBUSH, Blocks.VINE, Blocks.REDSTONE_WIRE, Blocks.REEDS, Blocks.SNOW_LAYER
-        ));
-        Block block = mc.world.getBlockState(new BlockPos(x, y, z)).getBlock();
-        return !excludedBlocks.contains(block);
+        if (mc.world != null) {
+            Set<Block> excludedBlocks = new HashSet<>(Arrays.asList(
+                    Blocks.AIR, Blocks.WATER, Blocks.LAVA, Blocks.BED, Blocks.CAKE, Blocks.TALLGRASS,
+                    Blocks.FLOWER_POT, Blocks.RED_FLOWER, Blocks.YELLOW_FLOWER, Blocks.SAPLING, Blocks.VINE,
+                    Blocks.ACACIA_FENCE, Blocks.ACACIA_FENCE_GATE, Blocks.BIRCH_FENCE, Blocks.BIRCH_FENCE_GATE,
+                    Blocks.DARK_OAK_FENCE, Blocks.DARK_OAK_FENCE_GATE, Blocks.JUNGLE_FENCE, Blocks.JUNGLE_FENCE_GATE,
+                    Blocks.NETHER_BRICK_FENCE, Blocks.OAK_FENCE, Blocks.OAK_FENCE_GATE, Blocks.SPRUCE_FENCE,
+                    Blocks.SPRUCE_FENCE_GATE, Blocks.ENCHANTING_TABLE, Blocks.END_PORTAL_FRAME, Blocks.DOUBLE_PLANT,
+                    Blocks.STANDING_SIGN, Blocks.WALL_SIGN, Blocks.SKULL, Blocks.DAYLIGHT_DETECTOR,
+                    Blocks.DAYLIGHT_DETECTOR_INVERTED, Blocks.STONE_SLAB, Blocks.WOODEN_SLAB, Blocks.CARPET,
+                    Blocks.DEADBUSH, Blocks.VINE, Blocks.REDSTONE_WIRE, Blocks.REEDS, Blocks.SNOW_LAYER
+            ));
+            Block block = mc.world.getBlockState(new BlockPos(x, y, z)).getBlock();
+            return !excludedBlocks.contains(block);
+        } else {
+            return false;
+        }
     }
 
-    public void draw(double scale, Color color, Textures textures) {
+    public void draw(double scale, Color color, TextureModifiers textures) {
         setUp();
 
         double x = lerp((float) prevPos.x, (float) pos.x, mc.getRenderPartialTicks()) - mc.getRenderManager().viewerPosX;
@@ -144,22 +149,5 @@ public class ParticleTickHandler {
         GlStateManager.enableCull();
         GlStateManager.enableAlpha();
         GlStateManager.popMatrix();
-    }
-
-    public enum Textures {
-        Normal(new ResourceLocation("textures/particles/circle.png")),
-        Text(new ResourceLocation("textures/particles/text.png")),
-        Heart(new ResourceLocation("textures/particles/heart.png")),
-        Dollar(new ResourceLocation("textures/particles/dollar.png"));
-
-        private final ResourceLocation resourceLocation;
-
-        Textures(ResourceLocation resourceLocation) {
-            this.resourceLocation = resourceLocation;
-        }
-
-        public ResourceLocation getResourceLocation() {
-            return this.resourceLocation;
-        }
     }
 }

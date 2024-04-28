@@ -18,20 +18,19 @@ import static org.lwjgl.opengl.GL11.*;
 import static xyz.templecheats.templeclient.util.color.ColorUtil.lerpColor;
 import static xyz.templecheats.templeclient.util.color.ColorUtil.setAlpha;
 import static xyz.templecheats.templeclient.util.render.RenderUtil.interpolateEntity;
-import static xyz.templecheats.templeclient.util.math.MathUtil.lerp;
 
 public class ChinaHat extends Module {
     /*
      * Settings
      */
-    private final BooleanSetting self = new BooleanSetting("Self", this, true);
-    private final BooleanSetting other = new BooleanSetting("Other", this, false);
+    private final BooleanSetting self = new BooleanSetting("Self", this, false);
+    private final BooleanSetting other = new BooleanSetting("Other", this, true);
     private final BooleanSetting firstPerson = new BooleanSetting("FirstPerson", this, true);
     private final DoubleSetting heightValue = new DoubleSetting("Height", this, 0.0, 0.7, 0.3);
     private final DoubleSetting radiusValue = new DoubleSetting("Radius", this, 0.3, 2.0, 1.0);
     private final DoubleSetting rotateSpeed = new DoubleSetting("Rotate Speed", this, 0.0, 10.0, 2.0);
     private final BooleanSetting fill = new BooleanSetting("Fill", this, true);
-    private final BooleanSetting outline = new BooleanSetting("Outline", this, false);
+    private final BooleanSetting outline = new BooleanSetting("Outline", this, true);
     private final DoubleSetting outlineWidth = new DoubleSetting("Outline Width", outline.parent, 1.0, 5.0, 2.0);
     private final IntSetting outlineOpacity = new IntSetting("Outline Opacity", outline.parent, 0, 255, 255);
     private final IntSetting fillOpacity1 = new IntSetting("Fill 1 Opacity", outline.parent, 0, 255, 255);

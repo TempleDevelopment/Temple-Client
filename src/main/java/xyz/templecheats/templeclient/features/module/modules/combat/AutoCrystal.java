@@ -3,6 +3,8 @@
  */
 package xyz.templecheats.templeclient.features.module.modules.combat;
 
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.entity.Entity;
@@ -37,9 +39,10 @@ import xyz.templecheats.templeclient.event.events.network.PacketEvent;
 import xyz.templecheats.templeclient.event.events.player.MotionEvent;
 import xyz.templecheats.templeclient.event.events.world.EntityEvent;
 import xyz.templecheats.templeclient.features.module.Module;
-import xyz.templecheats.templeclient.util.color.impl.GradientShader;
+import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
 import xyz.templecheats.templeclient.util.autocrystal.*;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
+import xyz.templecheats.templeclient.util.rotation.RotationUtil;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
@@ -93,7 +96,7 @@ public class AutoCrystal extends Module {
      */
     private final TimerUtil timer = new TimerUtil();
     private List < CrystalInfo.PlaceInfo > targets = new ArrayList <> ();
-    private final ArrayList<Integer> attackedCrystals = new ArrayList<>();
+    private final IntSet attackedCrystals = new IntOpenHashSet();
     private final ObjectSet<BlockPos> placedPos = new ObjectOpenHashSet<>();
     private boolean switchCooldown, isAttacking, rotating, finished;
     private Vec3d lastHitVec = Vec3d.ZERO;
@@ -176,10 +179,6 @@ public class AutoCrystal extends Module {
                 if (inhibit.booleanValue() && attackedCrystals.contains(crystal.getEntityId())) return;
 
                 this.breakCrystalInternal(this.curCrystal = crystal, false);
-                if (setDead.booleanValue()) {
-                    mc.world.removeEntity(crystal);
-                    crystal.setDead();
-                }
                 this.lastPos = null;
             }
         }
@@ -263,24 +262,25 @@ public class AutoCrystal extends Module {
         rendering = true;
         if (fill.booleanValue())
             RenderUtil.boxShader(render);
-        if (outline.booleanValue())
+        if (outline.booleanValue()) {
             RenderUtil.outlineShader(render);
             RenderUtil.outlineShader(render);
             RenderUtil.outlineShader(render);
-
+        }
         GradientShader.finish();
         lastRenderPos = render;
         rendering = false;
     } else {
-            if (opacity.doubleValue() > 0) {
-                opacity.setDoubleValue(opacity.doubleValue() - 0.01f);
+            if (opacity.floatValue() > 0.0F) {
+                opacity.setDoubleValue(opacity.doubleValue() - 0.01F * partialTicks);
                 GradientShader.setup(opacity.floatValue());
                 if (fill.booleanValue())
                     RenderUtil.boxShader(lastRenderPos);
-                if (outline.booleanValue())
+                if (outline.booleanValue()) {
                     RenderUtil.outlineShader(lastRenderPos);
                     RenderUtil.outlineShader(lastRenderPos);
                     RenderUtil.outlineShader(lastRenderPos);
+                }
                 GradientShader.finish();
             }
         }

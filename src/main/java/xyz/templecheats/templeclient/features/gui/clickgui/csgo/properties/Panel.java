@@ -12,8 +12,8 @@ import xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items
 import xyz.templecheats.templeclient.features.gui.font.CFont;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.features.module.modules.client.FontSettings;
-import xyz.templecheats.templeclient.util.color.RainbowUtil;
-import xyz.templecheats.templeclient.util.color.impl.RectBuilder;
+import xyz.templecheats.templeclient.util.render.shader.RainbowUtil;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
 
 import java.awt.*;

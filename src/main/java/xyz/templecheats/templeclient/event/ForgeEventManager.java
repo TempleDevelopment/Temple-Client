@@ -3,10 +3,12 @@ package xyz.templecheats.templeclient.event;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import xyz.templecheats.templeclient.TempleClient;
+import xyz.templecheats.templeclient.event.events.player.LeftClickBlockEvent;
 import xyz.templecheats.templeclient.event.events.render.Render3DEvent;
 import xyz.templecheats.templeclient.event.events.render.Render3DPreEvent;
 import xyz.templecheats.templeclient.event.events.render.Render3DPrePreEvent;
@@ -60,4 +62,9 @@ public class ForgeEventManager {
         }
     }
 
+    @SubscribeEvent
+    public void onLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
+        LeftClickBlockEvent leftClickBlockEvent = new LeftClickBlockEvent(event.getPos(), event.getFace());
+        MinecraftForge.EVENT_BUS.post(leftClickBlockEvent);
+    }
 }

@@ -1,9 +1,9 @@
-package xyz.templecheats.templeclient.util.color.impl;
+package xyz.templecheats.templeclient.util.render.shader.impl;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import xyz.templecheats.templeclient.util.color.ShaderUtil;
+import xyz.templecheats.templeclient.util.render.shader.ShaderUtil;
 
 import static net.minecraft.client.renderer.GlStateManager.resetColor;
 import static org.lwjgl.opengl.GL11.*;

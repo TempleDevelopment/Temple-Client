@@ -21,7 +21,6 @@ import static xyz.templecheats.templeclient.util.render.RenderUtil.interpolateEn
 import static xyz.templecheats.templeclient.util.math.MathUtil.lerp;
 import static xyz.templecheats.templeclient.util.render.RenderUtil.renderTexture;
 
-//TODO: Some openGl issue still need to be fix in someWhere
 public class Target extends Module {
     /*
      * Settings

@@ -8,9 +8,10 @@ import xyz.templecheats.templeclient.event.ForgeEventManager;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.Colors;
 import xyz.templecheats.templeclient.manager.HoleManager;
-import xyz.templecheats.templeclient.util.color.impl.GradientShader;
+import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
+import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 
@@ -28,6 +29,7 @@ public class Hole extends Module {
 
     private final IntSetting range = new IntSetting("Range", this, 1, 20, 5);
     private final IntSetting speed = new IntSetting("Speed", this, 1, 200, 50);
+    private final DoubleSetting height = new DoubleSetting("Height", this, 0.0, 1.0, 0.05);
     private final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.Normal);
     private final BooleanSetting slideAnimation = new BooleanSetting("Gradient", this, false);
 
@@ -39,7 +41,7 @@ public class Hole extends Module {
     public Hole() {
         super("Hole", "Highlights holes", Keyboard.KEY_NONE, Category.Render, true);
 
-        registerSettings(slideAnimation, range, speed, mode);
+        registerSettings(slideAnimation, height, range, speed, mode);
     }
 
     private boolean differentRenderType(final HoleManager.HolePos pos) {
@@ -117,15 +119,15 @@ public class Hole extends Module {
                 GradientShader.setup(0.5f);
                 if (holePos.isDouble()) {
                     if (holePos.isWestDouble()) {
-                        RenderUtil.outlineShader(bb.minX - 1, bb.minY, bb.minZ, bb.minX * (1.0f - size) + bb.maxX * size, bb.minY + 0.05f, bb.minZ * (1.0f - size) + bb.maxZ * size);
-                        RenderUtil.boxShader(bb.minX - 1, bb.minY, bb.minZ, bb.minX * (1.0f - size) + bb.maxX * size, bb.minY + 0.05f, bb.minZ * (1.0f - size) + bb.maxZ * size);
+                        RenderUtil.outlineShader(bb.minX - 1, bb.minY, bb.minZ, bb.minX * (1.0f - size) + bb.maxX * size, bb.minY + height.doubleValue(), bb.minZ * (1.0f - size) + bb.maxZ * size);
+                        RenderUtil.boxShader(bb.minX - 1, bb.minY, bb.minZ, bb.minX * (1.0f - size) + bb.maxX * size, bb.minY + height.doubleValue(), bb.minZ * (1.0f - size) + bb.maxZ * size);
                     } else {
-                        RenderUtil.outlineShader(bb.minX, bb.minY, bb.minZ - 1, bb.minX * (1.0f - size) + bb.maxX * size, bb.minY + 0.05f, bb.minZ * (1.0f - size) + bb.maxZ * size);
-                        RenderUtil.boxShader(bb.minX, bb.minY, bb.minZ - 1, bb.minX * (1.0f - size) + bb.maxX * size, bb.minY + 0.05f, bb.minZ * (1.0f - size) + bb.maxZ * size);
+                        RenderUtil.outlineShader(bb.minX, bb.minY, bb.minZ - 1, bb.minX * (1.0f - size) + bb.maxX * size, bb.minY + height.doubleValue(), bb.minZ * (1.0f - size) + bb.maxZ * size);
+                        RenderUtil.boxShader(bb.minX, bb.minY, bb.minZ - 1, bb.minX * (1.0f - size) + bb.maxX * size, bb.minY + height.doubleValue(), bb.minZ * (1.0f - size) + bb.maxZ * size);
                     }
                 } else {
-                    RenderUtil.outlineShader(bb.minX, bb.minY, bb.minZ, bb.minX * (1.0f - size) + bb.maxX * size, bb.minY + 0.05f, bb.minZ * (1.0f - size) + bb.maxZ * size);
-                    RenderUtil.boxShader(bb.minX, bb.minY, bb.minZ, bb.minX * (1.0f - size) + bb.maxX * size, bb.minY + 0.05f, bb.minZ * (1.0f - size) + bb.maxZ * size);
+                    RenderUtil.outlineShader(bb.minX, bb.minY, bb.minZ, bb.minX * (1.0f - size) + bb.maxX * size, bb.minY + height.doubleValue(), bb.minZ * (1.0f - size) + bb.maxZ * size);
+                    RenderUtil.boxShader(bb.minX, bb.minY, bb.minZ, bb.minX * (1.0f - size) + bb.maxX * size, bb.minY + height.doubleValue(), bb.minZ * (1.0f - size) + bb.maxZ * size);
                 }
                 GradientShader.finish();
             }

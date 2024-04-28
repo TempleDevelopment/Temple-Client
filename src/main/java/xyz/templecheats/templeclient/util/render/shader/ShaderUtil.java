@@ -1,4 +1,4 @@
-package xyz.templecheats.templeclient.util.color;
+package xyz.templecheats.templeclient.util.render.shader;
 
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -44,6 +44,10 @@ public class ShaderUtil implements Globals {
 
     public void colorUniform(String name, Color color) {
         setUniformf(name, color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f, color.getAlpha() / 255.0f);
+    }
+
+    public int getUniform(String name) {
+        return glGetUniformLocation(programID, name);
     }
 
     public void setUniformf(String name, float... args) {

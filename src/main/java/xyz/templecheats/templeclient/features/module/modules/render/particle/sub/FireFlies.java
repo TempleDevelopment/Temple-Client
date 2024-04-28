@@ -7,6 +7,7 @@ import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.Colors;
 import xyz.templecheats.templeclient.features.module.modules.render.particle.impl.ParticleTickHandler;
+import xyz.templecheats.templeclient.util.render.enums.TextureModifiers;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
@@ -21,7 +22,7 @@ import static xyz.templecheats.templeclient.util.world.BlockUtil.air;
 
 public class FireFlies extends Module {
 
-    private final EnumSetting<ParticleTickHandler.Textures> textures = new EnumSetting<>("Texture", this, ParticleTickHandler.Textures.Text);
+    private final EnumSetting<TextureModifiers> textures = new EnumSetting<>("Texture", this, TextureModifiers.Text);
     private final DoubleSetting size = new DoubleSetting("Size", this, 0.1, 5.0, 1.0);
     private final IntSetting amount = new IntSetting("Amount", this, 3, 200, 30);
     private final IntSetting maxAmount = new IntSetting("Max Amount", this, 100, 500, 250);

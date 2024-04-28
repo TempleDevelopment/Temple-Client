@@ -5,7 +5,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.Button;
-import xyz.templecheats.templeclient.util.color.impl.RectBuilder;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
 import xyz.templecheats.templeclient.features.gui.clickgui.csgo.CsgoGuiScreen;
 import xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.Item;

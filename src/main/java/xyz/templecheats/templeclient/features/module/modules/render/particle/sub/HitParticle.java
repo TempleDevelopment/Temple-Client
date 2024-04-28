@@ -1,13 +1,15 @@
 package xyz.templecheats.templeclient.features.module.modules.render.particle.sub;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
+import xyz.templecheats.templeclient.event.events.player.AttackEvent;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.Colors;
 import xyz.templecheats.templeclient.features.module.modules.render.particle.impl.ParticleTickHandler;
-import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
+import xyz.templecheats.templeclient.util.render.enums.TextureModifiers;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
@@ -21,8 +23,7 @@ import static xyz.templecheats.templeclient.util.math.MathUtil.random;
 
 public class HitParticle extends Module {
 
-    private final BooleanSetting self = new BooleanSetting("Self", this, true);
-    private final EnumSetting<ParticleTickHandler.Textures> textures = new EnumSetting<>("Texture", this, ParticleTickHandler.Textures.Text);
+    private final EnumSetting<TextureModifiers> textures = new EnumSetting<>("Texture", this, TextureModifiers.Text);
     private final DoubleSetting size = new DoubleSetting("Size", this, 0.1, 5.0, 1.0);
     private final IntSetting amount = new IntSetting("Amount", this, 3, 50, 25);
     private final IntSetting maxAmount = new IntSetting("Max Amount", this, 100, 500, 250);
@@ -36,44 +37,41 @@ public class HitParticle extends Module {
 
     public HitParticle() {
         super("HitParticle", "Spawn particle when entities hurt.", Keyboard.KEY_NONE, Category.Render, true);
-        registerSettings(self, size, amount, maxAmount, duration, speedH, speedV, inertia, gravity, textures);
+        registerSettings(size, amount, maxAmount, duration, speedH, speedV, inertia, gravity, textures);
     }
     @Override
     public void onEnable() {
         hitParticle.clear();
     }
 
-    @Override
-    public void onUpdate() {
-        if ( mc.player == null || mc.world == null) {
+    @SubscribeEvent
+    public void onAttack(AttackEvent.Pre event) {
+        if (mc.player == null || mc.world == null) {
             return;
         }
-        for (EntityPlayer player : mc.world.playerEntities) {
-            if(!self.booleanValue() && player == mc.player){
-                continue;
-            }
-            if (player.hurtTime > 0) {
-                for (int i = 0; i < amount.intValue(); i++) {
-                    Vec3d vec = player.getPositionVector().add(random(-0.5f, 0.5f), random(0.5f, player.height), random(-0.5f, 0.5f));
+        for (int i = 0; i < amount.intValue(); i++) {
+            Vec3d vec = event.getEntity().getPositionVector().add(random(-0.5f , 0.5f) , random(0.5f , event.getEntity().height) , random(-0.5f , 0.5f));
 
-                    Random random = new Random();
+            Random random = new Random();
 
-                    double motionX = (random.nextDouble() - 0.5) * 0.2 * speedH.doubleValue();
-                    double motionY = (random.nextDouble() - 0.5) * 0.2 * speedV.doubleValue();
-                    double motionZ = (random.nextDouble() - 0.5) * 0.2 * speedH.doubleValue();
+            double motionX = (random.nextDouble() - 0.5) * 0.2 * speedH.doubleValue();
+            double motionY = (random.nextDouble() - 0.5) * 0.2 * speedV.doubleValue();
+            double motionZ = (random.nextDouble() - 0.5) * 0.2 * speedH.doubleValue();
 
-                    Particle particle = new Particle(vec, motionX, motionY, motionZ, gravity.doubleValue(), inertia.doubleValue());
-                    particle.maxTickLiving = (int) (duration.doubleValue() * 10.0 + random.nextDouble() * 40.0);
+            Particle particle = new Particle(vec , motionX , motionY , motionZ , gravity.doubleValue() , inertia.doubleValue());
+            particle.maxTickLiving = (int) (duration.doubleValue() * 10.0 + random.nextDouble() * 40.0);
 
-                    hitParticle.add(particle);
-                }
-            }
+            hitParticle.add(particle);
         }
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent.ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.START) return;
+
         hitParticle.forEach(ParticleTickHandler::tick);
         hitParticle.removeIf(it -> it.tickLiving > it.maxTickLiving);
-        while (hitParticle.size() > maxAmount.intValue()) {
-            hitParticle.remove(0);
-        }
+        while (hitParticle.size() > maxAmount.intValue()) {hitParticle.remove(0);}
     }
 
     @Override

@@ -1,4 +1,4 @@
-package xyz.templecheats.templeclient.util.color;
+package xyz.templecheats.templeclient.util.render.shader;
 
 import java.awt.*;
 

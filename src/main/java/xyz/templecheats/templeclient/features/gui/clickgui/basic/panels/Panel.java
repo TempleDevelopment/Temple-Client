@@ -3,33 +3,29 @@ package xyz.templecheats.templeclient.features.gui.clickgui.basic.panels;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.buttons.Button;
 import xyz.templecheats.templeclient.features.gui.clickgui.basic.ClickGuiScreen;
 import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.Item;
-import xyz.templecheats.templeclient.features.gui.font.CFont;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
-import xyz.templecheats.templeclient.features.module.modules.client.FontSettings;
-import xyz.templecheats.templeclient.util.color.impl.RectBuilder;
+import xyz.templecheats.templeclient.util.render.StencilUtil;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static xyz.templecheats.templeclient.features.gui.font.Fonts.font18;
 import static xyz.templecheats.templeclient.features.gui.font.Fonts.font20;
-import static xyz.templecheats.templeclient.util.color.ColorUtil.setAlpha;
 
 public abstract class Panel {
     public static float[] counter1 = new float[]{1};
     private final List<Item> items = new ArrayList<>();
     private final Minecraft mc = Minecraft.getMinecraft();
+    //public Animation animation = new Animation(Easing.OutExpo, 300);
     private final String label;
     private int angle;
     private int x, y;
@@ -52,19 +48,17 @@ public abstract class Panel {
     public abstract void setupItems();
 
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        this.drag(mouseX, mouseY);
+        this.drag(mouseX , mouseY);
         counter1 = new float[]{1};
-        float totalItemHeight = this.open ? this.getTotalItemHeight() - 2.0f : 0.0f;
+        //animation.setEasing(open ? Easing.OutExpo : Easing.InExpo);
+        //animation.progress(open ? 1 : 0);
 
+        /* * animation.getProgress()*/
+        float totalItemHeight = (this.getTotalItemHeight() - 2.0f);
+        GlStateManager.pushMatrix();
         new RectBuilder(new Vec2d(this.x, (float) this.y - 1.5f), new Vec2d(this.x + this.width, this.y + this.height - 6))
                 .color(ClickGUI.INSTANCE.getStartColor())
                 .draw();
-
-        if (ClickGUI.INSTANCE.particles.booleanValue()) {
-            ClickGUI.INSTANCE.particleUtil.drawParticles();
-            ScaledResolution scaledResolution = new ScaledResolution(mc);
-            ClickGUI.INSTANCE.snow.drawSnow(scaledResolution);
-        }
 
         if(this.open) {
             RenderUtil.drawRect(this.x, (float) this.y + 12.5f, this.x + this.width, (float) (this.y + this.height) + totalItemHeight, 0x77000000);
@@ -89,6 +83,12 @@ public abstract class Panel {
         GlStateManager.disableBlend();
         GlStateManager.popMatrix();
 
+        StencilUtil.initStencilToWrite();
+        if(this.open) {
+            RenderUtil.drawRect(this.x, (float) this.y + 12.5f, this.x + this.width, (float) (this.y + this.height) + totalItemHeight, 0x77000000);
+        }
+        StencilUtil.readStencilBuffer(1);
+
         if(this.open) {
             float y = (float) (this.getY() + this.getHeight()) - 3.0f;
             for(Item item : getItems()) {
@@ -99,6 +99,9 @@ public abstract class Panel {
                 y += (float) item.getHeight() + 1.5f;
             }
         }
+        StencilUtil.uninitStencilBuffer();
+        GlStateManager.popMatrix();
+
     }
 
     private void drag(int mouseX, int mouseY) {

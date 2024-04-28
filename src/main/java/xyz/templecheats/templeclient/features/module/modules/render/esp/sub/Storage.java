@@ -1,26 +1,12 @@
 package xyz.templecheats.templeclient.features.module.modules.render.esp.sub;
 
-import net.minecraft.client.model.ModelChest;
-import net.minecraft.client.model.ModelLargeChest;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.shader.Framebuffer;
-import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.*;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.EXTFramebufferObject;
-import org.lwjgl.opengl.GL11;
 import xyz.templecheats.templeclient.features.module.Module;
-import xyz.templecheats.templeclient.util.color.impl.GradientShader;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
-
-import java.awt.*;
-import java.util.ArrayList;
-
-import static net.minecraft.client.renderer.GlStateManager.resetColor;
 
 public class Storage extends Module {
     /*

@@ -31,6 +31,47 @@ public class BlockUtil implements Globals {
             new Vec3i(0, -1, 0),
     };
 
+    public static final List<Block> resistantBlocks = Arrays.asList(
+            Blocks.OBSIDIAN,
+            Blocks.ANVIL,
+            Blocks.ENCHANTING_TABLE,
+            Blocks.ENDER_CHEST,
+            Blocks.BEACON
+    );
+
+    // All blocks that are unbreakable with tools in survival mode
+    public static final List<Block> unbreakableBlocks = Arrays.asList(
+            Blocks.BEDROCK,
+            Blocks.COMMAND_BLOCK,
+            Blocks.CHAIN_COMMAND_BLOCK,
+            Blocks.END_PORTAL_FRAME,
+            Blocks.BARRIER,
+            Blocks.PORTAL
+    );
+
+    public static boolean isBreakable(BlockPos position) {
+        return !getResistance(position).equals(Resistance.UNBREAKABLE);
+    }
+
+    public static Resistance getResistance(BlockPos position) {
+        Block block = mc.world.getBlockState(position).getBlock();
+        if (block != null) {
+            if (resistantBlocks.contains(block)) {
+                return Resistance.RESISTANT;
+            }
+            else if (unbreakableBlocks.contains(block)) {
+                return Resistance.UNBREAKABLE;
+            }
+            else if (block.getDefaultState().getMaterial().isReplaceable()) {
+                return Resistance.REPLACEABLE;
+            }
+            else {
+                return Resistance.BREAKABLE;
+            }
+        }
+        return Resistance.NONE;
+    }
+
     public static boolean valid(BlockPos pos, boolean updated) {
         return mc.world.getBlockState(pos.up()).getBlock().equals(Blocks.AIR) &&
                 (mc.world.getBlockState(pos.up().up()).getBlock().equals(Blocks.AIR) || updated) &&
@@ -198,5 +239,33 @@ public class BlockUtil implements Globals {
         }
 
         return positions;
+    }
+
+    public enum Resistance {
+
+        /**
+         * Blocks that are able to be replaced by other blocks
+         */
+        REPLACEABLE,
+
+        /**
+         * Blocks that are able to be broken with tools in survival mode
+         */
+        BREAKABLE,
+
+        /**
+         * Blocks that are resistant to explosions
+         */
+        RESISTANT,
+
+        /**
+         * Blocks that are unbreakable with tools in survival mode
+         */
+        UNBREAKABLE,
+
+        /**
+         * Null equivalent
+         */
+        NONE
     }
 }
