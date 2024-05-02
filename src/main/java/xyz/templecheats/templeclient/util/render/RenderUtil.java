@@ -17,11 +17,14 @@ import org.lwjgl.opengl.GL11;
 import xyz.templecheats.templeclient.features.module.modules.client.Colors;
 import xyz.templecheats.templeclient.mixins.accessor.IMixinRenderManager;
 import xyz.templecheats.templeclient.util.Globals;
+import xyz.templecheats.templeclient.util.color.ColorUtil;
 import xyz.templecheats.templeclient.util.render.shader.impl.RoundedTexture;
 import xyz.templecheats.templeclient.util.math.Vec2d;
 
 import static java.lang.Math.atan;
 import static org.lwjgl.opengl.GL11.*;
+import static xyz.templecheats.templeclient.util.color.ColorUtil.lerpColor;
+import static xyz.templecheats.templeclient.util.color.ColorUtil.setAlpha;
 import static xyz.templecheats.templeclient.util.render.StencilUtil.*;
 
 import java.awt.*;
@@ -69,6 +72,98 @@ public class RenderUtil implements Globals {
             glColor4d(1.0, 1.0, 1.0, 1.0);
             glPopMatrix();
         }
+    }
+
+    public static void drawHat(float radius, float height, int alpha1, int alpha2) {
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
+
+        GlStateManager.color(-1f, -1f, -1f, -1f);
+        buffer.begin(GL_TRIANGLE_FAN, DefaultVertexFormats.POSITION_COLOR);
+        buffer.pos(0.0, height, 0.0).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
+        for (int i = 0; i <= 360; i++) {
+            double percent = (double) i / 360;
+            double progress = ((percent > 0.5) ? 1.0 - percent : percent) * 2.0;
+            Color color = lerpColor(setAlpha(Colors.INSTANCE.getGradient()[1], alpha1), setAlpha(Colors.INSTANCE.getGradient()[0], alpha2), (float) progress);
+
+            double dir = Math.toRadians(i - 180.0);
+            double x = -Math.sin(dir) * radius;
+            double z = Math.cos(dir) * radius;
+            buffer.pos(x, 0.0, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+        }
+        buffer.pos(0.0, height, 0.0).color(0, 0 ,0 ,0).endVertex();
+        tessellator.draw();
+    }
+
+    public static void drawGradientCircleOutline(float radius, float outlineWidth, int alpha) {
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
+
+        GlStateManager.glLineWidth(outlineWidth);
+        GlStateManager.color(-1f, -1f, -1f, -1f);
+        buffer.begin(GL_LINE_LOOP, DefaultVertexFormats.POSITION_COLOR);
+        for (int i = 0; i <= 360; i++) {
+            double percent = (double) i / 360;
+            double progress = ((percent > 0.5) ? 1.0 - percent : percent) * 2.0;
+            Color color = ColorUtil.setAlpha(lerpColor(Colors.INSTANCE.getGradient()[1], Colors.INSTANCE.getGradient()[0], (float) progress), alpha);
+
+            double dir = Math.toRadians(i - 180.0);
+            double x = -Math.sin(dir) * radius;
+            double z = Math.cos(dir) * radius;
+            buffer.pos(x, 0.0, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+        }
+        tessellator.draw();
+    }
+
+    public static void drawCoolCircle(float radius, int alpha) {
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
+
+        GlStateManager.color(-1f, -1f, -1f, -1f);
+        buffer.begin(GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        for (int i = 0; i <= 360; i++) {
+            double percent = (double) i / 360;
+            double progress = ((percent > 0.5) ? 1.0 - percent : percent) * 2.0;
+            Color color = ColorUtil.setAlpha(lerpColor(Colors.INSTANCE.getGradient()[1], Colors.INSTANCE.getGradient()[0], (float) progress), alpha);
+
+            double dir = Math.toRadians(i - 180.0);
+
+            double x = -Math.sin(dir) * radius;
+            double z = Math.cos(dir) * radius;
+
+            double x0 = Math.cos(i + dir) * radius;
+            double z0 = -Math.sin(i + dir) * radius;
+
+            buffer.pos(x, 0.0, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+            buffer.pos(x0, 0.0, z0).color(color.getRed(), color.getGreen(), color.getBlue(), 0).endVertex();
+        }
+        tessellator.draw();
+    }
+
+    // Very long name
+    public static void drawFadeGradientCircleOutline(float radius, float size, int alpha) {
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
+
+        GlStateManager.color(-1f, -1f, -1f, -1f);
+        buffer.begin(GL_QUAD_STRIP, DefaultVertexFormats.POSITION_COLOR);
+        for (int i = 0; i <= 360; i++) {
+            double percent = (double) i / 360;
+            double progress = ((percent > 0.5) ? 1.0 - percent : percent) * 2.0;
+            Color color = ColorUtil.setAlpha(lerpColor(Colors.INSTANCE.getGradient()[1], Colors.INSTANCE.getGradient()[0], (float) progress), alpha);
+
+            double dir = Math.toRadians(i - 180.0);
+
+            double x = -Math.sin(dir) * radius;
+            double z = Math.cos(dir) * radius;
+
+            double x0 = -Math.sin(dir) * (radius + size);
+            double z0 = Math.cos(dir) * (radius + size);
+
+            buffer.pos(x, 0.0, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+            buffer.pos(x0, 0.0, z0).color(color.getRed(), color.getGreen(), color.getBlue(), 0).endVertex();
+        }
+        tessellator.draw();
     }
 
     public static void FillOnlyLine(Entity entity, AxisAlignedBB box) {
@@ -578,17 +673,17 @@ public class RenderUtil implements Globals {
         return new Vec3d(-mc.getRenderManager().viewerPosX, -mc.getRenderManager().viewerPosY, -mc.getRenderManager().viewerPosZ);
     }
 
-    public static void renderTexture(ResourceLocation resourceLocation, Color color) {
+    public static void renderTexture(ResourceLocation resourceLocation, Color color1, Color color2) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
 
         mc.getTextureManager().bindTexture(resourceLocation);
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
 
-        buffer.pos(0.0F, 1.5F, 0.0F).tex(0F, 1F).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
-        buffer.pos(1.5F, 1.5F, 0.0F).tex(1F, 1F).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
-        buffer.pos(1.5F, 0.0F, 0.0F).tex(1F, 0F).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
-        buffer.pos(0.0F, 0.0F, 0.0F).tex(0F, 0F).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+        buffer.pos(0.0F, 1.5F, 0.0F).tex(0F, 1F).color(color1.getRed(), color1.getGreen(), color1.getBlue(), color1.getAlpha()).endVertex();
+        buffer.pos(1.5F, 1.5F, 0.0F).tex(1F, 1F).color(color2.getRed(), color2.getGreen(), color2.getBlue(), color2.getAlpha()).endVertex();
+        buffer.pos(1.5F, 0.0F, 0.0F).tex(1F, 0F).color(color1.getRed(), color1.getGreen(), color1.getBlue(), color1.getAlpha()).endVertex();
+        buffer.pos(0.0F, 0.0F, 0.0F).tex(0F, 0F).color(color2.getRed(), color2.getGreen(), color2.getBlue(), color2.getAlpha()).endVertex();
 
         tessellator.draw();
     }

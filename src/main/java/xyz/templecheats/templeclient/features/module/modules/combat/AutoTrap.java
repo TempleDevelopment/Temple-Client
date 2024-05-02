@@ -22,7 +22,6 @@ import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
-import xyz.templecheats.templeclient.util.rotation.RotationUtil;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
@@ -36,7 +35,7 @@ public class AutoTrap extends Module {
      * Settings
      */
     private final IntSetting blocksPerTick = new IntSetting("Blocks Per Tick", this, 1, 10, 1);
-    private final BooleanSetting disable = new BooleanSetting("Disable", this, true);
+    private final BooleanSetting autoDisable = new BooleanSetting("Auto Disable", this, true);
     private final IntSetting range = new IntSetting("Range", this, 1, 6, 4);
     private final BooleanSetting render = new BooleanSetting("Render", this, true);
     private final BooleanSetting fill = new BooleanSetting("Box Fill", this, true);
@@ -61,7 +60,7 @@ public class AutoTrap extends Module {
 
     public AutoTrap() {
         super("AutoTrap", "Automatically traps enemies with obsidian", Keyboard.KEY_NONE, Category.Combat);
-        registerSettings(disable, blocksPerTick, range, render, fill, outline, opacity);
+        registerSettings(autoDisable, blocksPerTick, range, render, fill, outline, opacity);
     }
 
     @Override
@@ -87,7 +86,7 @@ public class AutoTrap extends Module {
         if (Minecraft.getMinecraft().player == null || Minecraft.getMinecraft().world == null)
             return;
 
-        if (finished && disable.booleanValue())
+        if (finished && autoDisable.booleanValue())
             disable();
 
         int blocksPlaced = 0;
@@ -160,17 +159,28 @@ public class AutoTrap extends Module {
         return -1;
     }
 
-    private static void placeBlock(BlockPos pos) {
+    public static void placeBlock(BlockPos pos) {
         for (EnumFacing enumFacing : EnumFacing.values()) {
-            if (!Minecraft.getMinecraft().world.getBlockState(pos.offset(enumFacing)).getBlock().equals(Blocks.AIR) &&
-                    !isIntercepted(pos)) {
+            if (!Minecraft.getMinecraft().world.getBlockState(pos.offset(enumFacing)).getBlock().equals(Blocks.AIR)
+                    && !isIntercepted(pos)) {
                 Vec3d vec = new Vec3d(pos.getX() + 0.5D + (double) enumFacing.getXOffset() * 0.5D,
                         pos.getY() + 0.5D + (double) enumFacing.getYOffset() * 0.5D,
                         pos.getZ() + 0.5D + (double) enumFacing.getZOffset() * 0.5D);
-                float[] rotations = RotationUtil.rotations(pos);
+
+                float[] old = new float[]{Minecraft.getMinecraft().player.rotationYaw,
+                        Minecraft.getMinecraft().player.rotationPitch};
 
                 Minecraft.getMinecraft().player.connection.sendPacket(new CPacketPlayer.Rotation(
-                        rotations[0], rotations[1], Minecraft.getMinecraft().player.onGround));
+                        (float) Math.toDegrees(Math.atan2((vec.z - Minecraft.getMinecraft().player.posZ),
+                                (vec.x - Minecraft.getMinecraft().player.posX))) - 90.0F,
+                        (float) (-Math.toDegrees(Math.atan2(
+                                (vec.y - (Minecraft.getMinecraft().player.posY
+                                        + (double) Minecraft.getMinecraft().player.getEyeHeight())),
+                                (Math.sqrt((vec.x - Minecraft.getMinecraft().player.posX)
+                                        * (vec.x - Minecraft.getMinecraft().player.posX)
+                                        + (vec.z - Minecraft.getMinecraft().player.posZ)
+                                        * (vec.z - Minecraft.getMinecraft().player.posZ)))))),
+                        Minecraft.getMinecraft().player.onGround));
                 Minecraft.getMinecraft().player.connection.sendPacket(new CPacketEntityAction(
                         Minecraft.getMinecraft().player, CPacketEntityAction.Action.START_SNEAKING));
                 Minecraft.getMinecraft().playerController.processRightClickBlock(Minecraft.getMinecraft().player,
@@ -179,8 +189,8 @@ public class AutoTrap extends Module {
                 Minecraft.getMinecraft().player.swingArm(EnumHand.MAIN_HAND);
                 Minecraft.getMinecraft().player.connection.sendPacket(new CPacketEntityAction(
                         Minecraft.getMinecraft().player, CPacketEntityAction.Action.STOP_SNEAKING));
-                Minecraft.getMinecraft().player.connection.sendPacket(new CPacketPlayer.Rotation(
-                        rotations[0], rotations[1], Minecraft.getMinecraft().player.onGround));
+                Minecraft.getMinecraft().player.connection.sendPacket(
+                        new CPacketPlayer.Rotation(old[0], old[1], Minecraft.getMinecraft().player.onGround));
 
                 return;
             }

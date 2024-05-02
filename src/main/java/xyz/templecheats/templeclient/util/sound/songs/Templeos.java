@@ -1,4 +1,4 @@
-package xyz.templecheats.templeclient.util.songs;
+package xyz.templecheats.templeclient.util.sound.songs;
 
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.Sound;

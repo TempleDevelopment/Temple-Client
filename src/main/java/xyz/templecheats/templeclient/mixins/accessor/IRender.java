@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(Render.class)
 public interface IRender {
-
     @Accessor("renderOutlines")
     boolean getRenderOutlines();
 

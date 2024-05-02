@@ -17,6 +17,7 @@ import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
+import xyz.templecheats.templeclient.event.events.render.Render3DEvent;
 import xyz.templecheats.templeclient.event.events.render.Render3DPrePreEvent;
 import xyz.templecheats.templeclient.features.gui.font.CFont;
 import xyz.templecheats.templeclient.features.module.Module;
@@ -61,16 +62,16 @@ public class NameTags extends Module {
         }
     }
 
-    @Override
-    public void onRenderWorld(float partialTicks) {
+    @Listener
+    public void onRender3DPost(Render3DEvent event) {
         for (EntityPlayer player: this.players) {
             if (player.equals(mc.player) || player.isDead || player.getHealth() <= 0 || player.isInvisible()) {
                 continue;
             }
 
-            final double x = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks - ((IMixinRenderManager) mc.getRenderManager()).getRenderPosX();
-            final double y = player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks - ((IMixinRenderManager) mc.getRenderManager()).getRenderPosY();
-            final double z = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks - ((IMixinRenderManager) mc.getRenderManager()).getRenderPosZ();
+            final double x = player.lastTickPosX + (player.posX - player.lastTickPosX) * event.partialTicks - ((IMixinRenderManager) mc.getRenderManager()).getRenderPosX();
+            final double y = player.lastTickPosY + (player.posY - player.lastTickPosY) * event.partialTicks - ((IMixinRenderManager) mc.getRenderManager()).getRenderPosY();
+            final double z = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * event.partialTicks - ((IMixinRenderManager) mc.getRenderManager()).getRenderPosZ();
             this.renderNametag(player, new Vec3d(x, y + player.height / 1.5, z));
         }
     }

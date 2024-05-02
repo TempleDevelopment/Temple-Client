@@ -1,16 +1,20 @@
 package xyz.templecheats.templeclient.features.gui.menu.alt;
 
 import com.mojang.authlib.Agent;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import com.mojang.authlib.yggdrasil.YggdrasilUserAuthentication;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.TempleClient;
 
+import java.awt.*;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.Proxy;
@@ -27,11 +31,11 @@ public class AltManager extends GuiScreen {
     public void initGui() {
         this.buttonList.clear();
         int centerX = this.width / 2;
-        int centerY = this.height / 4;
-        this.inputField = new GuiTextField(10, this.fontRenderer, centerX - 100, 25, 200, 20);
-        this.addButton = new GuiButton(0, centerX - 100, 50, 98, 20, "Add Account");
-        this.deleteButton = new GuiButton(1, centerX + 2, 50, 98, 20, "Delete Account");
-        this.loginButton = new GuiButton(2, centerX - 49, 75, 98, 20, "Login");
+        int centerY = this.height - 50;
+        this.inputField = new GuiTextField(10, this.fontRenderer, centerX - 100, centerY - 25, 200, 20);
+        this.addButton = new GuiButton(0, centerX - 100, centerY, 98, 20, "Add Account");
+        this.deleteButton = new GuiButton(1, centerX + 2, centerY, 98, 20, "Delete Account");
+        this.loginButton = new GuiButton(2, centerX - 49, centerY + 25, 98, 20, "Login");
         this.buttonList.add(this.addButton);
         this.buttonList.add(this.deleteButton);
         this.buttonList.add(this.loginButton);
@@ -85,11 +89,15 @@ public class AltManager extends GuiScreen {
         int startY = 100;
         for (int i = 0; i < alts.size(); i++) {
             int posY = startY + (i * 20);
+            drawRect(this.width / 2 - 100, posY - 10, this.width / 2 + 100, posY + 10, Color.BLACK.getRGB());
             if (i == selectedAltIndex) {
                 drawCenteredString(fontRenderer, alts.get(i) + " [Selected]", this.width / 2, posY, 0xFFFF00);
             } else {
                 drawCenteredString(fontRenderer, alts.get(i), this.width / 2, posY, 0xFFFFFF);
             }
+            ResourceLocation skinTexture = new ResourceLocation("textures/entity/steve.png");
+            mc.getTextureManager().bindTexture(skinTexture);
+            Gui.drawScaledCustomSizeModalRect(this.width / 2 - 110, posY - 10, 8.0F, 8.0F, 8, 8, 20, 20, 64.0F, 64.0F);
         }
     }
 

@@ -1,23 +1,17 @@
 package xyz.templecheats.templeclient.features.module.modules.render;
 
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import xyz.templecheats.templeclient.features.module.Module;
-import xyz.templecheats.templeclient.features.module.modules.client.Colors;
-import xyz.templecheats.templeclient.util.color.ColorUtil;
 import xyz.templecheats.templeclient.util.setting.impl.*;
-import java.awt.*;
 
 import static org.lwjgl.opengl.GL11.*;
 import static xyz.templecheats.templeclient.util.color.ColorUtil.lerpColor;
 import static xyz.templecheats.templeclient.util.color.ColorUtil.setAlpha;
-import static xyz.templecheats.templeclient.util.render.RenderUtil.interpolateEntity;
+import static xyz.templecheats.templeclient.util.render.RenderUtil.*;
 
 public class ChinaHat extends Module {
     /*
@@ -66,56 +60,15 @@ public class ChinaHat extends Module {
                 GlStateManager.translate(pos.x, 0.1 - (player.isSneaking() ? 0.23 : 0), pos.z);
                 GlStateManager.rotate((player.ticksExisted + mc.getRenderPartialTicks()) * -rotateSpeed.floatValue(), 0.0F, 1.0F, 0.0F);
                 if (fill.booleanValue()) {
-                    drawHat(radius);
+                    drawHat(radius, heightValue.floatValue(), fillOpacity1.intValue(), fillOpacity2.intValue());
                 }
                 if (outline.booleanValue()) {
-                    drawHatOutline(radius);
+                    drawGradientCircleOutline(radius, outlineWidth.floatValue(), outlineOpacity.intValue());
                 }
                 restore();
                 GlStateManager.popMatrix();
             }
         }
-    }
-
-    private void drawHat(float radius) {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
-
-        GlStateManager.color(-1f, -1f, -1f, -1f);
-        buffer.begin(GL_TRIANGLE_FAN, DefaultVertexFormats.POSITION_COLOR);
-        buffer.pos(0.0, heightValue.doubleValue(), 0.0).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
-        for (int i = 0; i <= 360; i++) {
-            double percent = (double) i / 360;
-            double progress = ((percent > 0.5) ? 1.0 - percent : percent) * 2.0;
-            Color color = lerpColor(setAlpha(Colors.INSTANCE.getGradient()[1], fillOpacity1.intValue()), setAlpha(Colors.INSTANCE.getGradient()[0], fillOpacity2.intValue()), (float) progress);
-
-            double dir = Math.toRadians(i - 180.0);
-            double x = -Math.sin(dir) * radius;
-            double z = Math.cos(dir) * radius;
-            buffer.pos(x, 0.0, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
-        }
-        buffer.pos(0.0, heightValue.doubleValue(), 0.0).color(0, 0 ,0 ,0).endVertex();
-        tessellator.draw();
-    }
-
-    private void drawHatOutline(float radius) {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
-
-        GlStateManager.glLineWidth(outlineWidth.floatValue());
-        GlStateManager.color(-1f, -1f, -1f, -1f);
-        buffer.begin(GL_LINE_LOOP, DefaultVertexFormats.POSITION_COLOR);
-        for (int i = 0; i <= 360; i++) {
-            double percent = (double) i / 360;
-            double progress = ((percent > 0.5) ? 1.0 - percent : percent) * 2.0;
-            Color color = ColorUtil.setAlpha(lerpColor(Colors.INSTANCE.getGradient()[1], Colors.INSTANCE.getGradient()[0], (float) progress), outlineOpacity.intValue());
-
-            double dir = Math.toRadians(i - 180.0);
-            double x = -Math.sin(dir) * radius;
-            double z = Math.cos(dir) * radius;
-            buffer.pos(x, 0.0, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
-        }
-        tessellator.draw();
     }
 
     private void setup() {

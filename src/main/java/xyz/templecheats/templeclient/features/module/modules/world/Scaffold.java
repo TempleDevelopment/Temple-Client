@@ -69,9 +69,6 @@ public class Scaffold extends Module {
 
         return null;
     }
-
-    // Dayum Fuck Dis Shiet Code
-    // is it good now?
     private BlockPosWithFacing checkNearBlocksExtended(BlockPos blockPos) {
         int[][] positionsToCheck = {
                 {0, 0, 0},   // Current position
@@ -90,7 +87,7 @@ public class Scaffold extends Module {
                 {0, -1, -1}  // Position below to the back
         };
 
-        for (int[] offset : positionsToCheck) {
+        for (int[] offset: positionsToCheck) {
             BlockPosWithFacing ret = checkNearBlocks(blockPos.add(offset[0], offset[1], offset[2]));
             if (ret != null) {
                 return ret;
@@ -99,7 +96,6 @@ public class Scaffold extends Module {
 
         return null;
     }
-
 
     private int findBlockToPlace() {
         if (mc.player.getHeldItemMainhand().getItem() instanceof ItemBlock) {
@@ -176,12 +172,12 @@ public class Scaffold extends Module {
         double d5 = d3;
         double d6 = Math.sqrt(d4 * d4 + d5 * d5);
 
-        float f = (float) (Math.toDegrees(Math.atan2(d3, d)) - 90.0f);
-        float f2 = (float) (-Math.toDegrees(Math.atan2(d2, d6)));
+        float f = (float)(Math.toDegrees(Math.atan2(d3, d)) - 90.0f);
+        float f2 = (float)(-Math.toDegrees(Math.atan2(d2, d6)));
 
         float[] ret = new float[2];
-        ret[0] = mc.player.rotationYaw + MathHelper.wrapDegrees((float) (f - mc.player.rotationYaw));
-        ret[1] = mc.player.rotationPitch + MathHelper.wrapDegrees((float) (f2 - mc.player.rotationPitch));
+        ret[0] = mc.player.rotationYaw + MathHelper.wrapDegrees((float)(f - mc.player.rotationYaw));
+        ret[1] = mc.player.rotationPitch + MathHelper.wrapDegrees((float)(f2 - mc.player.rotationPitch));
 
         return ret;
     }
@@ -197,39 +193,25 @@ public class Scaffold extends Module {
             GradientShader.finish();
         }
     }
-
-    // didnt even bother tbh
     @Listener
     public void onMotionUpdate(MotionEvent event) {
         {
-            block31:
-            {
+            block31: {
                 BlockPos blockPos;
                 Scaffold scaffold;
                 int n;
-                block37:
-                {
-                    block36:
-                    {
-                        block35:
-                        {
-                            block34:
-                            {
-                                block33:
-                                {
-                                    block30:
-                                    {
+                block37: {
+                    block36: {
+                        block35: {
+                            block34: {
+                                block33: {
+                                    block30: {
                                         BlockPos blockPos2;
-                                        block32:
-                                        {
-                                            block29:
-                                            {
-                                                block28:
-                                                {
-                                                    block27:
-                                                    {
-                                                        block26:
-                                                        {
+                                        block32: {
+                                            block29: {
+                                                block28: {
+                                                    block27: {
+                                                        block26: {
                                                             if (this.countValidBlocks() <= 0) break block26;
                                                             if (Double.compare(mc.player.posY, 257.0) <= 0)
                                                                 break block27;
@@ -303,7 +285,6 @@ public class Scaffold extends Module {
                     scaffold = this;
                 }
 
-                System.out.println("Watafak");
                 BlockPos blockPos3 = blockPos = scaffold.currentBlock.blockPos;
                 boolean bl = mc.world.getBlockState(blockPos).getBlock().onBlockActivated(mc.world, blockPos3, mc.world.getBlockState(blockPos3), mc.player, EnumHand.MAIN_HAND, EnumFacing.DOWN, 0.0f, 0.0f, 0.0f);
                 if (bl) {
@@ -337,7 +318,6 @@ public class Scaffold extends Module {
         public long getTimePassed() {
             return System.currentTimeMillis() - this.time;
         }
-
 
         public Timer() {
             this.time = -1L;

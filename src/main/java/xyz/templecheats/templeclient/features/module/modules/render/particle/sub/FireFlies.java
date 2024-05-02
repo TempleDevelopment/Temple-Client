@@ -83,7 +83,7 @@ public class FireFlies extends Module {
             double p1 = min(it.tickLiving, 10.0) / 10.0;
             double p2 = MathHelper.clamp((it.maxTickLiving - it.tickLiving) / 10, 0, 1);
             int alpha = (int) MathHelper.clamp((it.tickLiving <= 10 ? p1 : p2) * 255, 0, 255);
-            it.draw(size.floatValue(), setAlpha(Colors.INSTANCE.getColor(5), alpha), textures.value());
+            it.draw(size.floatValue(), setAlpha(Colors.INSTANCE.getColor(0), alpha), setAlpha(Colors.INSTANCE.getColor(5), alpha), textures.value());
         });
     }
 

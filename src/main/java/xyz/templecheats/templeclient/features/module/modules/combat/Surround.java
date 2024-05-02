@@ -2,178 +2,352 @@ package xyz.templecheats.templeclient.features.module.modules.combat;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockObsidian;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityXPOrb;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.client.CPacketEntityAction;
+import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
-import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
-import xyz.templecheats.templeclient.event.events.player.MotionEvent;
 import xyz.templecheats.templeclient.features.module.Module;
-import xyz.templecheats.templeclient.util.rotation.RotationUtil;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
-import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
-import xyz.templecheats.templeclient.util.time.TimerUtil;
 
 public class Surround extends Module {
-    /**
-     * Setings
+    /*
+     * Settings
      */
-    private final BooleanSetting disableOnJump = new BooleanSetting("Disable On Jump", this, false);
-    private final BooleanSetting strictDir = new BooleanSetting("Strict Dir", this, false);
-    private final DoubleSetting placeDelay = new DoubleSetting("Place Delay", this, 0d, 150d, 10d);
-
-    /**
-     * Variables
-     */
-    private BlockPos placePos;
-    private EnumFacing placeFace;
-    private TimerUtil timer = new TimerUtil();
+    private final BooleanSetting jumpDisable = new BooleanSetting("Jump Disable", this, true);
+    private final BooleanSetting autoDisable = new BooleanSetting("Auto Disable", this, true);
+    private final BooleanSetting chainPopToggle = new BooleanSetting("Totem Pop Toggle", this, true);
 
     public Surround() {
         super("Surround", "Automatically surrounds your feet with obsidian", Keyboard.KEY_NONE, Category.Combat);
 
-        registerSettings(disableOnJump, strictDir, placeDelay);
+        registerSettings(jumpDisable, autoDisable, chainPopToggle);
     }
 
-    @Listener
-    public void onMotion(MotionEvent event) {
-        if (disableOnJump.booleanValue() && mc.player.motionY > 0) {
-            this.disable();
+    public static boolean hasNeighbour(BlockPos blockPos) {
+        for (EnumFacing side: EnumFacing.values()) {
+            BlockPos neighbour = blockPos.offset(side);
+            if (!Minecraft.getMinecraft().world.getBlockState(neighbour).getMaterial().isReplaceable())
+                return true;
+        }
+        return false;
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent.ClientTickEvent event) {
+        if (mc.player == null)
+            return;
+        if (!mc.player.onGround && jumpDisable.booleanValue()) {
+            toggle();
             return;
         }
-        final EnumHand placeHand;
-        int newSlot = -1;
-        int oldSlot = mc.player.inventory.currentItem;
-
-        ItemStack stack;
-        if ((stack = mc.player.getHeldItem(EnumHand.MAIN_HAND)).getItem() instanceof ItemBlock && Block.getBlockFromItem(stack.getItem()) instanceof BlockObsidian) {
-            placeHand = EnumHand.MAIN_HAND;
-        } else if ((stack = mc.player.getHeldItem(EnumHand.OFF_HAND)).getItem() instanceof ItemBlock && Block.getBlockFromItem(stack.getItem()) instanceof BlockObsidian) {
-            placeHand = EnumHand.OFF_HAND;
-        } else {
-            for (int i = 0; i < 9; i++) {
-                stack = mc.player.inventory.getStackInSlot(i);
-                if (stack.getItem() instanceof ItemBlock && Block.getBlockFromItem(stack.getItem()) instanceof BlockObsidian) {
-                    newSlot = i;
+        final Vec3d vec3d = getInterpolatedPos(mc.player, 0);
+        BlockPos northBlockPos = new BlockPos(vec3d).north();
+        BlockPos southBlockPos = new BlockPos(vec3d).south();
+        BlockPos eastBlockPos = new BlockPos(vec3d).east();
+        BlockPos westBlockPos = new BlockPos(vec3d).west();
+        final int newSlot = findBlockInHotbar();
+        if (newSlot == -1)
+            return;
+        final BlockPos centerPos = mc.player.getPosition();
+        double y = centerPos.getY();
+        double x = centerPos.getX();
+        double z = centerPos.getZ();
+        final Vec3d plusPlus = new Vec3d(x + 0.5, y, z + 0.5);
+        final Vec3d plusMinus = new Vec3d(x + 0.5, y, z - 0.5);
+        final Vec3d minusMinus = new Vec3d(x - 0.5, y, z - 0.5);
+        final Vec3d minusPlus = new Vec3d(x - 0.5, y, z + 0.5);
+        final int oldSlot = mc.player.inventory.currentItem;
+        mc.player.inventory.currentItem = newSlot;
+        if (!hasNeighbour(northBlockPos)) {
+            for (EnumFacing side: EnumFacing.values()) {
+                BlockPos neighbour = northBlockPos.offset(side);
+                if (hasNeighbour(neighbour)) {
+                    northBlockPos = neighbour;
                     break;
                 }
             }
-
-            if (newSlot == -1) {
-                return;
-            }
-
-            placeHand = EnumHand.MAIN_HAND;
         }
 
-        switch (event.getStage()) {
-            case PRE:
-                final BlockPos playerPos = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
-
-                for (EnumFacing direction: EnumFacing.values()) {
-                    if (direction == EnumFacing.UP || direction == EnumFacing.DOWN) {
-                        continue;
-                    }
-
-                    final BlockPos targetPos = playerPos.offset(direction);
-
-                    if (!this.canPlaceBlock(targetPos)) {
-                        continue;
-                    }
-
-                    for (EnumFacing supportDir: EnumFacing.values()) {
-                        final BlockPos supportPos = targetPos.offset(supportDir);
-
-                        if (this.isSupportBlock(supportPos, supportDir.getOpposite())) {
-                            this.placePos = supportPos;
-                            this.placeFace = supportDir.getOpposite();
-                            break;
-                        }
-
-                        if (this.canPlaceBlock(supportPos)) {
-                            for (EnumFacing extendDir: EnumFacing.values()) {
-                                final BlockPos extendPos = supportPos.offset(extendDir);
-
-                                if (this.isSupportBlock(extendPos, extendDir.getOpposite())) {
-                                    this.placePos = extendPos;
-                                    this.placeFace = extendDir.getOpposite();
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
-                    if (this.placePos != null) {
-                        break;
-                    }
+        if (!hasNeighbour(southBlockPos)) {
+            for (EnumFacing side: EnumFacing.values()) {
+                BlockPos neighbour = southBlockPos.offset(side);
+                if (hasNeighbour(neighbour)) {
+                    southBlockPos = neighbour;
+                    break;
                 }
+            }
+        }
 
-                if (this.placePos != null) {
-                    final float[] rotations = RotationUtil.rotations(this.placePos);
-                    event.setYaw(rotations[0]);
-                    event.setPitch(rotations[1]);
+        if (!hasNeighbour(eastBlockPos)) {
+            for (EnumFacing side: EnumFacing.values()) {
+                BlockPos neighbour = eastBlockPos.offset(side);
+                if (hasNeighbour(neighbour)) {
+                    eastBlockPos = neighbour;
+                    break;
                 }
-                break;
-            case POST:
-                if (this.placePos == null || !timer.hasReached((long) placeDelay.doubleValue())) {
-                    return;
+            }
+        }
+
+        if (!hasNeighbour(westBlockPos)) {
+            for (EnumFacing side: EnumFacing.values()) {
+                BlockPos neighbour = westBlockPos.offset(side);
+                if (hasNeighbour(neighbour)) {
+                    westBlockPos = neighbour;
+                    break;
                 }
+            }
+        }
 
-                if (newSlot != -1) {
-                    mc.player.inventory.currentItem = newSlot;
+        if (mc.world.getBlockState(northBlockPos).getMaterial().isReplaceable() && isEntitiesEmpty(northBlockPos)) {
+            if (mc.player.onGround) {
+                if (getDst(plusPlus) < getDst(plusMinus) && getDst(plusPlus) < getDst(minusMinus) &&
+                        getDst(plusPlus) < getDst(minusPlus)) {
+                    x = centerPos.getX() + 0.5;
+                    z = centerPos.getZ() + 0.5;
+                    centerPlayer(x, y, z);
                 }
+                if (getDst(plusMinus) < getDst(plusPlus) && getDst(plusMinus) < getDst(minusMinus) &&
+                        getDst(plusMinus) < getDst(minusPlus)) {
+                    x = centerPos.getX() + 0.5;
+                    z = centerPos.getZ() - 0.5;
+                    centerPlayer(x, y, z);
+                }
+                if (getDst(minusMinus) < getDst(plusPlus) && getDst(minusMinus) < getDst(plusMinus) &&
+                        getDst(minusMinus) < getDst(minusPlus)) {
+                    x = centerPos.getX() - 0.5;
+                    z = centerPos.getZ() - 0.5;
+                    centerPlayer(x, y, z);
+                }
+                if (getDst(minusPlus) < getDst(plusPlus) && getDst(minusPlus) < getDst(plusMinus) &&
+                        getDst(minusPlus) < getDst(minusMinus)) {
+                    x = centerPos.getX() - 0.5;
+                    z = centerPos.getZ() + 0.5;
+                    centerPlayer(x, y, z);
+                }
+            }
+            placeBlockScaffold(northBlockPos, true);
+        }
 
-                final Vec3i dir = this.placeFace.getDirectionVec();
-                final Vec3d vec = new Vec3d(this.placePos).add(dir.getX() / 2.0, dir.getY() / 2.0, dir.getZ() / 2.0);
-                mc.playerController.processRightClickBlock(mc.player, mc.world, this.placePos, this.placeFace, vec, placeHand);
-                mc.player.swingArm(placeHand);
-                this.placePos = null;
+        if (mc.world.getBlockState(southBlockPos).getMaterial().isReplaceable() && isEntitiesEmpty(southBlockPos)) {
+            if (mc.player.onGround) {
+                if (getDst(plusPlus) < getDst(plusMinus) && getDst(plusPlus) < getDst(minusMinus) &&
+                        getDst(plusPlus) < getDst(minusPlus)) {
+                    x = centerPos.getX() + 0.5;
+                    z = centerPos.getZ() + 0.5;
+                    centerPlayer(x, y, z);
+                }
+                if (getDst(plusMinus) < getDst(plusPlus) && getDst(plusMinus) < getDst(minusMinus) &&
+                        getDst(plusMinus) < getDst(minusPlus)) {
+                    x = centerPos.getX() + 0.5;
+                    z = centerPos.getZ() - 0.5;
+                    centerPlayer(x, y, z);
+                }
+                if (getDst(minusMinus) < getDst(plusPlus) && getDst(minusMinus) < getDst(plusMinus) &&
+                        getDst(minusMinus) < getDst(minusPlus)) {
+                    x = centerPos.getX() - 0.5;
+                    z = centerPos.getZ() - 0.5;
+                    centerPlayer(x, y, z);
+                }
+                if (getDst(minusPlus) < getDst(plusPlus) && getDst(minusPlus) < getDst(plusMinus) &&
+                        getDst(minusPlus) < getDst(minusMinus)) {
+                    x = centerPos.getX() - 0.5;
+                    z = centerPos.getZ() + 0.5;
+                    centerPlayer(x, y, z);
+                }
+            }
+            placeBlockScaffold(southBlockPos, true);
+        }
 
-                mc.player.inventory.currentItem = oldSlot;
-                timer.reset();
-                break;
+        if (mc.world.getBlockState(eastBlockPos).getMaterial().isReplaceable() && isEntitiesEmpty(eastBlockPos)) {
+            if (mc.player.onGround) {
+                if (getDst(plusPlus) < getDst(plusMinus) && getDst(plusPlus) < getDst(minusMinus) &&
+                        getDst(plusPlus) < getDst(minusPlus)) {
+                    x = centerPos.getX() + 0.5;
+                    z = centerPos.getZ() + 0.5;
+                    centerPlayer(x, y, z);
+                }
+                if (getDst(plusMinus) < getDst(plusPlus) && getDst(plusMinus) < getDst(minusMinus) &&
+                        getDst(plusMinus) < getDst(minusPlus)) {
+                    x = centerPos.getX() + 0.5;
+                    z = centerPos.getZ() - 0.5;
+                    centerPlayer(x, y, z);
+                }
+                if (getDst(minusMinus) < getDst(plusPlus) && getDst(minusMinus) < getDst(plusMinus) &&
+                        getDst(minusMinus) < getDst(minusPlus)) {
+                    x = centerPos.getX() - 0.5;
+                    z = centerPos.getZ() - 0.5;
+                    centerPlayer(x, y, z);
+                }
+                if (getDst(minusPlus) < getDst(plusPlus) && getDst(minusPlus) < getDst(plusMinus) &&
+                        getDst(minusPlus) < getDst(minusMinus)) {
+                    x = centerPos.getX() - 0.5;
+                    z = centerPos.getZ() + 0.5;
+                    centerPlayer(x, y, z);
+                }
+            }
+            placeBlockScaffold(eastBlockPos, true);
+        }
+
+        if (mc.world.getBlockState(westBlockPos).getMaterial().isReplaceable() && isEntitiesEmpty(westBlockPos)) {
+            if (mc.player.onGround) {
+                if (getDst(plusPlus) < getDst(plusMinus) && getDst(plusPlus) < getDst(minusMinus) &&
+                        getDst(plusPlus) < getDst(minusPlus)) {
+                    x = centerPos.getX() + 0.5;
+                    z = centerPos.getZ() + 0.5;
+                    centerPlayer(x, y, z);
+                }
+                if (getDst(plusMinus) < getDst(plusPlus) && getDst(plusMinus) < getDst(minusMinus) &&
+                        getDst(plusMinus) < getDst(minusPlus)) {
+                    x = centerPos.getX() + 0.5;
+                    z = centerPos.getZ() - 0.5;
+                    centerPlayer(x, y, z);
+                }
+                if (getDst(minusMinus) < getDst(plusPlus) && getDst(minusMinus) < getDst(plusMinus) &&
+                        getDst(minusMinus) < getDst(minusPlus)) {
+                    x = centerPos.getX() - 0.5;
+                    z = centerPos.getZ() - 0.5;
+                    centerPlayer(x, y, z);
+                }
+                if (getDst(minusPlus) < getDst(plusPlus) && getDst(minusPlus) < getDst(plusMinus) &&
+                        getDst(minusPlus) < getDst(minusMinus)) {
+                    x = centerPos.getX() - 0.5;
+                    z = centerPos.getZ() + 0.5;
+                    centerPlayer(x, y, z);
+                }
+            }
+            placeBlockScaffold(westBlockPos, true);
+        }
+        mc.player.inventory.currentItem = oldSlot;
+        if ((autoDisable.booleanValue() || chainPopToggle.booleanValue()) &&
+                (mc.world.getBlockState(new BlockPos(vec3d).north()).getBlock() == Blocks.OBSIDIAN ||
+                        mc.world.getBlockState(new BlockPos(vec3d).north()).getBlock() == Blocks.BEDROCK) &&
+                (mc.world.getBlockState(new BlockPos(vec3d).south()).getBlock() == Blocks.OBSIDIAN ||
+                        mc.world.getBlockState(new BlockPos(vec3d).south()).getBlock() == Blocks.BEDROCK) &&
+                (mc.world.getBlockState(new BlockPos(vec3d).west()).getBlock() == Blocks.OBSIDIAN ||
+                        mc.world.getBlockState(new BlockPos(vec3d).west()).getBlock() == Blocks.BEDROCK) &&
+                (mc.world.getBlockState(new BlockPos(vec3d).east()).getBlock() == Blocks.OBSIDIAN ||
+                        mc.world.getBlockState(new BlockPos(vec3d).east()).getBlock() == Blocks.BEDROCK)) {
+            chainPopToggle.setBooleanValue(false);
+            toggle();
         }
     }
 
-    private boolean canPlaceBlock(BlockPos pos) {
-        if (this.isSupportBlock(pos, null)) {
-            return false;
+    private int findBlockInHotbar() {
+        for (int i = 0; i < 9; ++i) {
+            final ItemStack stack = mc.player.inventory.getStackInSlot(i);
+            if (stack != ItemStack.EMPTY && stack.getItem() instanceof ItemBlock) {
+                final Block block = ((ItemBlock) stack.getItem()).getBlock();
+                if (block instanceof BlockObsidian) {
+                    return i;
+                }
+            }
         }
 
-        final AxisAlignedBB box = new AxisAlignedBB(
-                pos.getX(), pos.getY(), pos.getZ(),
-                pos.getX() + 1.0, pos.getY() + 1.0, pos.getZ() + 1.0
-        );
-
-        if (!mc.world.getEntitiesWithinAABB(Entity.class, box, Entity::isEntityAlive).isEmpty()) {
-            return false;
-        }
-
-        final IBlockState state = mc.world.getBlockState(pos);
-        return state.getBlock().isReplaceable(mc.world, pos) || state.getMaterial().isLiquid();
+        return -1;
     }
 
-    private boolean isSupportBlock(BlockPos pos, EnumFacing face) {
-        final IBlockState state = mc.world.getBlockState(pos);
-        boolean isSolid = state.isFullCube() || state.isOpaqueCube();
+    private void centerPlayer(double x, double y, double z) {
+        mc.player.connection.sendPacket(new CPacketPlayer.Position(x, y, z, true));
+        mc.player.setPosition(x, y, z);
+    }
 
-        if (strictDir.booleanValue() && face != null && isSolid) {
-            Vec3d eyesPos = new Vec3d(mc.player.posX, mc.player.posY + mc.player.getEyeHeight(), mc.player.posZ);
-            Vec3d vec = new Vec3d(pos).add(0.5 * face.getDirectionVec().getX(),
-                    0.5 * face.getDirectionVec().getY(),
-                    0.5 * face.getDirectionVec().getZ());
-            RayTraceResult rayTraceResult = mc.world.rayTraceBlocks(eyesPos, vec, false, false, false);
+    private double getDst(Vec3d vec) {
+        return mc.player.getDistance(vec.x, vec.y, vec.z);
+    }
 
-            if (rayTraceResult != null && rayTraceResult.getBlockPos().equals(pos) && rayTraceResult.sideHit == face) {
-                return true;
-            }
-            return false;
+    private boolean isEntitiesEmpty(BlockPos pos) {
+        return mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(pos)).stream()
+                .filter(e -> !(e instanceof EntityItem) && !(e instanceof EntityXPOrb)).count() == 0;
+    }
+
+    public static void placeBlockScaffold(BlockPos pos, boolean rotate) {
+        for (EnumFacing side: EnumFacing.values()) {
+            final BlockPos neighbor = pos.offset(side);
+            final EnumFacing side2 = side.getOpposite();
+            if (!canBeClicked(neighbor))
+                continue;
+            final Vec3d hitVec = new Vec3d(neighbor).add(new Vec3d(0.5, 0.5, 0.5))
+                    .add(new Vec3d(side2.getDirectionVec()).scale(0.5));
+            if (rotate)
+                faceVectorPacketInstant(hitVec);
+            Minecraft.getMinecraft().player.connection.sendPacket(new CPacketEntityAction(
+                    Minecraft.getMinecraft().player, CPacketEntityAction.Action.START_SNEAKING));
+            processRightClickBlock(neighbor, side2, hitVec);
+            Minecraft.getMinecraft().player.swingArm(EnumHand.MAIN_HAND);
+            Minecraft.getMinecraft().player.connection.sendPacket(
+                    new CPacketEntityAction(Minecraft.getMinecraft().player, CPacketEntityAction.Action.STOP_SNEAKING));
+            return;
         }
+    }
 
-        return isSolid;
+    private static PlayerControllerMP getPlayerController() {
+        return Minecraft.getMinecraft().playerController;
+    }
+
+    public static void processRightClickBlock(BlockPos pos, EnumFacing side, Vec3d hitVec) {
+        getPlayerController().processRightClickBlock(Minecraft.getMinecraft().player, Minecraft.getMinecraft().world,
+                pos, side, hitVec, EnumHand.MAIN_HAND);
+    }
+
+    public static boolean canBeClicked(BlockPos pos) {
+        return Minecraft.getMinecraft().world.getBlockState(pos).getBlock()
+                .canCollideCheck(Minecraft.getMinecraft().world.getBlockState(pos), false);
+    }
+
+    public static void faceVectorPacketInstant(Vec3d vec) {
+        final float[] rotations = getNeededRotations2(vec);
+        Minecraft.getMinecraft().player.connection.sendPacket(
+                new CPacketPlayer.Rotation(rotations[0], rotations[1], Minecraft.getMinecraft().player.onGround));
+    }
+
+    private static float[] getNeededRotations2(Vec3d vec) {
+        final Vec3d eyesPos = getEyesPos();
+        final double diffX = vec.x - eyesPos.x;
+        final double diffY = vec.y - eyesPos.y;
+        final double diffZ = vec.z - eyesPos.z;
+        final double diffXZ = Math.sqrt(diffX * diffX + diffZ * diffZ);
+        final float yaw = (float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90F;
+        final float pitch = (float) - Math.toDegrees(Math.atan2(diffY, diffXZ));
+        return new float[] {
+                Minecraft.getMinecraft().player.rotationYaw +
+                        MathHelper.wrapDegrees(yaw - Minecraft.getMinecraft().player.rotationYaw),
+                Minecraft.getMinecraft().player.rotationPitch +
+                        MathHelper.wrapDegrees(pitch - Minecraft.getMinecraft().player.rotationPitch)
+        };
+    }
+
+    public static Vec3d getEyesPos() {
+        return new Vec3d(Minecraft.getMinecraft().player.posX,
+                Minecraft.getMinecraft().player.posY + Minecraft.getMinecraft().player.getEyeHeight(),
+                Minecraft.getMinecraft().player.posZ);
+    }
+
+    public static Vec3d getInterpolatedPos(Entity entity, float ticks) {
+        return new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ)
+                .add(getInterpolatedAmount(entity, ticks));
+    }
+
+    public static Vec3d getInterpolatedAmount(Entity entity, double ticks) {
+        return getInterpolatedAmount(entity, ticks, ticks, ticks);
+    }
+
+    public static Vec3d getInterpolatedAmount(Entity entity, double x, double y, double z) {
+        return new Vec3d((entity.posX - entity.lastTickPosX) * x, (entity.posY - entity.lastTickPosY) * y,
+                (entity.posZ - entity.lastTickPosZ) * z);
     }
 }

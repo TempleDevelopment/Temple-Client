@@ -116,7 +116,7 @@ public class ParticleTickHandler {
         }
     }
 
-    public void draw(double scale, Color color, TextureModifiers textures) {
+    public void draw(double scale, Color color1, Color color2, TextureModifiers textures) {
         setUp();
 
         double x = lerp((float) prevPos.x, (float) pos.x, mc.getRenderPartialTicks()) - mc.getRenderManager().viewerPosX;
@@ -129,7 +129,7 @@ public class ParticleTickHandler {
 
         GlStateManager.scale(-scale / 10f, -scale / 10f, scale / 10f);
         GlStateManager.translate(-0.75, -0.75, -0.01);
-        renderTexture(textures.getResourceLocation(), color);
+        renderTexture(textures.getResourceLocation(), color1, color2);
         restore();
     }
 

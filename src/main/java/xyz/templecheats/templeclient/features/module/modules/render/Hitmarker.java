@@ -13,6 +13,8 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import xyz.templecheats.templeclient.features.module.Module;
 
+import static xyz.templecheats.templeclient.util.sound.SoundUtils.playSound;
+
 public class Hitmarker extends Module {
 	/*
 	 * Variables
@@ -28,7 +30,8 @@ public class Hitmarker extends Module {
 	public void onAttackEntity(AttackEntityEvent event) {
 		if (event.getEntityPlayer().equals(mc.player)) {
 			this.hitmarkerDuration = 5;
-		}
+			playSound(mc.player, "hitmarker", 1f, 1f);
+        }
 	}
 
 	@SubscribeEvent

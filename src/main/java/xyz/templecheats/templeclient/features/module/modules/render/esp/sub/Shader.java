@@ -111,7 +111,8 @@ public class Shader extends Module {
     }
 
     @Listener
-    public void onRenderHeldItem(HeldItemEvent event) {
-        event.setCanceled(true);
-    }
+    public void onRenderHeldItem(HeldItemEvent event) {event.setCanceled(true);}
+
+    @Listener
+    public void onRenderFire(FireEvent event) {event.setCanceled(true);}
 }

@@ -19,6 +19,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
@@ -37,7 +38,6 @@ import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
 import xyz.templecheats.templeclient.util.math.MathUtil;
 import xyz.templecheats.templeclient.util.render.enums.ProgressBoxModifiers;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
-import xyz.templecheats.templeclient.util.rotation.Rotation;
 import xyz.templecheats.templeclient.util.rotation.RotationUtil;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
@@ -53,7 +53,7 @@ public class FastBreak extends Module {
     public final DoubleSetting damage = new DoubleSetting("Damage", this, 0.0, 1.0, 0.8);
     public DoubleSetting breakerDelay = new DoubleSetting("Breaker Delay", this, 0, 10, 2);
 
-    public final EnumSetting<Rotation.Rotate> rotate = new EnumSetting<>("Rotation", this, Rotation.Rotate.None);
+    public final EnumSetting<RotationUtil.Rotate> rotate = new EnumSetting<>("Rotation", this, RotationUtil.Rotate.None);
     public final BooleanSetting strict = new BooleanSetting("AlternateSwap", this, true);
     public final BooleanSetting strictReMine = new BooleanSetting("StrictBreak", this, true);
 
@@ -317,12 +317,12 @@ public class FastBreak extends Module {
     @SubscribeEvent
     public void onRotationUpdate(RotationUpdateEvent event) {
         if (isActive() && mc.player != null) {
-            if (!rotate.value().equals(Rotation.Rotate.None)) {
+            if (!rotate.value().equals(RotationUtil.Rotate.None)) {
                 if (mineDamage > 0.95) {
                     event.setCanceled(true);
                     if (minePosition != null) {
-                        Rotation mineRotation = RotationUtil.rotationCalculate(minePosition.add(0.5, 0.5, 0.5));
-                        if (rotate.value().equals(Rotation.Rotate.Client)) {
+                        RotationUtil mineRotation = RotationUtil.rotationCalculate(minePosition.add(0.5, 0.5, 0.5));
+                        if (rotate.value().equals(RotationUtil.Rotate.Client)) {
                             mc.player.rotationYaw = mineRotation.getYaw();
                             mc.player.rotationYawHead = mineRotation.getYaw();
                             mc.player.rotationPitch = mineRotation.getPitch();
@@ -339,6 +339,11 @@ public class FastBreak extends Module {
         if (reset.booleanValue()) {
             event.setCanceled(true);
         }
+    }
+
+    @SubscribeEvent
+    public void onBlockBreak(BlockEvent.BreakEvent event) {
+        event.setCanceled(true);
     }
 
     @Listener

@@ -6,7 +6,7 @@ package xyz.templecheats.templeclient.manager;
 
 import net.minecraft.client.audio.ISound;
 import xyz.templecheats.templeclient.util.Globals;
-import xyz.templecheats.templeclient.util.songs.Templeos;
+import xyz.templecheats.templeclient.util.sound.songs.Templeos;
 
 import java.util.Arrays;
 import java.util.Collections;

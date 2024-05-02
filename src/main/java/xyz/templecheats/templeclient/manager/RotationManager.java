@@ -10,11 +10,14 @@ import xyz.templecheats.templeclient.event.events.player.MotionEvent;
 import xyz.templecheats.templeclient.event.events.player.RenderRotationsEvent;
 import xyz.templecheats.templeclient.mixins.accessor.ICPacketPlayer;
 import xyz.templecheats.templeclient.util.Globals;
-import xyz.templecheats.templeclient.util.rotation.Rotation;
+import xyz.templecheats.templeclient.util.rotation.RotationUtil;
 
 public class RotationManager implements Globals {
-    private final Rotation serverRotation = new Rotation(Float.NaN, Float.NaN);
-    private Rotation rotation = new Rotation(Float.NaN, Float.NaN);
+    /*
+     * Variable
+     */
+    private final RotationUtil serverRotation = new RotationUtil(Float.NaN, Float.NaN);
+    private RotationUtil rotation = new RotationUtil(Float.NaN, Float.NaN);
     private long stay = 0;
 
     {
@@ -24,7 +27,7 @@ public class RotationManager implements Globals {
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         if (System.currentTimeMillis() - stay >= 250 && rotation.isValid()) {
-            rotation = new Rotation(Float.NaN, Float.NaN);
+            rotation = new RotationUtil(Float.NaN, Float.NaN);
         }
     }
 
@@ -63,16 +66,16 @@ public class RotationManager implements Globals {
         }
     }
 
-    public void setRotation(Rotation in ) {
+    public void setRotation(RotationUtil in ) {
         rotation = in;
         stay = System.currentTimeMillis();
     }
 
-    public Rotation getRotation() {
+    public RotationUtil getRotation() {
         return rotation;
     }
 
-    public Rotation getServerRotation() {
+    public RotationUtil getServerRotation() {
         return serverRotation;
     }
 }

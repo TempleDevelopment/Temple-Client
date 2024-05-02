@@ -57,6 +57,7 @@ public class ModuleManager {
         addMod(new AimAssist());
         addMod(new Surround());
         addMod(new AutoTrap());
+        addMod(new SelfTrap());
         addMod(new Velocity());
         addMod(new TriggerBot());
         addMod(new Offhand());

@@ -163,31 +163,23 @@ public class LogoutSpots extends Module {
     }
 
     private void notifyPlayerReconnect(String playerName) {
-        if (shouldNotifyChat()) {
+        if (notify.value() != Notify.Bar) {
             Minecraft.getMinecraft().player.sendMessage(new TextComponentString(playerName + " reconnected!"));
         }
-        if (shouldNotifyBar()) {
+        if (notify.value() != Notify.Chat) {
             Notifications.addMessage(this.getName(), playerName + " reconnected!", NotificationType.INFO);
         }
     }
 
     private void notifyPlayerDisconnect(String playerName, Entity entity) {
         String location = "(" + (int) entity.posX + ", " + (int) entity.posY + ", " + (int) entity.posZ + ")";
-        if (shouldNotifyChat() && timer.getTimePassed() / 50L >= 5) {
+        if (notify.value() != Notify.Bar && timer.getTimePassed() / 50L >= 5) {
             Minecraft.getMinecraft().player.sendMessage(new TextComponentString(playerName + " disconnected at " + location + "!"));
             timer.reset();
         }
-        if (shouldNotifyBar()) {
+        if (notify.value() != Notify.Chat) {
             Notifications.addMessage(this.getName(), playerName + " disconnected at " + location + "!", NotificationType.INFO);
         }
-    }
-
-    private boolean shouldNotifyChat() {
-        return notify.value() == Notify.Chat || notify.value() == Notify.Both;
-    }
-
-    private boolean shouldNotifyBar() {
-        return notify.value() == Notify.Bar || notify.value() == Notify.Both;
     }
 
     @SubscribeEvent

@@ -114,9 +114,11 @@ public class Target extends Module {
             return;
         }
 
-        Color baseColor = Colors.INSTANCE.getColor();
+        Color color1 = Colors.INSTANCE.getGradient()[0];
+        Color color2 = Colors.INSTANCE.getGradient()[1];
         int alpha = (int) Math.round(opacity.doubleValue() * 255);
-        Color colorWithOpacity = new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), alpha);
+        Color color1WithOpacity = new Color(color1.getRed(), color1.getGreen(), color1.getBlue(), alpha);
+        Color color2WithOpacity = new Color(color2.getRed(), color2.getGreen(), color2.getBlue(), alpha);
 
         if (TARGET != Minecraft.getMinecraft().player && TARGET != null) {
             spinTargetTexture(
@@ -125,7 +127,8 @@ public class Target extends Module {
                     prevSpinStep,
                     spinStep,
                     defaultScale,
-                    colorWithOpacity
+                    color1WithOpacity,
+                    color2WithOpacity
             );
         }
     }
@@ -137,7 +140,8 @@ public class Target extends Module {
             Float prevSpinStep,
             Float spinStep,
             Float scale,
-            Color color
+            Color color1,
+            Color color2
     ) {
         Vec3d pos = interpolateEntity(entity);
 
@@ -148,7 +152,7 @@ public class Target extends Module {
         GlStateManager.rotate(lerp(prevSpinStep, spinStep, mc.getRenderPartialTicks()), 0.0F, 0.0F, 1.0F);
         GlStateManager.scale(-scale, -scale, scale);
         GlStateManager.translate(-0.75, -0.75, -0.01);
-        renderTexture(resourceLocation, color);
+        renderTexture(resourceLocation, color1, color2);
         restore();
     }
 
