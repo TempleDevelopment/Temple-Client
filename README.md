@@ -4,13 +4,6 @@
 	<br>
 		Temple Client is a Minecraft 1.12.2 forge mod that enhances the anarchy server experience. It is a free and open-source utility mod.
 	<br>
-	<a href="https://www.minecraft.net/"><img src="https://img.shields.io/badge/minecraft%20version-1.12.2-white" alt="Minecraft version"/></a>
-	<a href="https://github.com/TempleDevelopment/Temple-Client/releases"><img src="https://img.shields.io/github/downloads/TempleDevelopment/Temple-Client/total" alt="Downloads"/></a>
-	<a href="https://github.com/TempleDevelopment/Temple-Client/stargazers"><img src="https://github.com/TempleDevelopment/Temple-Client" alt="GitHub stars"/></a>
-	<br>
-	<a href="https://discord.gg/XZUGTpGCe8><img src="https://img.shields.io/discord/1125838140456849418?color=skyblue&logo=discord&logoColor=white" alt="Discord"/></a>
-	<br>
-	<br>
 </div>
 
 <p align="center">
