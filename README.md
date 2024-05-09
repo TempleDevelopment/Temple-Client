@@ -1,10 +1,6 @@
-<div align="center">
-	<img src="https://github.com/TempleDevelopment/Temple-Client/blob/main/github/images/logo.png" alt="meteor-plus" width="200px"/>
-	<h1>Temple Client</h1>
-	<br>
-		Temple Client is a Minecraft 1.12.2 forge mod that enhances the anarchy server experience. It is a free and open-source utility mod.
-	<br>
-</div>
+<p align="center">
+  <img src="https://github.com/TempleDevelopment/Temple-Client/blob/main/github/images/logo.png">
+</p>
 
 <p align="center">
   <a href="https://github.com/TempleDevelopment/Temple-Client/releases">
