@@ -19,6 +19,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
+import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
@@ -130,7 +131,7 @@ public class AutoTrap extends Module {
         EntityPlayer closestPlayer = null;
         double range = 1000;
         for (EntityPlayer playerEntity : Minecraft.getMinecraft().world.playerEntities) {
-            if (!playerEntity.equals(Minecraft.getMinecraft().player)) {
+            if (!playerEntity.equals(Minecraft.getMinecraft().player) && !TempleClient.friendManager.isFriend(playerEntity.getName())) {
                 double distance = Minecraft.getMinecraft().player.getDistance(playerEntity);
                 if (distance < range) {
                     closestPlayer = playerEntity;

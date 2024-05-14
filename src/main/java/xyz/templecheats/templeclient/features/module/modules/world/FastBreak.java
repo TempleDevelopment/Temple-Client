@@ -19,7 +19,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
@@ -28,7 +27,7 @@ import xyz.templecheats.templeclient.event.events.network.PacketEvent;
 import xyz.templecheats.templeclient.event.events.player.BlockResetEvent;
 import xyz.templecheats.templeclient.event.events.player.LeftClickBlockEvent;
 import xyz.templecheats.templeclient.event.events.player.RotationUpdateEvent;
-import xyz.templecheats.templeclient.event.events.render.Render3DEvent;
+import xyz.templecheats.templeclient.event.events.render.Render3DPostEvent;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.combat.Aura;
 import xyz.templecheats.templeclient.features.module.modules.combat.AutoCrystal;
@@ -206,7 +205,7 @@ public class FastBreak extends Module {
     }
 
     @Listener
-    public void onRender3D(Render3DEvent event) {
+    public void onRender3D(Render3DPostEvent event) {
         if (mode.value().equals(Mode.Packet) && !mc.player.capabilities.isCreativeMode && render.booleanValue()) {
             if (minePosition != null) {
                 if (!mc.world.isAirBlock(minePosition)) {
@@ -339,11 +338,6 @@ public class FastBreak extends Module {
         if (reset.booleanValue()) {
             event.setCanceled(true);
         }
-    }
-
-    @SubscribeEvent
-    public void onBlockBreak(BlockEvent.BreakEvent event) {
-        event.setCanceled(true);
     }
 
     @Listener

@@ -24,12 +24,13 @@ public class ModuleList extends HUD.HudElement {
      */
     private final ColorSetting color = new ColorSetting("Color", this, new Color(25, 25, 25, 255));
     private final BooleanSetting sideLine = new BooleanSetting("Side Line", this, false);
+    private final BooleanSetting background = new BooleanSetting("Background", this, false);
     private final BooleanSetting metadata = new BooleanSetting("Metadata", this, true);
     private float progress = 0.0f;
 
     public ModuleList() {
         super("ModuleList", "Shows active module in the HUD");
-        this.registerSettings(color, sideLine, metadata);
+        this.registerSettings(background, sideLine, metadata, color);
 
         this.setEnabled(true);
         this.setX(2);
@@ -61,9 +62,10 @@ public class ModuleList extends HUD.HudElement {
             double rectY = offsetY - (font18.getFontHeight() + 1);
             double rectWidth = (!this.isLeftOfCenter() ? -font18.getStringWidth(text) - 4 : font18.getStringWidth(text) + 4);
 
-
-            new RectBuilder(new Vec2d(this.getX() + rectOffsetX , rectY) , new Vec2d(this.getX() + 2 + rectOffsetX + rectWidth , offsetY))
-                    .color(color.getColor()).radius(1.0).draw();
+            if (background.booleanValue()) { // Check if background setting is enabled
+                new RectBuilder(new Vec2d(this.getX() + rectOffsetX , rectY) , new Vec2d(this.getX() + 2 + rectOffsetX + rectWidth , offsetY))
+                        .color(color.getColor()).radius(1.0).draw();
+            }
             if (sideLine.booleanValue()) {
                 new RectBuilder(new Vec2d(this.getX() + rectOffsetX , rectY) , new Vec2d(this.getX() + 2 + rectOffsetX , offsetY))
                         .color(fontColor).radius(1.0).draw();

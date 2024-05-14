@@ -144,6 +144,34 @@ public class RotationUtil implements Globals {
         this.rotate = rotate;
     }
 
+    public static float[] getRotations3(BlockPos blockPos, EnumFacing enumFacing) {
+        Vec3d vec3d = new Vec3d((double) blockPos.getX() + 0.5, mc.world.getBlockState(blockPos).getSelectedBoundingBox(mc.world, blockPos).maxY - 0.01, (double) blockPos.getZ() + 0.5);
+        vec3d = vec3d.add(new Vec3d(enumFacing.getDirectionVec()).scale(0.5));
+
+        Vec3d vec3d2 = getEyePosition();
+
+        double d = vec3d.x - vec3d2.x;
+        double d2 = vec3d.y - vec3d2.y;
+        double d3 = vec3d.z - vec3d2.z;
+        double d4 = d;
+        double d5 = d3;
+        double d6 = Math.sqrt(d4 * d4 + d5 * d5);
+
+        float f = (float)(Math.toDegrees(Math.atan2(d3, d)) - 90.0f);
+        float f2 = (float)(-Math.toDegrees(Math.atan2(d2, d6)));
+
+        float[] ret = new float[2];
+        ret[0] = mc.player.rotationYaw + MathHelper.wrapDegrees((float)(f - mc.player.rotationYaw));
+        ret[1] = mc.player.rotationPitch + MathHelper.wrapDegrees((float)(f2 - mc.player.rotationPitch));
+
+        return ret;
+    }
+
+    public static Vec3d getEyePosition() {
+        return new Vec3d(mc.player.posX, mc.player.posY + mc.player.getEyeHeight(), mc.player.posZ);
+    }
+
+
     public RotationUtil(float yaw, float pitch) {
         this(yaw, pitch, Rotate.None);
     }

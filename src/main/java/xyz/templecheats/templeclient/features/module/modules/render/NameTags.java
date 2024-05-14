@@ -17,8 +17,7 @@ import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
-import xyz.templecheats.templeclient.event.events.render.Render3DEvent;
-import xyz.templecheats.templeclient.event.events.render.Render3DPrePreEvent;
+import xyz.templecheats.templeclient.event.events.render.Render3DPreEvent;
 import xyz.templecheats.templeclient.features.gui.font.CFont;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.Colors;
@@ -63,7 +62,7 @@ public class NameTags extends Module {
     }
 
     @Listener
-    public void onRender3DPost(Render3DEvent event) {
+    public void onRender3DPost(Render3DPreEvent event) {
         for (EntityPlayer player: this.players) {
             if (player.equals(mc.player) || player.isDead || player.getHealth() <= 0 || player.isInvisible()) {
                 continue;

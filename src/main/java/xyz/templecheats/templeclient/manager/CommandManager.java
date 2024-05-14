@@ -31,6 +31,7 @@ public class CommandManager {
         registerCommand(new BindCommand());
         registerCommand(new ClickguiCommand());
         registerCommand(new CoordsCommand());
+        registerCommand(new DeathCoordsCommand());
         registerCommand(new DisconnectCommand());
         registerCommand(new FakePlayerCommand());
         registerCommand(new FriendCommand());

@@ -4,6 +4,8 @@ import net.minecraft.tileentity.*;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
+import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
+import xyz.templecheats.templeclient.event.events.render.Render3DPrePreEvent;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
@@ -24,8 +26,8 @@ public class Storage extends Module {
         registerSettings(chests, dispensers, eChests, furnaces, shulkers, spawner);
     }
 
-    @SubscribeEvent
-    public void onRender(RenderWorldLastEvent e) {
+    @Listener
+    public void onRender(Render3DPrePreEvent event) {
         for (TileEntity tileEntity : mc.world.loadedTileEntityList) {
             if (chests.booleanValue() && tileEntity instanceof TileEntityChest ||
                     eChests.booleanValue() && tileEntity instanceof TileEntityEnderChest ||

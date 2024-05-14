@@ -7,7 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import org.lwjgl.input.Keyboard;
 import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
-import xyz.templecheats.templeclient.event.events.render.Render3DEvent;
+import xyz.templecheats.templeclient.event.events.render.Render3DPostEvent;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.mixins.accessor.IPlayerControllerMP;
 import xyz.templecheats.templeclient.mixins.accessor.IRenderGlobal;
@@ -34,7 +34,7 @@ public class Break extends Module {
     }
 
     @Listener
-    public void onRender3D(Render3DEvent event) {
+    public void onRender3D(Render3DPostEvent event) {
         if (mc.player == null || mc.world == null) return;
         RayTraceResult objectMouseOver = Minecraft.getMinecraft().objectMouseOver;
         posPlayerLookingAt = objectMouseOver.getBlockPos();
@@ -81,6 +81,7 @@ public class Break extends Module {
             }
         lastMinePos = pos;
         } else {
+            if (lastMinePos == null) return;
             if (normalizedOpacity > 0.0F && mc.world.getBlockState(lastMinePos).getBlock() == Blocks.AIR) {
                 normalizedOpacity = (normalizedOpacity - 0.047F * event.partialTicks);
                 GradientShader.setup(normalizedOpacity);

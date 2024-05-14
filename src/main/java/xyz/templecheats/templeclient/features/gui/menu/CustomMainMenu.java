@@ -20,9 +20,15 @@ public class CustomMainMenu extends GuiMainMenu {
 
     private void playMusic() {
         if (!mc.getSoundHandler().isSoundPlaying(TempleClient.SONG_MANAGER.getMenuSong())) {
-            mc.getSoundHandler().playSound(TempleClient.SONG_MANAGER.getMenuSong());
+            try {
+                mc.getSoundHandler().playSound(TempleClient.SONG_MANAGER.getMenuSong());
+            } catch (IllegalArgumentException ex) {
+                ex.printStackTrace();
+                System.err.println("Value already present: " + ex.getMessage());
+            }
         }
     }
+
 
     @Override
     public void initGui() {

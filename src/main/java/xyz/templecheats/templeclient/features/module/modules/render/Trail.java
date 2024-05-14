@@ -6,6 +6,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
+import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
+import xyz.templecheats.templeclient.event.events.render.Render3DPrePreEvent;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.Colors;
 import xyz.templecheats.templeclient.util.render.shader.RainbowUtil;
@@ -47,8 +49,8 @@ public class Trail extends Module {
         else return mc.gameSettings.thirdPersonView != 0;
     }
 
-    @Override
-    public void onRenderWorld(float partialTicks) {
+    @Listener
+    public void onRenderWorld(Render3DPrePreEvent event) {
         long currentTime = System.currentTimeMillis();
 
         points.removeIf(point -> (currentTime - point.time) > length.doubleValue() * 100);
@@ -60,9 +62,9 @@ public class Trail extends Module {
             }
             if (player == mc.player && check()) {
 
-                double x = lerp((float) player.lastTickPosX, (float) player.posX, partialTicks);
-                double y = lerp((float) player.lastTickPosY, (float) player.posY, partialTicks);
-                double z = lerp((float) player.lastTickPosZ, (float) player.posZ, partialTicks);
+                double x = lerp((float) player.lastTickPosX, (float) player.posX, event.partialTicks);
+                double y = lerp((float) player.lastTickPosY, (float) player.posY, event.partialTicks);
+                double z = lerp((float) player.lastTickPosZ, (float) player.posZ, event.partialTicks);
 
                 points.add(new Point(new Vec3d(x, y, z)));
                 setup();

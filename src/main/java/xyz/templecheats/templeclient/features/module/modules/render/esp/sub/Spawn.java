@@ -6,7 +6,7 @@ import net.minecraft.entity.item.EntityEnderCrystal;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
-import xyz.templecheats.templeclient.event.events.render.Render3DEvent;
+import xyz.templecheats.templeclient.event.events.render.Render3DPostEvent;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.math.MathUtil;
 import xyz.templecheats.templeclient.util.render.animation.Easing;
@@ -16,10 +16,8 @@ import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 import xyz.templecheats.templeclient.util.time.TimerUtil;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.lwjgl.opengl.GL11.*;
 import static xyz.templecheats.templeclient.util.render.RenderUtil.drawGradientCircleOutline;
@@ -85,7 +83,7 @@ public class Spawn extends Module {
     }
 
     @Listener
-    public void onRender3D(Render3DEvent event) {
+    public void onRender3D(Render3DPostEvent event) {
         if (mc.player == null || mc.world == null) return;
 
         for (Entity entity : mc.world.loadedEntityList) {

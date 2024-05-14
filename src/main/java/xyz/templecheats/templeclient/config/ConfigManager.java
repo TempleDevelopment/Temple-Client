@@ -5,6 +5,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.HUD;
@@ -15,6 +17,7 @@ import xyz.templecheats.templeclient.util.setting.Setting;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ConfigManager {
 
@@ -24,6 +27,8 @@ public class ConfigManager {
     private final File modulesDirectory;
     private final File hudElementsDirectory;
     private final File friendsDirectory;
+    private File baseFinderLogDirectory;
+    private File coordsLoggerLogDirectory;
     private File altsDirectory;
     private File altsFile;
 
@@ -33,6 +38,7 @@ public class ConfigManager {
         this.hudElementsDirectory = new File(this.mainDirectory, "Hud Elements");
         this.friendsDirectory = new File(this.mainDirectory, "Friends");
         this.altsDirectory = new File(this.mainDirectory, "Alts");
+        this.baseFinderLogDirectory = new File(this.mainDirectory, "Base Finder");
 
         if (!this.modulesDirectory.exists()) {
             this.modulesDirectory.mkdirs();
@@ -66,20 +72,15 @@ public class ConfigManager {
 
     private void saveModules() {
 
-        //iterate through each module to save its config
         for (Module module: ModuleManager.getModules()) {
 
-            //file that the config will be saved to
             final File moduleConfigFile = new File(this.modulesDirectory, module.getName() + ".json");
 
-            //json object that will store panels of the module
             final JsonObject moduleObject = new JsonObject();
 
-            //add panels
             moduleObject.addProperty("toggled", module.isToggled());
             moduleObject.addProperty("key", module.getKey());
 
-            //add settings
             final List < Setting < ? >> settings = TempleClient.settingsManager.getSettingsByMod(module);
             if (!settings.isEmpty()) {
                 final JsonObject settingsObject = new JsonObject();
@@ -91,7 +92,6 @@ public class ConfigManager {
                 moduleObject.add("settings", settingsObject);
             }
 
-            //write to file
             try {
                 final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(moduleConfigFile));
                 bufferedWriter.write(GSON.toJson(moduleObject));
@@ -107,27 +107,21 @@ public class ConfigManager {
 
         for (Module module: ModuleManager.getModules()) {
 
-            //file that the config was saved to
             final File moduleConfigFile = new File(this.modulesDirectory, module.getName() + ".json");
 
-            //dont try to load config file if it doesnt exist
             if (!moduleConfigFile.exists()) {
                 continue;
             }
 
             try {
-                //open a file reader and json reader to read the config file
                 final FileReader fileReader = new FileReader(moduleConfigFile);
                 final JsonReader jsonReader = GSON.newJsonReader(fileReader);
 
-                //get json object from file
                 final JsonObject moduleObject = GSON.fromJson(jsonReader, JsonObject.class);
 
-                //deserialize panels
                 module.setToggled(moduleObject.get("toggled").getAsBoolean());
                 module.setKey(moduleObject.get("key").getAsInt());
 
-                //deserialize settings
                 if (moduleObject.has("settings")) {
                     final JsonObject settingsObject = moduleObject.get("settings").getAsJsonObject();
                     for (Setting < ? > setting : TempleClient.settingsManager.getSettingsByMod(module)) {
@@ -147,21 +141,16 @@ public class ConfigManager {
 
         for (HUD.HudElement element: HUD.INSTANCE.getHudElements()) {
 
-            //file that the config will be saved to
             final File hudElementConfigFile = new File(this.hudElementsDirectory, element.getName() + ".json");
 
-            //json object that will store panels of the module
             final JsonObject hudElementObject = new JsonObject();
 
-            //add panels
             hudElementObject.addProperty("enabled", element.isEnabled());
             hudElementObject.addProperty("x", element.getX());
             hudElementObject.addProperty("y", element.getY());
 
-            //add settings
             final List < Setting < ? >> settings = TempleClient.settingsManager.getSettingsByMod(element);
             if (!settings.isEmpty()) {
-                //json object just for settings
                 final JsonObject settingsObject = new JsonObject();
 
                 for (Setting < ? > setting : settings) {
@@ -171,7 +160,6 @@ public class ConfigManager {
                 hudElementObject.add("settings", settingsObject);
             }
 
-            //write to file
             try {
                 final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(hudElementConfigFile));
                 bufferedWriter.write(GSON.toJson(hudElementObject));
@@ -186,28 +174,22 @@ public class ConfigManager {
     private void loadHud() {
         for (HUD.HudElement element: HUD.INSTANCE.getHudElements()) {
 
-            //file that the config was saved to
             final File hudElementConfigFile = new File(this.hudElementsDirectory, element.getName() + ".json");
 
-            //dont try to load config file if it doesnt exist
             if (!hudElementConfigFile.exists()) {
                 continue;
             }
 
             try {
-                //open a file reader and json reader to read the config file
                 final FileReader fileReader = new FileReader(hudElementConfigFile);
                 final JsonReader jsonReader = GSON.newJsonReader(fileReader);
 
-                //get json object from file
                 final JsonObject hudElementObject = GSON.fromJson(jsonReader, JsonObject.class);
 
-                //deserialize panels
                 element.setEnabled(hudElementObject.get("enabled").getAsBoolean());
                 element.setX(hudElementObject.get("x").getAsDouble());
                 element.setY(hudElementObject.get("y").getAsDouble());
 
-                //deserialize settings
                 if (hudElementObject.has("settings")) {
                     final JsonObject settingsObject = hudElementObject.get("settings").getAsJsonObject();
                     for (Setting < ? > setting : TempleClient.settingsManager.getSettingsByMod(element)) {
@@ -280,11 +262,30 @@ public class ConfigManager {
         }
     }
 
-    public void resetModule(Module module) {
-        final File moduleConfigFile = new File(this.modulesDirectory, module.getName() + ".json");
-        if (moduleConfigFile.exists()) {
-            moduleConfigFile.delete();
+    public void setupBaseFinderLogging() {
+        final File baseFinderLogDirectory = new File(mainDirectory, "Base Finder");
+        if (!baseFinderLogDirectory.exists()) {
+            baseFinderLogDirectory.mkdirs();
         }
-        loadAll();
+    }
+
+    public void logBaseFound(ChunkPos chunkPos, Map<String, List<BlockPos>> foundItems) {
+        File logFile = new File(baseFinderLogDirectory, "found_bases.txt");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(logFile, true))) {
+            writer.write("Base found at Chunk [" + chunkPos.x + ", " + chunkPos.z + "]:\n");
+            foundItems.forEach((item, positions) -> {
+                try {
+                    writer.write(" - " + positions.size() + " x " + item + " at positions:\n");
+                    for (BlockPos pos : positions) {
+                        writer.write("   [" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + "]\n");
+                    }
+                } catch (IOException e) {
+                    System.err.println("Error writing to base log file: " + e.getMessage());
+                }
+            });
+            writer.newLine();
+        } catch (IOException e) {
+            System.err.println("Error opening base log file: " + e.getMessage());
+        }
     }
 }

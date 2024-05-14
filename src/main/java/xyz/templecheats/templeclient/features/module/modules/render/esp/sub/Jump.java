@@ -8,7 +8,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
 import xyz.templecheats.templeclient.event.events.player.JumpEvent;
-import xyz.templecheats.templeclient.event.events.render.Render3DEvent;
+import xyz.templecheats.templeclient.event.events.render.Render3DPostEvent;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
@@ -85,7 +85,7 @@ public class Jump extends Module {
     }
 
     @Listener
-    public void onRender3D(Render3DEvent event) {
+    public void onRender3D(Render3DPostEvent event) {
         Collections.reverse(circleList);
         for (Circle circle : circleList) {
             double x = circle.pos.x - mc.getRenderManager().viewerPosX;

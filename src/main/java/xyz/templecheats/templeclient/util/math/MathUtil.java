@@ -17,26 +17,11 @@ public final class MathUtil {
 
     public static final Minecraft mc = Minecraft.getMinecraft();
 
-    public static Vec3d interpolateEntity(Entity entity, float time) {
-        return new Vec3d(entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * time,
-                entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * time,
-                entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * time);
-    }
-    public static float gaussian(float x, float s) {
-        double output = 1.0 / Math.sqrt(2.0 * Math.PI * (s * s));
-        return (float)(output * Math.exp(-(x * x) / (2.0 * (s * s))));
-    }
-    public static double radToDeg(double rad) {
-        return rad * (float)(180.0f / Math.PI);
-    }
-
     public static double degToRad(double deg) {
         return deg * (float)(Math.PI / 180.0f);
     }
 
-    public static Vec3d direction(float yaw) {
-        return new Vec3d(Math.cos(degToRad(yaw + 90f)), 0, Math.sin(degToRad(yaw + 90f)));
-    }
+
 
     public static float[] calcAngle(Vec3d from, Vec3d to) {
         final double difX = to.x - from.x;
@@ -95,21 +80,6 @@ public final class MathUtil {
         return (float) (Math.random() * (max - min) + min);
     }
 
-    public static Vec3d mult(Vec3d factor, Vec3d multiplier) {
-        return new Vec3d(factor.x * multiplier.x, factor.y * multiplier.y, factor.z * multiplier.z);
-    }
-
-    public static Vec3d mult(Vec3d factor, float multiplier) {
-        return new Vec3d(factor.x * multiplier, factor.y * multiplier, factor.z * multiplier);
-    }
-
-    public static Vec3d div(Vec3d factor, Vec3d divisor) {
-        return new Vec3d(factor.x / divisor.x, factor.y / divisor.y, factor.z / divisor.z);
-    }
-
-    public static Vec3d div(Vec3d factor, float divisor) {
-        return new Vec3d(factor.x / divisor, factor.y / divisor, factor.z / divisor);
-    }
 
     public static double round(double value, int places) {
         if (places < 0) {
@@ -118,9 +88,6 @@ public final class MathUtil {
         return new BigDecimal(value).setScale(places, RoundingMode.HALF_UP).doubleValue();
     }
 
-    public static double normalize(double value, double minIn, double maxIn, double minOut, double maxOut) {
-        return lerp((float) minOut, (float) maxOut, (float) ((value - minIn) / (maxIn - minIn)));
-    }
 
     public static float clamp(float val, float min, float max) {
         if (val <= min) {
@@ -132,14 +99,7 @@ public final class MathUtil {
         return val;
     }
 
-    public static float wrap(float val) {
-        val = val % 360.0f;
-        if (val >= 180.0f)
-            val -= 360.0f;
-        if (val < -180.0f)
-            val += 360.0f;
-        return val;
-    }
+
 
     // linearly maps value from the range (a..b) to (c..d)
     public static double map(double value, double a, double b, double c, double d) {
@@ -147,14 +107,6 @@ public final class MathUtil {
         value = (value - a) / (b - a);
         // then map it from (0..1) to (c..d) and return it
         return c + value * (d - c);
-    }
-
-    public static double linear(double from, double to, double incline) {
-        return (from < to - incline) ? (from + incline) : ((from > to + incline) ? (from - incline) : to);
-    }
-
-    public static double parabolic(double from, double to, double incline) {
-        return from + (to - from) / incline;
     }
 
     public static double getDistanceToCenter(EntityPlayer player, BlockPos pos) {
@@ -217,9 +169,6 @@ public final class MathUtil {
         return (float) (output * Math.exp(-(x * x) / (2.0 * (sigma * sigma))));
     }
 
-        public static float randomBetween(float min, float max) {
-        return min + (new Random().nextFloat() * (max - min));
-    }
 
     public static int randomBetween(int min, int max) {
         return min + (new Random().nextInt() * (max - min));

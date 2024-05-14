@@ -12,6 +12,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.templecheats.templeclient.features.module.modules.client.Colors;
 import xyz.templecheats.templeclient.features.module.modules.render.*;
 import xyz.templecheats.templeclient.features.module.modules.render.esp.sub.Hand;
+import xyz.templecheats.templeclient.features.module.modules.render.norender.sub.Player;
+import xyz.templecheats.templeclient.features.module.modules.render.norender.sub.World;
 
 import javax.vecmath.Vector3f;
 import java.awt.*;
@@ -35,7 +37,7 @@ public abstract class MixinEntityRenderer {
     @Inject(method = "renderItemActivation", at = @At("HEAD"), cancellable = true)
     public void noRenderItemActivation(CallbackInfo info) {
         if (itemActivationItem != null && itemActivationItem.getItem().equals(Items.TOTEM_OF_UNDYING)) {
-            if (NoRender.preventTotem()) {
+            if (Player.preventTotem()) {
                 info.cancel();
             }
         }
@@ -43,7 +45,7 @@ public abstract class MixinEntityRenderer {
 
     @Inject(method = "setupFog", at = @At("HEAD"), cancellable = true)
     private void noRenderFog(int startCoords, float partialTicks, CallbackInfo ci) {
-        if (NoRender.preventFog()) {
+        if (World.preventFog()) {
             GlStateManager.setFogDensity(0.0f);
             ci.cancel();
         }
@@ -51,13 +53,13 @@ public abstract class MixinEntityRenderer {
 
     @Redirect(method = "setupFog", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/EntityLivingBase;isPotionActive(Lnet/minecraft/potion/Potion;)Z"))
     private boolean noRenderBlindness(EntityLivingBase instance, Potion potion) {
-        if (NoRender.preventBlindness()) return false;
+        if (Player.preventBlindness()) return false;
         return instance.isPotionActive(potion);
     }
 
     @ModifyVariable(method = "setupCameraTransform", index = 4, at = @At("STORE"))
     private float noRenderNausea(float original) {
-        if (NoRender.preventNausea()) return 0.0f;
+        if (Player.preventNausea()) return 0.0f;
         return original;
     }
 
@@ -81,20 +83,20 @@ public abstract class MixinEntityRenderer {
 
     @Redirect(method = "setupCameraTransform", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/EntityRenderer;hurtCameraEffect(F)V"))
     private void noHurtCam(EntityRenderer instance, float partialTicks) {
-        if (NoRender.preventHurtCam()) return;
+        if (Player.preventHurtCam()) return;
         else this.hurtCameraEffect(partialTicks);
     }
 
     @Inject(method = "applyBobbing", at = @At("HEAD"), cancellable = true)
     private void noCameraBob(float partialTicks, CallbackInfo ci) {
-        if(NoRender.preventBobbing()) {
+        if(Player.preventBobbing()) {
             ci.cancel();
         }
     }
 
     @Inject(method = "renderRainSnow", at = @At("HEAD"), cancellable = true)
     private void cancelWeather(float partialTicks, CallbackInfo ci) {
-        if (NoRender.preventWeather()) {
+        if (World.preventWeather()) {
             ci.cancel();
         }
     }

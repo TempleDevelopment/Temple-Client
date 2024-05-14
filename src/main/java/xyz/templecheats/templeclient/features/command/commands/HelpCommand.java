@@ -19,6 +19,7 @@ public class HelpCommand extends Command {
 
         Minecraft.getMinecraft().player.sendMessage(new TextComponentString(commandPrefix + ".bind - Binds a module to a key"));
         Minecraft.getMinecraft().player.sendMessage(new TextComponentString(commandPrefix + ".coords - Copies your coordinates to your clipboard"));
+        Minecraft.getMinecraft().player.sendMessage(new TextComponentString(commandPrefix + ".deathcoords - Shows the coordinates of your last death"));
         Minecraft.getMinecraft().player.sendMessage(new TextComponentString(commandPrefix + ".disconnect - Disconnects from game session"));
         Minecraft.getMinecraft().player.sendMessage(new TextComponentString(commandPrefix + ".friend - Adds, removes & lists your friends"));
         Minecraft.getMinecraft().player.sendMessage(new TextComponentString(commandPrefix + ".fakeplayer - Adds a FakePlayer"));

@@ -11,6 +11,7 @@ import xyz.templecheats.templeclient.features.module.modules.movement.speed.Spee
 import xyz.templecheats.templeclient.features.module.modules.player.*;
 import xyz.templecheats.templeclient.features.module.modules.render.*;
 import xyz.templecheats.templeclient.features.module.modules.render.esp.ESP;
+import xyz.templecheats.templeclient.features.module.modules.render.norender.*;
 import xyz.templecheats.templeclient.features.module.modules.render.particle.Particle;
 import xyz.templecheats.templeclient.features.module.modules.render.xray.XRay;
 import xyz.templecheats.templeclient.features.module.modules.world.*;
@@ -49,18 +50,20 @@ public class ModuleManager {
         addMod(new TotemPopNotify());
         // Combat
         addMod(new AutoDisconnect());
+        addMod(new TriggerBot());
         addMod(new AutoCrystal());
-        addMod(new BowAimbot());
-        addMod(new BowSpam());
+        addMod(new HoleFiller());
         addMod(new AutoArmor());
         addMod(new AutoTotem());
         addMod(new AimAssist());
+        addMod(new BowAimbot());
+        addMod(new Offhand());
+        addMod(new BowSpam());
         addMod(new Surround());
         addMod(new AutoTrap());
         addMod(new SelfTrap());
         addMod(new Velocity());
-        addMod(new TriggerBot());
-        addMod(new Offhand());
+        addMod(new Quiver());
         addMod(new Aura());
         // Miscellaneous
         addMod(new ExtraTooltips());
@@ -72,8 +75,8 @@ public class ModuleManager {
         addMod(new Log4jAlert());
         addMod(new AutoMount());
         addMod(new SkinBlink());
+        addMod(new AntiAFK());
         // Client
-        addMod(new MiddleClick());
         addMod(new Particles());
         addMod(new ClickGUI());
         addMod(new Panic());
@@ -85,6 +88,8 @@ public class ModuleManager {
         addMod(new TunnelSpeed());
         addMod(new AutoWalk());
         addMod(new RotationLock());
+        addMod(new Parkour());
+        addMod(new Safewalk());
         addMod(new GuiWalk());
         addMod(new NoSlow());
         addMod(new FastFall());
@@ -115,15 +120,17 @@ public class ModuleManager {
         addMod(new XRay());
         addMod(new ESP());
         // World
-        addMod(new BaseFinder());
         addMod(new ChunkAnimator());
+        addMod(new BaseFinder());
         addMod(new Scaffold());
-        addMod(new Nuker());
         addMod(new MobOwner());
         addMod(new NewChunks());
         addMod(new FastBreak());
+        addMod(new Nuker());
         // Player
+        addMod(new MiddleClick());
         addMod(new Freecam());
+        addMod(new AutoFish());
         addMod(new AutoEat());
         addMod(new FastUse());
         addMod(new XCarry());

@@ -19,7 +19,6 @@ public class AimAssist extends Module {
      */
     private final BooleanSetting modifyPitch = new BooleanSetting("Pitch", this, true);
     private final BooleanSetting modifyYaw = new BooleanSetting("Yaw", this, true);
-
     private final BooleanSetting visibility = new BooleanSetting("Visible-Only", this, true);
     private final DoubleSetting smoothing = new DoubleSetting("Smoothing-Factor", this, 1.0f, 50.0f, 5.0f);
     private final DoubleSetting fov = new DoubleSetting("FOV", this, 1.0f, 360.0f, 40.0f);

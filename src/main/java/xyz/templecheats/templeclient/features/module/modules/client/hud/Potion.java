@@ -4,7 +4,6 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.features.module.modules.client.HUD;
@@ -14,11 +13,11 @@ import java.util.List;
 
 import static xyz.templecheats.templeclient.features.gui.font.Fonts.font18;
 
-public class PotionHUD extends HUD.HudElement {
+public class Potion extends HUD.HudElement {
 
-    public static PotionHUD INSTANCE;
-    public PotionHUD() {
-        super("PotionHUD", "Shows active potion effects in the HUD");
+    public static Potion INSTANCE;
+    public Potion() {
+        super("Potion", "Shows active potion effects in the HUD");
         INSTANCE = this;
     }
 
@@ -56,7 +55,7 @@ public class PotionHUD extends HUD.HudElement {
 
     private String getEffectText(PotionEffect effect) {
         String effectName = I18n.format(effect.getEffectName());
-        String effectDuration = Potion.getPotionDurationString(effect, 1.0F);
+        String effectDuration = net.minecraft.potion.Potion.getPotionDurationString(effect, 1.0F);
         return effectName + " " + ChatFormatting.WHITE + effectDuration;
     }
 }

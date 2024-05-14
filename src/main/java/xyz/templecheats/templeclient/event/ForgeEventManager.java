@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.event.events.player.LeftClickBlockEvent;
 import xyz.templecheats.templeclient.event.events.render.Render3DEvent;
+import xyz.templecheats.templeclient.event.events.render.Render3DPostEvent;
 import xyz.templecheats.templeclient.event.events.render.Render3DPreEvent;
 import xyz.templecheats.templeclient.event.events.render.Render3DPrePreEvent;
 import xyz.templecheats.templeclient.features.module.Module;
@@ -46,11 +47,14 @@ public class ForgeEventManager {
         final Render3DPrePreEvent render3DPrePreEvent = new Render3DPrePreEvent(event.getPartialTicks());
         TempleClient.eventBus.dispatchEvent(render3DPrePreEvent);
 
-        final Render3DPreEvent render3dPreEvent = new Render3DPreEvent(event.getPartialTicks());
-        TempleClient.eventBus.dispatchEvent(render3dPreEvent);
+        final Render3DPreEvent render3DPreEvent = new Render3DPreEvent(event.getPartialTicks());
+        TempleClient.eventBus.dispatchEvent(render3DPreEvent);
 
         final Render3DEvent render3dEvent = new Render3DEvent(event.getPartialTicks());
         TempleClient.eventBus.dispatchEvent(render3dEvent);
+
+        final Render3DPostEvent render3dEventPost = new Render3DPostEvent(event.getPartialTicks());
+        TempleClient.eventBus.dispatchEvent(render3dEventPost);
 
         deltaTime = System.currentTimeMillis() - lastFrame;
         lastFrame = System.currentTimeMillis();

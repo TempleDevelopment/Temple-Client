@@ -53,7 +53,7 @@ public class Shader extends Module {
     }
 
     @Listener
-    public void onRender3d(Render3DPreEvent event) {
+    public void onRender3d(Render3DEvent event) {
         if (mc.gameSettings.thirdPersonView != 0 || mc.world == null) {
             return;
         }

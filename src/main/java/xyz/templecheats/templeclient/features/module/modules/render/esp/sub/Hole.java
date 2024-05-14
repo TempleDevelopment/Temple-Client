@@ -1,10 +1,10 @@
 package xyz.templecheats.templeclient.features.module.modules.render.esp.sub;
 
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
+import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
 import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.event.ForgeEventManager;
+import xyz.templecheats.templeclient.event.events.render.Render3DPrePreEvent;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.Colors;
 import xyz.templecheats.templeclient.manager.HoleManager;
@@ -52,8 +52,8 @@ public class Hole extends Module {
         return renderHoles.stream().anyMatch(renderHole -> renderHole.holePos.getPos().equals(pos.getPos()));
     }
 
-    @SubscribeEvent
-    public void onRender3d(RenderWorldLastEvent event) {
+    @Listener
+    public void onRenderWorld(Render3DPrePreEvent event) {
         TempleClient.holeManager.loadHoles(range.intValue());
         for (HoleManager.HolePos holePos : TempleClient.holeManager.getHoles()) {
             final boolean diff = differentRenderType(holePos);

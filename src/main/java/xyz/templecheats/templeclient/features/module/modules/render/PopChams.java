@@ -11,7 +11,7 @@ import org.lwjgl.input.Keyboard;
 import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
 import xyz.templecheats.templeclient.event.events.network.PacketEvent;
 import xyz.templecheats.templeclient.event.events.player.ModelEvent;
-import xyz.templecheats.templeclient.event.events.render.Render3DEvent;
+import xyz.templecheats.templeclient.event.events.render.Render3DPostEvent;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.render.animation.Animation;
 import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
@@ -59,7 +59,8 @@ public class PopChams extends Module {
     public void onPacketReceive(PacketEvent.Receive event) {
         if (event.getPacket() instanceof SPacketEntityStatus) {
             final SPacketEntityStatus packet = (SPacketEntityStatus) event.getPacket();
-            final Entity entity = packet.getEntity(mc.world);
+            if (packet == null) return;
+                final Entity entity = packet.getEntity(mc.world);
             if (entity instanceof EntityPlayer && packet.getOpCode() == 35 && entity.isEntityAlive()) {
                 invokeEntity((EntityPlayer) entity);
             }
@@ -104,7 +105,7 @@ public class PopChams extends Module {
     }
 
     @Listener
-    public void onRender3D(Render3DEvent event) {
+    public void onRender3D(Render3DPostEvent event) {
         this.chams.forEach(cham -> {
             cham.animation.progress(movementHeight.floatValue());
             float animFac = (float) cham.animation.getProgress();
