@@ -24,28 +24,23 @@ public class ConfigManager {
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private final File mainDirectory;
-    private final File modulesDirectory;
-    private final File hudElementsDirectory;
+    private final File configDirectory;
     private final File friendsDirectory;
-    private File baseFinderLogDirectory;
-    private File coordsLoggerLogDirectory;
-    private File altsDirectory;
-    private File altsFile;
+    private final File altsDirectory;
+    private final File altsFile;
+    private final File defaultConfigFile;
+    private final File baseFinderLogDirectory;
 
     public ConfigManager() {
         this.mainDirectory = new File(System.getProperty("user.dir") + File.separator + "Temple Client");
-        this.modulesDirectory = new File(this.mainDirectory, "Modules");
-        this.hudElementsDirectory = new File(this.mainDirectory, "Hud Elements");
-        this.friendsDirectory = new File(this.mainDirectory, "Friends");
-        this.altsDirectory = new File(this.mainDirectory, "Alts");
-        this.baseFinderLogDirectory = new File(this.mainDirectory, "Base Finder");
+        this.configDirectory = new File(this.mainDirectory, "1.12.2" + File.separator + "Config");
+        this.friendsDirectory = new File(this.mainDirectory, "1.12.2" + File.separator + "Friends");
+        this.altsDirectory = new File(this.mainDirectory, "1.12.2" + File.separator + "Alts");
+        this.defaultConfigFile = new File(this.configDirectory, "config.cfg");
+        this.baseFinderLogDirectory = new File(this.mainDirectory, "1.12.2" + File.separator + "Base Finder");
 
-        if (!this.modulesDirectory.exists()) {
-            this.modulesDirectory.mkdirs();
-        }
-
-        if (!this.hudElementsDirectory.exists()) {
-            this.hudElementsDirectory.mkdirs();
+        if (!this.configDirectory.exists()) {
+            this.configDirectory.mkdirs();
         }
 
         if (!this.friendsDirectory.exists()) {
@@ -55,171 +50,146 @@ public class ConfigManager {
         if (!this.altsDirectory.exists()) {
             this.altsDirectory.mkdirs();
         }
+
+        if (!this.baseFinderLogDirectory.exists()) {
+            this.baseFinderLogDirectory.mkdirs();
+        }
+
         this.altsFile = new File(this.altsDirectory, "alt_accounts.json");
     }
 
+    public File getConfigDirectory() {
+        return configDirectory;
+    }
+
     public void saveAll() {
-        this.saveModules();
-        this.saveHud();
+        this.saveConfig(this.defaultConfigFile);
         this.saveFriends();
     }
 
     public void loadAll() {
-        this.loadModules();
-        this.loadHud();
+        this.loadConfig(this.defaultConfigFile);
         this.loadFriends();
     }
 
-    private void saveModules() {
+    public void saveConfig(File file) {
+        final JsonObject configObject = new JsonObject();
 
-        for (Module module: ModuleManager.getModules()) {
-
-            final File moduleConfigFile = new File(this.modulesDirectory, module.getName() + ".json");
-
+        for (Module module : ModuleManager.getModules()) {
             final JsonObject moduleObject = new JsonObject();
-
             moduleObject.addProperty("toggled", module.isToggled());
             moduleObject.addProperty("key", module.getKey());
 
-            final List < Setting < ? >> settings = TempleClient.settingsManager.getSettingsByMod(module);
-            if (!settings.isEmpty()) {
+            final List<Setting<?>> settings = TempleClient.settingsManager.getSettingsByMod(module);
+            if (settings != null && !settings.isEmpty()) {
                 final JsonObject settingsObject = new JsonObject();
-
-                for (Setting < ? > setting : settings) {
+                for (Setting<?> setting : settings) {
                     setting.serialize(settingsObject);
                 }
-
                 moduleObject.add("settings", settingsObject);
             }
-
-            try {
-                final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(moduleConfigFile));
-                bufferedWriter.write(GSON.toJson(moduleObject));
-                bufferedWriter.close();
-            } catch (Throwable t) {
-                System.err.println("Could not save config for " + module.getName() + "!");
-                t.printStackTrace();
-            }
+            configObject.add(module.getName(), moduleObject);
         }
-    }
 
-    private void loadModules() {
-
-        for (Module module: ModuleManager.getModules()) {
-
-            final File moduleConfigFile = new File(this.modulesDirectory, module.getName() + ".json");
-
-            if (!moduleConfigFile.exists()) {
-                continue;
-            }
-
-            try {
-                final FileReader fileReader = new FileReader(moduleConfigFile);
-                final JsonReader jsonReader = GSON.newJsonReader(fileReader);
-
-                final JsonObject moduleObject = GSON.fromJson(jsonReader, JsonObject.class);
-
-                module.setToggled(moduleObject.get("toggled").getAsBoolean());
-                module.setKey(moduleObject.get("key").getAsInt());
-
-                if (moduleObject.has("settings")) {
-                    final JsonObject settingsObject = moduleObject.get("settings").getAsJsonObject();
-                    for (Setting < ? > setting : TempleClient.settingsManager.getSettingsByMod(module)) {
-                        if (!settingsObject.has(setting.name)) continue;
-
-                        setting.deserialize(settingsObject);
-                    }
-                }
-            } catch (Throwable t) {
-                System.err.println("Could not load config for " + module.getName() + "!");
-                t.printStackTrace();
-            }
-        }
-    }
-
-    private void saveHud() {
-
-        for (HUD.HudElement element: HUD.INSTANCE.getHudElements()) {
-
-            final File hudElementConfigFile = new File(this.hudElementsDirectory, element.getName() + ".json");
-
+        for (HUD.HudElement element : HUD.INSTANCE.getHudElements()) {
             final JsonObject hudElementObject = new JsonObject();
-
             hudElementObject.addProperty("enabled", element.isEnabled());
             hudElementObject.addProperty("x", element.getX());
             hudElementObject.addProperty("y", element.getY());
 
-            final List < Setting < ? >> settings = TempleClient.settingsManager.getSettingsByMod(element);
-            if (!settings.isEmpty()) {
+            final List<Setting<?>> settings = TempleClient.settingsManager.getSettingsByMod(element);
+            if (settings != null && !settings.isEmpty()) {
                 final JsonObject settingsObject = new JsonObject();
-
-                for (Setting < ? > setting : settings) {
+                for (Setting<?> setting : settings) {
                     setting.serialize(settingsObject);
                 }
-
                 hudElementObject.add("settings", settingsObject);
             }
+            configObject.add(element.getName(), hudElementObject);
+        }
 
-            try {
-                final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(hudElementConfigFile));
-                bufferedWriter.write(GSON.toJson(hudElementObject));
-                bufferedWriter.close();
-            } catch (Throwable t) {
-                System.err.println("Could not save config for " + element.getName() + "!");
-                t.printStackTrace();
-            }
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+            bufferedWriter.write(GSON.toJson(configObject));
+        } catch (IOException e) {
+            System.err.println("Could not save config!");
+            e.printStackTrace();
         }
     }
 
-    private void loadHud() {
-        for (HUD.HudElement element: HUD.INSTANCE.getHudElements()) {
+    public void loadConfig(File file) {
+        if (!file.exists()) {
+            return;
+        }
 
-            final File hudElementConfigFile = new File(this.hudElementsDirectory, element.getName() + ".json");
+        try (FileReader fileReader = new FileReader(file);
+             JsonReader jsonReader = GSON.newJsonReader(fileReader)) {
 
-            if (!hudElementConfigFile.exists()) {
-                continue;
-            }
+            final JsonObject configObject = GSON.fromJson(jsonReader, JsonObject.class);
 
-            try {
-                final FileReader fileReader = new FileReader(hudElementConfigFile);
-                final JsonReader jsonReader = GSON.newJsonReader(fileReader);
+            for (Module module : ModuleManager.getModules()) {
+                if (configObject.has(module.getName())) {
+                    final JsonObject moduleObject = configObject.getAsJsonObject(module.getName());
+                    if (moduleObject.has("toggled")) {
+                        module.setToggled(moduleObject.get("toggled").getAsBoolean());
+                    }
+                    if (moduleObject.has("key")) {
+                        module.setKey(moduleObject.get("key").getAsInt());
+                    }
 
-                final JsonObject hudElementObject = GSON.fromJson(jsonReader, JsonObject.class);
-
-                element.setEnabled(hudElementObject.get("enabled").getAsBoolean());
-                element.setX(hudElementObject.get("x").getAsDouble());
-                element.setY(hudElementObject.get("y").getAsDouble());
-
-                if (hudElementObject.has("settings")) {
-                    final JsonObject settingsObject = hudElementObject.get("settings").getAsJsonObject();
-                    for (Setting < ? > setting : TempleClient.settingsManager.getSettingsByMod(element)) {
-                        if (!settingsObject.has(setting.name)) continue;
-
-                        setting.deserialize(settingsObject);
+                    if (moduleObject.has("settings")) {
+                        final JsonObject settingsObject = moduleObject.get("settings").getAsJsonObject();
+                        for (Setting<?> setting : TempleClient.settingsManager.getSettingsByMod(module)) {
+                            if (settingsObject.has(setting.name)) {
+                                setting.deserialize(settingsObject);
+                            }
+                        }
                     }
                 }
-            } catch (Throwable t) {
-                System.err.println("Could not load config for " + element.getName() + "!");
-                t.printStackTrace();
             }
+
+            for (HUD.HudElement element : HUD.INSTANCE.getHudElements()) {
+                if (configObject.has(element.getName())) {
+                    final JsonObject hudElementObject = configObject.getAsJsonObject(element.getName());
+                    if (hudElementObject.has("enabled")) {
+                        element.setEnabled(hudElementObject.get("enabled").getAsBoolean());
+                    }
+                    if (hudElementObject.has("x")) {
+                        element.setX(hudElementObject.get("x").getAsDouble());
+                    }
+                    if (hudElementObject.has("y")) {
+                        element.setY(hudElementObject.get("y").getAsDouble());
+                    }
+
+                    if (hudElementObject.has("settings")) {
+                        final JsonObject settingsObject = hudElementObject.get("settings").getAsJsonObject();
+                        for (Setting<?> setting : TempleClient.settingsManager.getSettingsByMod(element)) {
+                            if (settingsObject.has(setting.name)) {
+                                setting.deserialize(settingsObject);
+                            }
+                        }
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            System.err.println("Could not load config!");
+            e.printStackTrace();
         }
     }
 
     private void saveFriends() {
-        final File friendsFile = new File(this.friendsDirectory, "Friends.json");
+        final File friendsFile = new File(this.friendsDirectory, "friends.json");
 
-        final List < String > friendNames = new ArrayList < > ();
-        for (Friend friend: TempleClient.friendManager.getFriends()) {
+        final List<String> friendNames = new ArrayList<>();
+        for (Friend friend : TempleClient.friendManager.getFriends()) {
             friendNames.add(friend.getName());
         }
 
-        try {
-            final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(friendsFile));
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(friendsFile))) {
             bufferedWriter.write(GSON.toJson(friendNames));
-            bufferedWriter.close();
-        } catch (Throwable t) {
+        } catch (IOException e) {
             System.err.println("Could not save friends!");
-            t.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -230,20 +200,20 @@ public class ConfigManager {
             return;
         }
 
-        try {
-            final FileReader fileReader = new FileReader(friendsFile);
-            final JsonReader jsonReader = GSON.newJsonReader(fileReader);
+        try (FileReader fileReader = new FileReader(friendsFile);
+             JsonReader jsonReader = GSON.newJsonReader(fileReader)) {
 
-            final List < String > friendNames = GSON.fromJson(jsonReader, new TypeToken < List < String >> () {}.getType());
+            final List<String> friendNames = GSON.fromJson(jsonReader, new TypeToken<List<String>>() {}.getType());
 
-            for (String name: friendNames) {
+            for (String name : friendNames) {
                 TempleClient.friendManager.addFriend(name);
             }
-        } catch (Throwable t) {
+        } catch (IOException e) {
             System.err.println("Could not load friends!");
-            t.printStackTrace();
+            e.printStackTrace();
         }
     }
+
     public List<String> loadAlts() {
         if (!altsFile.exists()) return new ArrayList<>();
         try (Reader reader = new FileReader(altsFile)) {
@@ -263,7 +233,6 @@ public class ConfigManager {
     }
 
     public void setupBaseFinderLogging() {
-        final File baseFinderLogDirectory = new File(mainDirectory, "Base Finder");
         if (!baseFinderLogDirectory.exists()) {
             baseFinderLogDirectory.mkdirs();
         }

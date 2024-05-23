@@ -45,38 +45,6 @@ public class InventoryManager implements Globals {
 
         return slot;
     }
-    public int searchSlot(Block[] in, InventoryRegion inventoryRegion) {
-
-        int slot = -1;
-
-        for (int i = inventoryRegion.getStart(); i < inventoryRegion.getBound(); i++) {
-
-            for (Block block: in) {
-
-                if (slot == -1 && mc.player.inventory.getStackInSlot(i).getItem().equals(Item.getItemFromBlock(block))) {
-                    slot = i;
-                    break;
-                }
-            }
-        }
-
-        return slot;
-    }
-    public int searchSlot(Class < ? extends Item > in, InventoryRegion inventoryRegion) {
-
-        int slot = -1;
-
-        for (int i = inventoryRegion.getStart(); i <= inventoryRegion.getBound(); i++) {
-
-            if (in.isInstance(mc.player.inventory.getStackInSlot(i).getItem())) {
-                slot = i;
-                break;
-            }
-        }
-
-        return slot;
-    }
-
     public static List<Integer> getItemInventory(Item item) {
         ArrayList<Integer> ints = new ArrayList<Integer>();
         for (int i = 9; i < 36; ++i) {

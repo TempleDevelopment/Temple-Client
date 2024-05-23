@@ -8,8 +8,7 @@ import xyz.templecheats.templeclient.util.setting.Setting;
 import xyz.templecheats.templeclient.util.setting.SettingHolder;
 
 public class DoubleSetting extends Setting < Double > {
-    public final double min,
-            max;
+    public final double min, max;
     private double value;
 
     public DoubleSetting(String name, SettingHolder parent, double min, double max, double defaultValue) {
@@ -25,6 +24,10 @@ public class DoubleSetting extends Setting < Double > {
 
     public float floatValue() {
         return (float) this.value;
+    }
+
+    public int intValue() {
+        return (int) this.value;
     }
 
     public void setDoubleValue(double value) {

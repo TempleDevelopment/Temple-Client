@@ -12,9 +12,10 @@ public class Step extends Module {
     public final IntSetting height = new IntSetting("Height", this, 0, 2, 1);
 
     public Step() {
-        super("Step", "Quickly step on blocks", Keyboard.KEY_NONE, Category.Movement);
+        super("Step", "Quickly step on blocks", Keyboard.KEY_NONE, Module.Category.Movement);
         registerSettings(height);
     }
+
     @Override
     public void onDisable() {
         mc.player.stepHeight = 0.6f;
@@ -22,9 +23,5 @@ public class Step extends Module {
     @Override
     public void onUpdate() {
         mc.player.stepHeight = height.intValue();
-    }
-    @Override
-    public String getHudInfo() {
-            return " [" + ChatFormatting.WHITE + "Vanilla, " + height.intValue() + ChatFormatting.RESET  + "]";
     }
 }

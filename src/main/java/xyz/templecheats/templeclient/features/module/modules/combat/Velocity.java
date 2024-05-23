@@ -1,5 +1,6 @@
 package xyz.templecheats.templeclient.features.module.modules.combat;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.network.play.client.CPacketEntityAction;
@@ -98,6 +99,11 @@ public final class Velocity extends Module {
             mc.player.connection.sendPacket(new CPacketPlayer.PositionRotation(mc.player.posX, mc.player.getEntityBoundingBox().minY, mc.player.posZ, yaw, pitch, mc.player.onGround));
             mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SPRINTING));
         }
+    }
+
+    @Override
+    public String getHudInfo() {
+        return ChatFormatting.WHITE + mode.value().name() + ChatFormatting.RESET;
     }
 
     public enum Mode {

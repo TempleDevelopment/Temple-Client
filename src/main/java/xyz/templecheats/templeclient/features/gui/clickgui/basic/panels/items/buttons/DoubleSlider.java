@@ -20,7 +20,7 @@ public class DoubleSlider extends Item {
         super(setting.name);
         this.setting = setting;
         this.parentButton = parentButton;
-        this.width = 15;
+        this.height = 15;
         this.value = setting.doubleValue();
     }
 
@@ -29,15 +29,15 @@ public class DoubleSlider extends Item {
         double range = setting.max - setting.min;
         double percentBar = (value - setting.min) / range;
 
-        RenderUtil.drawRect(x, y, (float) (this.x + (percentBar * (this.width + 7.4f))), y + height, ClickGUI.INSTANCE.getStartColor().getRGB());
+        RenderUtil.drawRect(x, y, (float) (this.x + (percentBar * (this.getWidth() + 7.4f))), y + height, ClickGUI.INSTANCE.getStartColor().getRGB());
 
         if(this.isHovering(mouseX, mouseY)) {
-            RenderUtil.drawRect(x, y, (float) (this.x + (percentBar * (this.width + 7.4f))), y + height, 0x22000000);
+            RenderUtil.drawRect(x, y, (float) (this.x + (percentBar * (this.getWidth() + 7.4f))), y + height, 0x22000000);
         }
         font16.drawString(getLabel() + TextFormatting.GRAY + " " + Math.round(value * 100D) / 100D, this.x + 2.3, this.y + 4, 0xFFFFFFFF, false);
 
         if(this.dragging) {
-            double offset = (MathHelper.clamp((mouseX - x) / (this.width + 7.4f), 0, 1) * range);
+            double offset = (MathHelper.clamp((mouseX - x) / (this.getWidth() + 7.4f), 0, 1) * range);
             this.value = setting.min + offset;
 
             if(!(this.setting.parent instanceof ClickGUI) || !this.setting.name.equals("Scale")) {

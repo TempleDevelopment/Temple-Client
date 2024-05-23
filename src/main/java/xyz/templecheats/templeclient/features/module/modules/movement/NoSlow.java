@@ -2,17 +2,12 @@ package xyz.templecheats.templeclient.features.module.modules.movement;
 
 import net.minecraft.item.ItemFood;
 import net.minecraft.network.play.client.CPacketHeldItemChange;
-import net.minecraft.util.EnumHand;
 import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import org.lwjgl.input.Keyboard;
-import xyz.templecheats.templeclient.event.events.player.MotionEvent;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
-
-import java.util.stream.IntStream;
 
 public class NoSlow extends Module {
     /*

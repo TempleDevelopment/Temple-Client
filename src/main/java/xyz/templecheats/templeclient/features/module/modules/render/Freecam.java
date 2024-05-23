@@ -9,24 +9,41 @@ import xyz.templecheats.templeclient.event.events.network.PacketEvent;
 import xyz.templecheats.templeclient.event.events.player.MotionEvent;
 import xyz.templecheats.templeclient.event.events.player.MoveEvent;
 import xyz.templecheats.templeclient.features.module.Module;
+import xyz.templecheats.templeclient.features.module.modules.movement.*;
+import xyz.templecheats.templeclient.features.module.modules.movement.speed.*;
+import xyz.templecheats.templeclient.features.module.modules.movement.speed.sub.Bhop;
+import xyz.templecheats.templeclient.features.module.modules.movement.speed.sub.Strafe;
+import xyz.templecheats.templeclient.manager.ModuleManager;
+import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 
 public class Freecam extends Module {
     /*
      * Settings
      */
+    private final BooleanSetting disableMovement = new BooleanSetting("Disable Movement", this, true);
     private final DoubleSetting horizontalSpeed = new DoubleSetting("Horizontal Speed", this, 0.1, 5d, 1d);
     private final DoubleSetting verticalSpeed = new DoubleSetting("Vertical Speed", this, 0.1, 5d, 1d);
+
     /*
      * Variables
      */
     private EntityOtherPlayerMP fakePlayer;
     private float startYaw, startPitch;
+    private boolean wasAutoWalkEnabled;
+    private boolean wasReverseStepEnabled;
+    private boolean wasRotationLockEnabled;
+    private boolean wasStepEnabled;
+    private boolean wasFlightEnabled;
+    private boolean wasSpeedEnabled;
+    private boolean wasStrafeEnabled;
+    private boolean wasBhopEnabled;
+    private boolean wasJesusEnabled;
+    private boolean wasTunnelSpeedEnabled;
 
     public Freecam() {
         super("Freecam", "Out of body experience", Keyboard.KEY_NONE, Category.Render);
-
-        this.registerSettings(horizontalSpeed, verticalSpeed);
+        this.registerSettings(disableMovement, horizontalSpeed, verticalSpeed);
     }
 
     @Listener
@@ -97,6 +114,10 @@ public class Freecam extends Module {
         this.startYaw = mc.player.rotationYaw;
         this.startPitch = mc.player.rotationPitch;
         mc.world.addEntityToWorld(696984837, this.fakePlayer);
+
+        if (disableMovement.booleanValue()) {
+            disableMovementModules();
+        }
     }
 
     @Override
@@ -108,5 +129,153 @@ public class Freecam extends Module {
         mc.player.rotationPitch = this.startPitch;
         mc.world.removeEntity(this.fakePlayer);
         this.fakePlayer = null;
+
+        if (disableMovement.booleanValue()) {
+            enableMovementModules();
+        }
+    }
+
+    private void disableMovementModules() {
+        AutoWalk autoWalk = (AutoWalk) ModuleManager.getModuleByName("AutoWalk");
+        if (autoWalk != null && autoWalk.isEnabled()) {
+            autoWalk.disable();
+            this.wasAutoWalkEnabled = true;
+        }
+
+        RotationLock rotationLock = (RotationLock) ModuleManager.getModuleByName("RotationLock");
+        if (rotationLock != null && rotationLock.isEnabled()) {
+            rotationLock.disable();
+            this.wasRotationLockEnabled = true;
+        }
+
+        Step step = (Step) ModuleManager.getModuleByName("Step");
+        if (step != null && step.isEnabled()) {
+            step.disable();
+            this.wasStepEnabled = true;
+        }
+
+        Flight flight = (Flight) ModuleManager.getModuleByName("Flight");
+        if (flight != null && flight.isEnabled()) {
+            flight.disable();
+            this.wasFlightEnabled = true;
+        }
+
+        Speed speed = (Speed) ModuleManager.getModuleByName("Speed");
+        if (speed != null && speed.isEnabled()) {
+            speed.disable();
+            this.wasSpeedEnabled = true;
+        }
+
+        Strafe strafe = (Strafe) ModuleManager.getModuleByName("Strafe");
+        if (strafe != null && strafe.isEnabled()) {
+            strafe.disable();
+            this.wasStrafeEnabled = true;
+        }
+
+        Bhop bhop = (Bhop) ModuleManager.getModuleByName("Bhop");
+        if (bhop != null && bhop.isEnabled()) {
+            bhop.disable();
+            this.wasBhopEnabled = true;
+        }
+
+        Jesus jesus = (Jesus) ModuleManager.getModuleByName("Jesus");
+        if (jesus != null && jesus.isEnabled()) {
+            jesus.disable();
+            this.wasJesusEnabled = true;
+        }
+
+        TunnelSpeed tunnelSpeed = (TunnelSpeed) ModuleManager.getModuleByName("TunnelSpeed");
+        if (tunnelSpeed != null && tunnelSpeed.isEnabled()) {
+            tunnelSpeed.disable();
+            this.wasTunnelSpeedEnabled = true;
+        }
+
+        ReverseStep reverseStep = (ReverseStep) ModuleManager.getModuleByName("ReverseStep");
+        if (reverseStep != null && reverseStep.isEnabled()) {
+            reverseStep.disable();
+            this.wasReverseStepEnabled = true;
+        }
+    }
+
+    private void enableMovementModules() {
+        if (this.wasAutoWalkEnabled) {
+            AutoWalk autoWalk = (AutoWalk) ModuleManager.getModuleByName("AutoWalk");
+            if (autoWalk != null) {
+                autoWalk.enable();
+            }
+            this.wasAutoWalkEnabled = false;
+        }
+
+        if (this.wasRotationLockEnabled) {
+            RotationLock rotationLock = (RotationLock) ModuleManager.getModuleByName("RotationLock");
+            if (rotationLock != null) {
+                rotationLock.enable();
+            }
+            this.wasRotationLockEnabled = false;
+        }
+
+        if (this.wasReverseStepEnabled) {
+            Step step = (Step) ModuleManager.getModuleByName("Step");
+            if (step != null) {
+                step.enable();
+            }
+            this.wasReverseStepEnabled = false;
+        }
+
+        if (this.wasFlightEnabled) {
+            Flight flight = (Flight) ModuleManager.getModuleByName("Flight");
+            if (flight != null) {
+                flight.enable();
+            }
+            this.wasFlightEnabled = false;
+        }
+
+        if (this.wasSpeedEnabled) {
+            Speed speed = (Speed) ModuleManager.getModuleByName("Speed");
+            if (speed != null) {
+                speed.enable();
+            }
+            this.wasSpeedEnabled = false;
+        }
+
+        if (this.wasStrafeEnabled) {
+            Strafe strafe = (Strafe) ModuleManager.getModuleByName("Strafe");
+            if (strafe != null) {
+                strafe.enable();
+            }
+            this.wasStrafeEnabled = false;
+        }
+
+        if (this.wasBhopEnabled) {
+            Bhop bhop = (Bhop) ModuleManager.getModuleByName("Bhop");
+            if (bhop != null) {
+                bhop.enable();
+            }
+            this.wasBhopEnabled = false;
+        }
+
+        if (this.wasJesusEnabled) {
+            Jesus jesus = (Jesus) ModuleManager.getModuleByName("Jesus");
+            if (jesus != null) {
+                jesus.enable();
+            }
+            this.wasJesusEnabled = false;
+        }
+
+        if (this.wasTunnelSpeedEnabled) {
+            TunnelSpeed tunnelSpeed = (TunnelSpeed) ModuleManager.getModuleByName("TunnelSpeed");
+            if (tunnelSpeed != null) {
+                tunnelSpeed.enable();
+            }
+            this.wasTunnelSpeedEnabled = false;
+        }
+
+        if (this.wasStepEnabled) {
+            ReverseStep reverseStep = (ReverseStep) ModuleManager.getModuleByName("ReverseStep");
+            if (reverseStep != null) {
+                reverseStep.enable();
+            }
+            this.wasStepEnabled = false;
+        }
     }
 }

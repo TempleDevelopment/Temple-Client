@@ -7,7 +7,6 @@ import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.bu
 public abstract class Setting < T > {
     public final String name;
     public final SettingHolder parent;
-    public boolean visible;
 
     public Setting(String name, SettingHolder parent) {
         this.name = name;

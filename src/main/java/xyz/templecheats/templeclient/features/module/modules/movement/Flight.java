@@ -1,13 +1,12 @@
 package xyz.templecheats.templeclient.features.module.modules.movement;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraft.network.play.client.CPacketConfirmTeleport;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
 import xyz.templecheats.templeclient.event.EventStageable;
@@ -18,7 +17,6 @@ import xyz.templecheats.templeclient.util.math.MathUtil;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
-import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -213,6 +211,11 @@ public class Flight extends Module {
                 }
             }
         }
+    }
+
+    @Override
+    public String getHudInfo() {
+        return ChatFormatting.WHITE + mode.value().name() + ChatFormatting.RESET;
     }
 
     private enum FlightMode {

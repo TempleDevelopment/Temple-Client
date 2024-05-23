@@ -2,18 +2,15 @@ package xyz.templecheats.templeclient.features.module.modules.render.esp.sub;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.Colors;
 import xyz.templecheats.templeclient.features.module.modules.combat.Aura;
 import xyz.templecheats.templeclient.features.module.modules.combat.AutoCrystal;
-import xyz.templecheats.templeclient.manager.ModuleManager;
 import xyz.templecheats.templeclient.util.setting.impl.*;
 import java.awt.*;
 

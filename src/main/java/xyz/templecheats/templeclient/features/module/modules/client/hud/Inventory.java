@@ -7,15 +7,20 @@ import net.minecraft.item.ItemStack;
 import xyz.templecheats.templeclient.features.module.modules.client.HUD;
 import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
+import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 
 import java.awt.*;
 
 import static xyz.templecheats.templeclient.features.gui.font.Fonts.*;
 
 public class Inventory extends HUD.HudElement {
+    /*
+     * Settings
+     */
+    private final BooleanSetting showText = new BooleanSetting("Text", this, true);
     public Inventory() {
         super("Inventory", "Shows your inventory in the HUD");
-        registerSettings(fill, outline, blur, color, outlineColor, outlineWidth, blurRadius);
+        registerSettings(fill, outline, blur, showText, color, outlineColor, outlineWidth, blurRadius);
     }
 
     @Override
@@ -49,7 +54,9 @@ public class Inventory extends HUD.HudElement {
                     .drawBlur()
                     .draw();
         }
-        font18.drawString("Inventory", (float) (getX() + textOffset), (float) getY() - (font18.getFontHeight() + 2), Color.WHITE, true);
+        if (showText.booleanValue()) {
+            font18.drawString("Inventory", (float) (getX() + textOffset), (float) getY() - (font18.getFontHeight() + 2), Color.WHITE, true);
+        }
 
         GlStateManager.pushMatrix();
         RenderHelper.enableStandardItemLighting();

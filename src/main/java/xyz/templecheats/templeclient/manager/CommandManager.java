@@ -30,6 +30,7 @@ public class CommandManager {
     public void commandInit() {
         registerCommand(new BindCommand());
         registerCommand(new ClickguiCommand());
+        registerCommand(new ConfigCommand());
         registerCommand(new CoordsCommand());
         registerCommand(new DeathCoordsCommand());
         registerCommand(new DisconnectCommand());
@@ -38,6 +39,7 @@ public class CommandManager {
         registerCommand(new HelpCommand());
         registerCommand(new IpCommand());
         registerCommand(new NameMcCommand());
+        registerCommand(new OpenFolderCommand());
         registerCommand(new PanicCommand());
         registerCommand(new ToggleCommand());
     }

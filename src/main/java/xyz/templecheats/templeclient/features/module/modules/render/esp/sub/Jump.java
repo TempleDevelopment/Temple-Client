@@ -19,7 +19,6 @@ import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import static java.lang.Math.sin;
 import static net.minecraft.util.math.MathHelper.clamp;

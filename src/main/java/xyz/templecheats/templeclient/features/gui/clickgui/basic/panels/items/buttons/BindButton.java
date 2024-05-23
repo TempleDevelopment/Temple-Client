@@ -18,12 +18,12 @@ public class BindButton extends Button {
     public BindButton(Module module) {
         super("Keybind");
         this.module = module;
-        width = 15;
+        height = 15;
     }
     
     @Override
     public void drawScreen(final int mouseX, final int mouseY, final float partialTicks) {
-        RenderUtil.drawRect(x, y, x + width + 7.4F, y + height, !isHovering(mouseX, mouseY) ? 0x11555555 : 0x88555555);
+        RenderUtil.drawRect(x, y, x + getWidth() + 7.4F, y + height, !isHovering(mouseX, mouseY) ? 0x11555555 : 0x88555555);
         String s = listening ? "..." : Keyboard.getKeyName(module.getKey());
         font16.drawString(getLabel() + " " + TextFormatting.GRAY + s, this.x + 2.3, this.y + 4, 0xFFFFFFFF, false);
     }

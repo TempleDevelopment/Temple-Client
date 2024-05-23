@@ -7,10 +7,6 @@ import xyz.templecheats.templeclient.features.gui.font.Fonts;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.setting.impl.*;
 
-import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
-
 public class FontSettings extends Module {
 	/**
 	 * Instance

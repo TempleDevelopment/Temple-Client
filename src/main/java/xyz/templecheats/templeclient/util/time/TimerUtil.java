@@ -8,6 +8,35 @@ public class TimerUtil {
         this.current = System.currentTimeMillis();
     }
 
+    public void reset() {
+        this.current = System.currentTimeMillis();
+    }
+
+    public TimerUtil resetNT() {
+        this.time = System.nanoTime();
+        return this;
+    }
+
+    public void resetTms() {
+        time = System.currentTimeMillis();
+    }
+
+    public void setMs(long ms) {
+        this.time = System.nanoTime() - this.convertToNS(ms);
+    }
+
+    public long getMs(long time) {
+        return time / 1000000L;
+    }
+
+    public long getTimePassed() {
+        return System.currentTimeMillis() - this.current;
+    }
+
+    public long getPassedTimeMs() {
+        return this.getMs(System.nanoTime() - this.time);
+    }
+
     public boolean hasReached(final long delay) {
         return System.currentTimeMillis() - this.current >= delay;
     }
@@ -34,25 +63,8 @@ public class TimerUtil {
         return this.passedNS(this.convertToNS(ms));
     }
 
-    public void setMs(long ms) {
-        this.time = System.nanoTime() - this.convertToNS(ms);
-    }
-
     public boolean passedNS(long ns) {
         return System.nanoTime() - this.time >= ns;
-    }
-
-    public long getPassedTimeMs() {
-        return this.getMs(System.nanoTime() - this.time);
-    }
-
-    public TimerUtil resetNT() {
-        this.time = System.nanoTime();
-        return this;
-    }
-
-    public long getMs(long time) {
-        return time / 1000000L;
     }
 
     public long convertToNS(long time) {
@@ -61,13 +73,6 @@ public class TimerUtil {
 
     public boolean hasPassed(double ms) {
         return System.currentTimeMillis() - time >= ms;
-    }
-    public void reset() {
-        this.current = System.currentTimeMillis();
-    }
-
-    public long getTimePassed() {
-        return System.currentTimeMillis() - this.current;
     }
 
     public boolean sleep(final long time) {
@@ -80,8 +85,5 @@ public class TimerUtil {
 
     public long time() {
         return System.currentTimeMillis() - this.current;
-    }
-    public void reset2() {
-        time = System.currentTimeMillis();
     }
 }

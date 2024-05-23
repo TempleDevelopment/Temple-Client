@@ -18,12 +18,12 @@ public class EnumButton<T extends Enum<T>> extends Button {
         this.setting = setting;
         this.parentButton = parentButton;
         this.values = setting.getValues();
-        width = 15;
+        height = 15;
     }
 
     @Override
     public void drawScreen(final int mouseX, final int mouseY, final float partialTicks) {
-        RenderUtil.drawRect(x, y, x + width + 7.4F, y + height, !isHovering(mouseX, mouseY) ? 0x11333333 : 0x88333333);
+        RenderUtil.drawRect(x, y, x + getWidth() + 7.4F, y + height, !isHovering(mouseX, mouseY) ? 0x11333333 : 0x88333333);
 
         int textColor = ClickGUI.INSTANCE.getStartColor().getRGB();
         String displayText = getLabel() + TextFormatting.GRAY + " " + setting.value().toString();

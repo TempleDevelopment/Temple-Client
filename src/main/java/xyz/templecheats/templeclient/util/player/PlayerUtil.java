@@ -1,105 +1,52 @@
 package xyz.templecheats.templeclient.util.player;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.inventory.ClickType;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.client.CPacketClickWindow;
 
 public class PlayerUtil {
+    private static final Minecraft mc = Minecraft.getMinecraft();
 
-    public static float[] getPlayerFacingRotations(double posX, double posY, double posZ) {
-        Minecraft mc = Minecraft.getMinecraft();
+    public static int GetItemSlot(Item input) {
+        if (mc.player == null)
+            return 0;
 
-        double deltaX = posX - mc.player.posX;
-        double deltaY = posY - mc.player.posY - mc.player.getEyeHeight();
-        double deltaZ = posZ - mc.player.posZ;
-        double deltaGround = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
+        for (int i = 0; i < mc.player.inventoryContainer.getInventory().size(); ++i) {
+            if (i == 0 || i == 5 || i == 6 || i == 7 || i == 8)
+                continue;
 
-        float pitch = (float) - Math.toDegrees(Math.atan(deltaY / deltaGround));
-        float yaw = (float) - Math.toDegrees(Math.atan(deltaX / deltaZ));
+            ItemStack s = mc.player.inventoryContainer.getInventory().get(i);
 
-        if (deltaZ <= 0) {
-            if (deltaX > 0) {
-                yaw = yaw - 180F;
-            } else {
-                yaw = yaw + 180F;
+            if (s.isEmpty())
+                continue;
+
+            if (s.getItem() == input) {
+                return i;
             }
         }
-
-        return new float[] {
-                pitch,
-                yaw
-        };
+        return -1;
     }
+    public static int GetRecursiveItemSlot(Item input) {
+        if (mc.player == null)
+            return 0;
 
-    public static double[] getPlayerMoveVec() {
-        Minecraft mc = Minecraft.getMinecraft();
+        for (int i = mc.player.inventoryContainer.getInventory().size() - 1; i > 0; --i) {
+            if (i == 0 || i == 5 || i == 6 || i == 7 || i == 8)
+                continue;
 
-        float yaw = mc.player.rotationYaw;
-        float forward = mc.player.moveForward;
-        float strafe = mc.player.moveStrafing;
+            ItemStack s = mc.player.inventoryContainer.getInventory().get(i);
 
-        if (forward == 0 && strafe == 0) {
-            return new double[] {
-                    0,
-                    0
-            };
-        }
+            if (s.isEmpty())
+                continue;
 
-        if (forward > 0) {
-
-            if (strafe > 0) {
-                yaw = yaw - 45;
-            } else if (strafe < 0) {
-                yaw = yaw + 45;
-            }
-
-        } else if (forward < 0) {
-
-            yaw = yaw - 180;
-            if (strafe > 0) {
-                yaw = yaw + 45;
-            } else if (strafe < 0) {
-                yaw = yaw - 45;
-            }
-
-        } else {
-
-            if (strafe > 0) {
-                yaw = yaw - 90;
-            } else if (strafe < 0) {
-                yaw = yaw + 90;
+            if (s.getItem() == input) {
+                return i;
             }
         }
-
-        return new double[] {
-                -Math.sin(Math.toRadians(yaw)), Math.cos(Math.toRadians(yaw))
-        };
+        return -1;
     }
 
-    public static void swapContainerItems(int slot1, int slot2) {
-        Minecraft mc = Minecraft.getMinecraft();
-
-        mc.playerController.windowClick(mc.player.inventoryContainer.windowId, slot1, 0, ClickType.PICKUP, mc.player);
-        mc.playerController.windowClick(mc.player.inventoryContainer.windowId, slot2, 0, ClickType.PICKUP, mc.player);
-        mc.playerController.windowClick(mc.player.inventoryContainer.windowId, slot1, 0, ClickType.PICKUP, mc.player);
-        mc.playerController.updateController();
-    }
-
-    public static void swapInventoryItems(int slot1, int slot2) {
-        Minecraft mc = Minecraft.getMinecraft();
-
-        short short1 = mc.player.inventoryContainer.getNextTransactionID(mc.player.inventory);
-
-        ItemStack itemstack = mc.player.inventoryContainer.slotClick(slot1, 0, ClickType.PICKUP, mc.player);
-        mc.player.connection.sendPacket(new CPacketClickWindow(mc.player.inventoryContainer.windowId, slot1, 0, ClickType.PICKUP, itemstack, short1));
-
-        itemstack = mc.player.inventoryContainer.slotClick(slot2, 0, ClickType.PICKUP, mc.player);
-        mc.player.connection.sendPacket(new CPacketClickWindow(mc.player.inventoryContainer.windowId, slot2, 0, ClickType.PICKUP, itemstack, short1));
-
-        itemstack = mc.player.inventoryContainer.slotClick(slot1, 0, ClickType.PICKUP, mc.player);
-        mc.player.connection.sendPacket(new CPacketClickWindow(mc.player.inventoryContainer.windowId, slot1, 0, ClickType.PICKUP, itemstack, short1));
-
-        mc.playerController.updateController();
+    public static float GetHealthWithAbsorption() {
+        return mc.player.getHealth() + mc.player.getAbsorptionAmount();
     }
 }

@@ -7,10 +7,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.math.MathUtil;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
-import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 import xyz.templecheats.templeclient.util.time.TimerUtil;
-import xyz.templecheats.templeclient.util.world.BlockUtil;
 
 import java.text.DecimalFormat;
 import java.util.Random;

@@ -17,7 +17,7 @@ public class BooleanButton extends Button {
         super(setting.name);
         this.setting = setting;
         this.parentButton = parentButton;
-        width = 15;
+        height = 15;
     }
 
     private int lightenColor(int color, float amount) {
@@ -33,7 +33,7 @@ public class BooleanButton extends Button {
 
     @Override
     public void drawScreen(final int mouseX, final int mouseY, final float partialTicks) {
-        RenderUtil.drawRect(x, y, x + width + 7.4F, y + height, !this.isHovering(mouseX, mouseY) ? 0x11555555 : 0x88555555);
+        RenderUtil.drawRect(x, y, x + getWidth() + 7.4F, y + height, !this.isHovering(mouseX, mouseY) ? 0x11555555 : 0x88555555);
 
         int checkboxSize = 6;
         int checkboxX = (int) (x + 2);

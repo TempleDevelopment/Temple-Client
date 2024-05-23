@@ -75,7 +75,7 @@ public class ModuleButton extends Button implements IContainer {
                 for(Item item : getItems()) {
                     item.setLocation(this.x + 1.0f, this.y + (height += 15.0f));
                     item.setHeight(15);
-                    item.setWidth(this.width - 9);
+                    item.setWidth(this.getWidth() - 9);
                     item.drawScreen(mouseX, mouseY, partialTicks);
                     float offset = item.getHeight() - 14;
                     if (item instanceof ColorButton && ((ColorButton) item).getExtended()) {

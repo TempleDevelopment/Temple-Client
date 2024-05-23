@@ -1,5 +1,6 @@
 package xyz.templecheats.templeclient.features.module.modules.world;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.material.Material;
@@ -484,6 +485,11 @@ public class FastBreak extends Module {
         }
 
         return destroySpeed;
+    }
+
+    @Override
+    public String getHudInfo() {
+        return ChatFormatting.WHITE + mode.value().name() + ChatFormatting.RESET;
     }
 
     public enum Mode {

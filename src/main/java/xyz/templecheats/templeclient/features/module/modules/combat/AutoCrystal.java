@@ -13,6 +13,7 @@ import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.item.ItemEndCrystal;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
@@ -104,6 +105,7 @@ public class AutoCrystal extends Module {
     private EntityEnderCrystal curCrystal, lastCrystal;
     private BlockPos curPos, lastPos, lastRenderPos;
     boolean offhand = false;
+    public EntityLivingBase renderTarget = null;
 
 
     public AutoCrystal() {
@@ -142,7 +144,10 @@ public class AutoCrystal extends Module {
                 rotating = false;
                 isAttacking = false;
                 render = null;
+                renderTarget = null;
             }
+        } else {
+            renderTarget = targets.isEmpty() ? null : targets.get(0).target.entity;
         }
     }
 
@@ -408,26 +413,45 @@ public class AutoCrystal extends Module {
         return false;
     }
 
-    private boolean placeCrystalInternal(BlockPos pos) {
-        // check to see if we are holding crystals or not
-        int crystalSlot = mc.player.getHeldItemMainhand().getItem() == Items.END_CRYSTAL ? mc.player.inventory.currentItem : -1;
-        if (crystalSlot == -1) {
-            crystalSlot = InventoryUtil.findFirstItemSlot(ItemEndCrystal.class, 0, 8);
+    private int getCrystalSlot() {
+        for (int i = 0; i < 9; i++) {
+            if (mc.player.inventory.getStackInSlot(i).getItem() instanceof ItemEndCrystal) {
+                return i;
+            }
         }
+        for (int i = 9; i < 36; i++) {
+            if (mc.player.inventory.getStackInSlot(i).getItem() instanceof ItemEndCrystal) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
+    private boolean placeCrystalInternal(BlockPos pos) {
+        int crystalSlot = getCrystalSlot();
         offhand = false;
+
         if (mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL) {
             offhand = true;
         } else if (crystalSlot == -1) {
             return false;
         }
+
         placedPos.add(pos);
         this.render = pos;
 
-        // autoSwitch stuff
+        // AutoSwitch logic
         if (!offhand && mc.player.inventory.currentItem != crystalSlot) {
             if (this.autoSwitch.booleanValue()) {
                 if (!noGapSwitch.booleanValue() || !(mc.player.getHeldItemMainhand().getItem() == Items.GOLDEN_APPLE)) {
-                    mc.player.inventory.currentItem = crystalSlot;
+                    if (crystalSlot >= 9) {
+                        mc.playerController.windowClick(0, crystalSlot, 0, ClickType.PICKUP, mc.player);
+                        mc.playerController.windowClick(0, mc.player.inventory.currentItem + 36, 0, ClickType.PICKUP, mc.player);
+                        mc.playerController.windowClick(0, crystalSlot, 0, ClickType.PICKUP, mc.player);
+                    } else {
+                        mc.player.inventory.currentItem = crystalSlot;
+                    }
                     rotating = false;
                     this.switchCooldown = true;
                 }
@@ -443,7 +467,7 @@ public class AutoCrystal extends Module {
         EnumFacing validFace = mc.player.posY + mc.player.getEyeHeight() > pos.getY() + 0.5 || !mc.world.isAirBlock(pos.down()) ? EnumFacing.UP : EnumFacing.DOWN;
 
         if (raytrace.booleanValue()) {
-            RayTraceResult result = mc.world.rayTraceBlocks(new Vec3d(mc.player.posX, mc.player.posY + (double) mc.player.getEyeHeight(), mc.player.posZ), new Vec3d((double) pos.getX() + 0.5, (double) pos.getY() - 0.5, (double) pos.getZ() + 0.5));
+            RayTraceResult result = mc.world.rayTraceBlocks(new Vec3d(mc.player.posX, mc.player.posY + mc.player.getEyeHeight(), mc.player.posZ), new Vec3d(pos.getX() + 0.5, pos.getY() - 0.5, pos.getZ() + 0.5));
             if (result == null || result.sideHit == null) {
                 render = null;
                 return false;
@@ -460,6 +484,7 @@ public class AutoCrystal extends Module {
 
         return true;
     }
+
 
     private void startTargetFinder() {
         long timeoutTime = System.currentTimeMillis() + timeout.intValue();
@@ -498,6 +523,15 @@ public class AutoCrystal extends Module {
             this.placeComparator = placeComparator;
             this.breakComparator = breakComparator;
         }
+    }
+
+    @Override
+    public String getHudInfo() {
+        if(this.renderTarget != null) {
+            return this.renderTarget.getName();
+        }
+
+        return "";
     }
 
     public enum Server {

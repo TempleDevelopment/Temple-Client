@@ -87,9 +87,4 @@ public class TargetUtil {
                 entity instanceof EntityDragon ||
                 entity instanceof EntityGhast;
     }
-
-    private static boolean isItem(Entity entity) {
-        return entity instanceof EntityItem;
-    }
-
 }

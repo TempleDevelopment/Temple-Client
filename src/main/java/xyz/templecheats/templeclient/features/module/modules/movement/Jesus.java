@@ -4,6 +4,7 @@
 
 package xyz.templecheats.templeclient.features.module.modules.movement;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.Entity;

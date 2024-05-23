@@ -63,6 +63,7 @@ public class HUD extends Module {
         this.hudElements.add(new Server());
         this.hudElements.add(new Speed());
         this.hudElements.add(new TargetHUD());
+        this.hudElements.add(new Text());
         this.hudElements.add(new Watermark());
     }
 

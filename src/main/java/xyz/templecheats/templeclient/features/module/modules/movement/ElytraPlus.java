@@ -1,7 +1,7 @@
 package xyz.templecheats.templeclient.features.module.modules.movement;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.network.play.client.CPacketEntityAction;
-import net.minecraft.util.math.BlockPos;
 import org.lwjgl.input.Keyboard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -144,6 +144,11 @@ public final class ElytraPlus extends Module {
                 player.motionY = -0.04f;
             }
         }
+    }
+
+    @Override
+    public String getHudInfo() {
+        return ChatFormatting.WHITE + mode.value().name() + ChatFormatting.RESET;
     }
 
     private enum Mode {

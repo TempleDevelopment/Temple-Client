@@ -16,7 +16,6 @@ public class Armor extends HUD.HudElement {
 
     public Armor() {
         super("Armor", "Shows your Armor in the HUD");
-
         registerSettings(displayMode);
     }
 

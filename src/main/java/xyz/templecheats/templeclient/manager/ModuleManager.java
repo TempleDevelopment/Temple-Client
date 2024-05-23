@@ -8,6 +8,7 @@ import xyz.templecheats.templeclient.features.module.modules.combat.*;
 import xyz.templecheats.templeclient.features.module.modules.misc.*;
 import xyz.templecheats.templeclient.features.module.modules.movement.*;
 import xyz.templecheats.templeclient.features.module.modules.movement.speed.Speed;
+import xyz.templecheats.templeclient.features.module.modules.movement.Step;
 import xyz.templecheats.templeclient.features.module.modules.player.*;
 import xyz.templecheats.templeclient.features.module.modules.render.*;
 import xyz.templecheats.templeclient.features.module.modules.render.esp.ESP;
@@ -57,12 +58,12 @@ public class ModuleManager {
         addMod(new AutoTotem());
         addMod(new AimAssist());
         addMod(new BowAimbot());
-        addMod(new Offhand());
         addMod(new BowSpam());
         addMod(new Surround());
         addMod(new AutoTrap());
         addMod(new SelfTrap());
         addMod(new Velocity());
+        addMod(new AutoWeb());
         addMod(new Quiver());
         addMod(new Aura());
         // Miscellaneous
@@ -88,11 +89,11 @@ public class ModuleManager {
         addMod(new TunnelSpeed());
         addMod(new AutoWalk());
         addMod(new RotationLock());
+        addMod(new ReverseStep());
         addMod(new Parkour());
         addMod(new Safewalk());
         addMod(new GuiWalk());
         addMod(new NoSlow());
-        addMod(new FastFall());
         addMod(new Sprint());
         addMod(new NoFall());
         addMod(new Speed());
@@ -120,6 +121,7 @@ public class ModuleManager {
         addMod(new XRay());
         addMod(new ESP());
         // World
+        addMod(new NoMineAnimation());
         addMod(new ChunkAnimator());
         addMod(new BaseFinder());
         addMod(new Scaffold());
@@ -135,6 +137,7 @@ public class ModuleManager {
         addMod(new FastUse());
         addMod(new XCarry());
         addMod(new Reach());
+        addMod(new NoSwing());
         addMod(new Blink());
     }
 
