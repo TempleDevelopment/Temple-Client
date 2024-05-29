@@ -6,18 +6,18 @@ import xyz.templecheats.templeclient.features.module.modules.client.HUD;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 import xyz.templecheats.templeclient.util.setting.impl.StringSetting;
 
-import static xyz.templecheats.templeclient.features.gui.font.Fonts.*;
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font18;
 
 public class Text extends HUD.HudElement {
-    /*
-     * Settings
-     */
-    private final StringSetting string =  new StringSetting("Text", this, "Hello World!");
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
+    private final StringSetting string = new StringSetting("Text", this, "Hello World!");
     private final EnumSetting<Effects> mode = new EnumSetting<>("Mode", this, Effects.Static);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private int counter = 0;
     private long lastFrameTime = 0;
 

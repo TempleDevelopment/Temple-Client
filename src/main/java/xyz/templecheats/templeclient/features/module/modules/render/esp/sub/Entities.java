@@ -22,20 +22,20 @@ import java.util.List;
 import static xyz.templecheats.templeclient.util.player.TargetUtil.updateEntityList;
 
 public class Entities extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.Box);
-    private final BooleanSetting crystal = new BooleanSetting("Crystals" , this , false);
-    private final BooleanSetting self = new BooleanSetting("Self" , this , false);
-    private final BooleanSetting player = new BooleanSetting("Players" , this , false);
-    private final BooleanSetting items = new BooleanSetting("Items" , this , false);
-    private final BooleanSetting hostiles = new BooleanSetting("Hostiles" , this , false);
-    private final BooleanSetting animals = new BooleanSetting("Animals" , this , false);
+    private final BooleanSetting crystal = new BooleanSetting("Crystals", this, false);
+    private final BooleanSetting self = new BooleanSetting("Self", this, false);
+    private final BooleanSetting player = new BooleanSetting("Players", this, false);
+    private final BooleanSetting items = new BooleanSetting("Items", this, false);
+    private final BooleanSetting hostiles = new BooleanSetting("Hostiles", this, false);
+    private final BooleanSetting animals = new BooleanSetting("Animals", this, false);
     private final DoubleSetting range = new DoubleSetting("Range", this, 8.0, 256.0, 32.0);
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private static final List<Entity> glowed = new ArrayList<>();
     private final LinkedHashSet<Entity> entityList = new LinkedHashSet<>();
 
@@ -75,19 +75,19 @@ public class Entities extends Module {
                 }
                 AxisAlignedBB box = new AxisAlignedBB(
                         entity.getEntityBoundingBox().minX - 0.05 - entity.posX +
-                                (entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * e.getPartialTicks() - Minecraft.getMinecraft().getRenderManager().viewerPosX) ,
+                                (entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * e.getPartialTicks() - Minecraft.getMinecraft().getRenderManager().viewerPosX),
                         entity.getEntityBoundingBox().minY - entity.posY +
-                                (entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * e.getPartialTicks() - Minecraft.getMinecraft().getRenderManager().viewerPosY) ,
+                                (entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * e.getPartialTicks() - Minecraft.getMinecraft().getRenderManager().viewerPosY),
                         entity.getEntityBoundingBox().minZ - 0.05 - entity.posZ +
-                                (entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * e.getPartialTicks() - Minecraft.getMinecraft().getRenderManager().viewerPosZ) ,
+                                (entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * e.getPartialTicks() - Minecraft.getMinecraft().getRenderManager().viewerPosZ),
                         entity.getEntityBoundingBox().maxX + 0.05 - entity.posX +
-                                (entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * e.getPartialTicks() - Minecraft.getMinecraft().getRenderManager().viewerPosX) ,
+                                (entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * e.getPartialTicks() - Minecraft.getMinecraft().getRenderManager().viewerPosX),
                         entity.getEntityBoundingBox().maxY + 0.1 - entity.posY +
-                                (entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * e.getPartialTicks() - Minecraft.getMinecraft().getRenderManager().viewerPosY) ,
+                                (entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * e.getPartialTicks() - Minecraft.getMinecraft().getRenderManager().viewerPosY),
                         entity.getEntityBoundingBox().maxZ + 0.05 - entity.posZ +
                                 (entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * e.getPartialTicks() - Minecraft.getMinecraft().getRenderManager().viewerPosZ)
                 );
-                RenderUtil.FillOnlyLinePlayerESP(entity , box , r , g , b);
+                RenderUtil.FillOnlyLinePlayerESP(entity, box, r, g, b);
             } else {
                 entity.setGlowing(true);
                 if (!glowed.contains(entity)) {
@@ -99,7 +99,7 @@ public class Entities extends Module {
 
     @Override
     public void onDisable() {
-        for (Entity entity: glowed) {
+        for (Entity entity : glowed) {
             entity.setGlowing(false);
         }
         glowed.clear();

@@ -9,6 +9,9 @@ import xyz.templecheats.templeclient.features.module.modules.render.norender.sub
 public class NoRender extends Module {
     public NoRender() {
         super("NoRender", "Prevents rendering of certain things", Category.Render, true);
+        /****************************************************************
+         *                      Sub Module Registration
+         ****************************************************************/
         submodules.add(new Overlays());
         submodules.add(new Player());
         submodules.add(new UI());

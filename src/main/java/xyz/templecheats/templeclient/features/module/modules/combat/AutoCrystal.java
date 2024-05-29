@@ -13,7 +13,6 @@ import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.ClickType;
 import net.minecraft.item.ItemEndCrystal;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
@@ -34,15 +33,18 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
-import xyz.templecheats.templeclient.mixins.accessor.ICPacketUseEntity;
 import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.event.events.network.PacketEvent;
 import xyz.templecheats.templeclient.event.events.player.MotionEvent;
 import xyz.templecheats.templeclient.event.events.world.EntityEvent;
 import xyz.templecheats.templeclient.features.module.Module;
-import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
+import xyz.templecheats.templeclient.manager.InventoryManager;
+import xyz.templecheats.templeclient.mixins.accessor.ICPacketUseEntity;
 import xyz.templecheats.templeclient.util.autocrystal.*;
+import xyz.templecheats.templeclient.util.player.DamageUtil;
+import xyz.templecheats.templeclient.util.player.PlayerInfo;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
+import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
 import xyz.templecheats.templeclient.util.rotation.RotationUtil;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
@@ -50,24 +52,25 @@ import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 import xyz.templecheats.templeclient.util.time.TimerUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static net.minecraft.network.play.client.CPacketUseEntity.Action.ATTACK;
 
 public class AutoCrystal extends Module {
     public static AutoCrystal INSTANCE;
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final BooleanSetting antiWeakness = new BooleanSetting("Anti Weakness", this, true);
     private final BooleanSetting autoSwitch = new BooleanSetting("Auto Switch", this, true);
     private final BooleanSetting fill = new BooleanSetting("Box Fill", this, true);
     private final BooleanSetting inhibit = new BooleanSetting("Inhibit", this, true);
     private final BooleanSetting predict = new BooleanSetting("Predict", this, false);
-
     private final BooleanSetting instant = new BooleanSetting("Instant", this, false);
-
     private final BooleanSetting setDead = new BooleanSetting("Set Dead", this, false);
 
     private final BooleanSetting noGapSwitch = new BooleanSetting("No Gap Switch", this, false);
@@ -79,7 +82,7 @@ public class AutoCrystal extends Module {
     private final DoubleSetting maxSelfDmg = new DoubleSetting("Max Self Dmg", this, 1.0, 36.0, 10.0);
     private final DoubleSetting minDmg = new DoubleSetting("Min Dmg", this, 0.0, 36.0, 5.0);
     private final DoubleSetting minFacePlaceDmg = new DoubleSetting("Min FacePlace Dmg", this, 0.0, 10.0, 2.0);
-    private final DoubleSetting defaultOpacityVal = new DoubleSetting("DefaultOpacity", this, 0.0, 1, 0.5);
+    private final DoubleSetting defaultOpacityVal = new DoubleSetting("Default Opacity", this, 0.0, 1, 0.5);
     private final DoubleSetting opacity = new DoubleSetting("Opacity", this, 0.0, 1, 0.5);
 
     private final DoubleSetting range = new DoubleSetting("Range", this, 0.0, 6.0, 4.5);
@@ -89,14 +92,15 @@ public class AutoCrystal extends Module {
     private final IntSetting facePlaceValue = new IntSetting("FacePlace HP", this, 0, 36, 8);
     private final IntSetting maxTargets = new IntSetting("Max Targets", this, 1, 5, 2);
     private final IntSetting timeout = new IntSetting("Timeout", this, 1, 50, 10);
-    private final EnumSetting < Priority > crystalPriority = new EnumSetting < > ("Prioritise", this, Priority.Damage);
-    private final EnumSetting < Server > server = new EnumSetting < > ("Server", this, Server.OneTwelve);
+    private final EnumSetting<Priority> crystalPriority = new EnumSetting<>("Prioritise", this, Priority.Damage);
+    private final EnumSetting<Server> server = new EnumSetting<>("Server", this, Server.OneTwelve);
     public static boolean rendering;
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
+    public static boolean stopAC = false;
     private final TimerUtil timer = new TimerUtil();
-    private List < CrystalInfo.PlaceInfo > targets = new ArrayList <> ();
+    private List<CrystalInfo.PlaceInfo> targets = new ArrayList<>();
     private final IntSet attackedCrystals = new IntOpenHashSet();
     private final ObjectSet<BlockPos> placedPos = new ObjectOpenHashSet<>();
     private boolean switchCooldown, isAttacking, rotating, finished;
@@ -105,7 +109,6 @@ public class AutoCrystal extends Module {
     private EntityEnderCrystal curCrystal, lastCrystal;
     private BlockPos curPos, lastPos, lastRenderPos;
     boolean offhand = false;
-    public EntityLivingBase renderTarget = null;
 
 
     public AutoCrystal() {
@@ -113,12 +116,16 @@ public class AutoCrystal extends Module {
         INSTANCE = this;
         this.registerSettings(antiWeakness, autoSwitch, instant, inhibit, noGapSwitch, predict, raytrace, rotate, setDead, wait,
                 attackSpeed, armourFacePlace, facePlaceValue, maxTargets, timeout,
-                enemyRange, defaultOpacityVal, maxSelfDmg, minDmg, minFacePlaceDmg, range, wallRange, fill, outline, opacity, crystalPriority, server);
+                enemyRange, maxSelfDmg, minDmg, minFacePlaceDmg, range, wallRange, fill, outline, opacity, defaultOpacityVal, crystalPriority, server);
     }
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (mc.player == null || mc.world == null || mc.player.isDead) {
+            return;
+        }
+
+        if (stopAC) {
             return;
         }
 
@@ -144,10 +151,7 @@ public class AutoCrystal extends Module {
                 rotating = false;
                 isAttacking = false;
                 render = null;
-                renderTarget = null;
             }
-        } else {
-            renderTarget = targets.isEmpty() ? null : targets.get(0).target.entity;
         }
     }
 
@@ -188,7 +192,9 @@ public class AutoCrystal extends Module {
             }
         }
     }
+
     private boolean crystalPlacedThisTick = false;
+
     @Listener
     public void onEntityDelete(EntityEvent.Delete event) {
         if (this.instant.booleanValue() && this.lastCrystal != null && this.curPos == null && event.getEntity() instanceof EntityEnderCrystal) {
@@ -262,20 +268,20 @@ public class AutoCrystal extends Module {
     public void onRenderWorld(float partialTicks) {
         if (render != null) {
             opacity.setDoubleValue(defaultOpacityVal.doubleValue());
-        rendering = false;
-        GradientShader.setup(opacity.floatValue());
-        rendering = true;
-        if (fill.booleanValue())
-            RenderUtil.boxShader(render);
-        if (outline.booleanValue()) {
-            RenderUtil.outlineShader(render);
-            RenderUtil.outlineShader(render);
-            RenderUtil.outlineShader(render);
-        }
-        GradientShader.finish();
-        lastRenderPos = render;
-        rendering = false;
-    } else {
+            rendering = false;
+            GradientShader.setup(opacity.floatValue());
+            rendering = true;
+            if (fill.booleanValue())
+                RenderUtil.boxShader(render);
+            if (outline.booleanValue()) {
+                RenderUtil.outlineShader(render);
+                RenderUtil.outlineShader(render);
+                RenderUtil.outlineShader(render);
+            }
+            GradientShader.finish();
+            lastRenderPos = render;
+            rendering = false;
+        } else {
             if (opacity.floatValue() > 0.0F) {
                 opacity.setDoubleValue(opacity.doubleValue() - 0.01F * partialTicks);
                 GradientShader.setup(opacity.floatValue());
@@ -308,17 +314,17 @@ public class AutoCrystal extends Module {
 
     public boolean breakCrystal(ACSettings settings) {
         if (!targets.isEmpty()) {
-            List < CrystalInfo.PlaceInfo > currentTargets;
+            List<CrystalInfo.PlaceInfo> currentTargets;
             if (targets.size() < maxTargets.intValue()) {
-                currentTargets = new ArrayList < > (targets);
+                currentTargets = new ArrayList<>(targets);
             } else {
                 currentTargets = targets.subList(0, maxTargets.intValue());
             }
-            List < EntityEnderCrystal > crystals = ACHelper.INSTANCE.getTargetableCrystals();
+            List<EntityEnderCrystal> crystals = ACHelper.INSTANCE.getTargetableCrystals();
 
-            TreeSet < CrystalInfo.BreakInfo > possibleCrystals = new TreeSet < > (crystalPriority.value().breakComparator);
+            TreeSet<CrystalInfo.BreakInfo> possibleCrystals = new TreeSet<>(crystalPriority.value().breakComparator);
 
-            for (CrystalInfo.PlaceInfo currentTarget: currentTargets) {
+            for (CrystalInfo.PlaceInfo currentTarget : currentTargets) {
                 CrystalInfo.BreakInfo breakInfo = ACUtil.calculateBestBreakable(settings, new PlayerInfo(currentTarget.target.entity, currentTarget.target.lowArmour), crystals);
                 if (breakInfo != null) {
                     possibleCrystals.add(breakInfo);
@@ -345,9 +351,9 @@ public class AutoCrystal extends Module {
                     isAttacking = true;
                 }
                 // search for sword and tools in hotbar
-                int newSlot = InventoryUtil.findFirstItemSlot(ItemSword.class, 0, 8);
+                int newSlot = InventoryManager.findFirstItemSlot(ItemSword.class, 0, 8);
                 if (newSlot == -1) {
-                    InventoryUtil.findFirstItemSlot(ItemTool.class, 0, 8);
+                    InventoryManager.findFirstItemSlot(ItemTool.class, 0, 8);
                 }
                 // check if any swords or tools were found
                 if (newSlot != -1) {
@@ -362,7 +368,7 @@ public class AutoCrystal extends Module {
                 rotating = rotate.booleanValue();
                 lastHitVec = crystal.getPositionVector();
                 if (!inhibit.booleanValue() || inhibit.booleanValue() && attackedCrystals.contains(crystal.getEntityId())) {
-                        mc.playerController.attackEntity(mc.player, crystal);
+                    mc.playerController.attackEntity(mc.player, crystal);
                     if (setDead.booleanValue()) mc.world.removeEntityFromWorld(crystal.getEntityId());
                 }
                 attackedCrystals.add(crystal.getEntityId());
@@ -381,17 +387,17 @@ public class AutoCrystal extends Module {
     }
 
     private boolean placeCrystal(ACSettings settings) {
-        List < CrystalInfo.PlaceInfo > currentTargets;
+        List<CrystalInfo.PlaceInfo> currentTargets;
         if (targets.size() < maxTargets.intValue()) {
-            currentTargets = new ArrayList < > (targets);
+            currentTargets = new ArrayList<>(targets);
         } else {
             currentTargets = targets.subList(0, maxTargets.intValue());
         }
-        List < BlockPos > placements = ACHelper.INSTANCE.getPossiblePlacements();
+        List<BlockPos> placements = ACHelper.INSTANCE.getPossiblePlacements();
 
-        TreeSet < CrystalInfo.PlaceInfo > possiblePlacements = new TreeSet < > (crystalPriority.value().placeComparator);
+        TreeSet<CrystalInfo.PlaceInfo> possiblePlacements = new TreeSet<>(crystalPriority.value().placeComparator);
 
-        for (CrystalInfo.PlaceInfo currentTarget: currentTargets) {
+        for (CrystalInfo.PlaceInfo currentTarget : currentTargets) {
             CrystalInfo.PlaceInfo placeInfo = ACUtil.calculateBestPlacement(settings, new PlayerInfo(currentTarget.target.entity, currentTarget.target.lowArmour), placements);
             if (placeInfo != null) {
                 placedPos.add(placeInfo.pos);
@@ -445,29 +451,21 @@ public class AutoCrystal extends Module {
         if (!offhand && mc.player.inventory.currentItem != crystalSlot) {
             if (this.autoSwitch.booleanValue()) {
                 if (!noGapSwitch.booleanValue() || !(mc.player.getHeldItemMainhand().getItem() == Items.GOLDEN_APPLE)) {
-                    if (crystalSlot >= 9) {
-                        mc.playerController.windowClick(0, crystalSlot, 0, ClickType.PICKUP, mc.player);
-                        mc.playerController.windowClick(0, mc.player.inventory.currentItem + 36, 0, ClickType.PICKUP, mc.player);
-                        mc.playerController.windowClick(0, crystalSlot, 0, ClickType.PICKUP, mc.player);
-                    } else {
-                        mc.player.inventory.currentItem = crystalSlot;
-                    }
+                    mc.player.inventory.currentItem = crystalSlot;
                     rotating = false;
                     this.switchCooldown = true;
                 }
             }
             return false;
         }
-
         if (this.switchCooldown) {
             this.switchCooldown = false;
             return false;
         }
-
         EnumFacing validFace = mc.player.posY + mc.player.getEyeHeight() > pos.getY() + 0.5 || !mc.world.isAirBlock(pos.down()) ? EnumFacing.UP : EnumFacing.DOWN;
 
         if (raytrace.booleanValue()) {
-            RayTraceResult result = mc.world.rayTraceBlocks(new Vec3d(mc.player.posX, mc.player.posY + mc.player.getEyeHeight(), mc.player.posZ), new Vec3d(pos.getX() + 0.5, pos.getY() - 0.5, pos.getZ() + 0.5));
+            RayTraceResult result = mc.world.rayTraceBlocks(new Vec3d(mc.player.posX, mc.player.posY + (double) mc.player.getEyeHeight(), mc.player.posZ), new Vec3d((double) pos.getX() + 0.5, (double) pos.getY() - 0.5, (double) pos.getZ() + 0.5));
             if (result == null || result.sideHit == null) {
                 render = null;
                 return false;
@@ -492,7 +490,7 @@ public class AutoCrystal extends Module {
     }
 
     private void collectTargetFinder() {
-        List < CrystalInfo.PlaceInfo > output = ACHelper.INSTANCE.getOutput(wait.booleanValue());
+        List<CrystalInfo.PlaceInfo> output = ACHelper.INSTANCE.getOutput(wait.booleanValue());
         if (output != null) {
             finished = true;
             if (!output.isEmpty()) {
@@ -504,7 +502,7 @@ public class AutoCrystal extends Module {
     }
 
     public EntityLivingBase getTarget() {
-        AtomicReference <EntityLivingBase> target = new AtomicReference<>();
+        AtomicReference<EntityLivingBase> target = new AtomicReference<>();
         targets.forEach(it -> {
             target.set(it.target.entity);
         });
@@ -516,10 +514,10 @@ public class AutoCrystal extends Module {
         Closest(Comparator.comparingDouble(o -> -mc.player.getDistanceSq(o.target.entity)), Comparator.comparingDouble(o -> -mc.player.getDistanceSq(o.target.entity))),
         Health(Comparator.comparingDouble(o -> o.damage), Comparator.comparingDouble(o -> o.damage));
 
-        public final Comparator < CrystalInfo.PlaceInfo > placeComparator;
-        public final Comparator < CrystalInfo.BreakInfo > breakComparator;
+        public final Comparator<CrystalInfo.PlaceInfo> placeComparator;
+        public final Comparator<CrystalInfo.BreakInfo> breakComparator;
 
-        Priority(Comparator < CrystalInfo.PlaceInfo > placeComparator, Comparator < CrystalInfo.BreakInfo > breakComparator) {
+        Priority(Comparator<CrystalInfo.PlaceInfo> placeComparator, Comparator<CrystalInfo.BreakInfo> breakComparator) {
             this.placeComparator = placeComparator;
             this.breakComparator = breakComparator;
         }
@@ -527,12 +525,9 @@ public class AutoCrystal extends Module {
 
     @Override
     public String getHudInfo() {
-        if(this.renderTarget != null) {
-            return this.renderTarget.getName();
-        }
-
-        return "";
+        return server.value().toString();
     }
+
 
     public enum Server {
         OneTwelve("1.12"),

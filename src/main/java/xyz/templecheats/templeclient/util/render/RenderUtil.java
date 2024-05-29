@@ -2,10 +2,10 @@ package xyz.templecheats.templeclient.util.render;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.shader.Framebuffer;
-import net.minecraft.client.renderer.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
@@ -18,8 +18,10 @@ import xyz.templecheats.templeclient.features.module.modules.client.Colors;
 import xyz.templecheats.templeclient.mixins.accessor.IMixinRenderManager;
 import xyz.templecheats.templeclient.util.Globals;
 import xyz.templecheats.templeclient.util.color.ColorUtil;
-import xyz.templecheats.templeclient.util.render.shader.impl.RoundedTexture;
 import xyz.templecheats.templeclient.util.math.Vec2d;
+import xyz.templecheats.templeclient.util.render.shader.impl.RoundedTexture;
+
+import java.awt.*;
 
 import static java.lang.Math.atan;
 import static org.lwjgl.opengl.GL11.*;
@@ -27,16 +29,15 @@ import static xyz.templecheats.templeclient.util.color.ColorUtil.lerpColor;
 import static xyz.templecheats.templeclient.util.color.ColorUtil.setAlpha;
 import static xyz.templecheats.templeclient.util.render.StencilUtil.*;
 
-import java.awt.*;
-
 public class RenderUtil implements Globals {
     public static final IMixinRenderManager renderManager = (IMixinRenderManager) mc.getRenderManager();
     private static final ResourceLocation blank = new ResourceLocation("textures/blank.png");
     public static final Color transparent = new Color(0, 0, 0, 0);
 
-    /**
-     * Renders
-     */
+    /****************************************************************
+     *                  Rendering Methods
+     ****************************************************************/
+
     public static void trace(Minecraft mc, Entity e, float partialTicks, int mode, float red, float green, float blue) {
         if (mc.getRenderManager().renderViewEntity != null) {
             glDisable(GL_DEPTH_TEST);
@@ -91,95 +92,85 @@ public class RenderUtil implements Globals {
             double z = Math.cos(dir) * radius;
             buffer.pos(x, 0.0, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
         }
-        buffer.pos(0.0, height, 0.0).color(0, 0 ,0 ,0).endVertex();
+        buffer.pos(0.0, height, 0.0).color(0, 0, 0, 0).endVertex();
         tessellator.draw();
     }
 
-    public static void drawGradientCircleOutline(float radius, float outlineWidth, int alpha) {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
-
-        GlStateManager.glLineWidth(outlineWidth);
-        GlStateManager.color(-1f, -1f, -1f, -1f);
-        buffer.begin(GL_LINE_LOOP, DefaultVertexFormats.POSITION_COLOR);
-        for (int i = 0; i <= 360; i++) {
-            double percent = (double) i / 360;
-            double progress = ((percent > 0.5) ? 1.0 - percent : percent) * 2.0;
-            Color color = ColorUtil.setAlpha(lerpColor(Colors.INSTANCE.getGradient()[1], Colors.INSTANCE.getGradient()[0], (float) progress), alpha);
-
-            double dir = Math.toRadians(i - 180.0);
-            double x = -Math.sin(dir) * radius;
-            double z = Math.cos(dir) * radius;
-            buffer.pos(x, 0.0, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+    public static void drawPlayer(EntityPlayer player, float playerScale, float x, float y) {
+        GlStateManager.pushAttrib();
+        GlStateManager.pushMatrix();
+        GlStateManager.color(1.0f, 1.0f, 1.0f);
+        RenderHelper.enableStandardItemLighting();
+        GlStateManager.enableAlpha();
+        GlStateManager.shadeModel(7424);
+        GlStateManager.enableAlpha();
+        GlStateManager.enableDepth();
+        GlStateManager.rotate(0.0f, 0.0f, 5.0f, 0.0f);
+        GlStateManager.enableColorMaterial();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, 50.0f);
+        GlStateManager.scale(-50.0f * playerScale, 50.0f * playerScale, 50.0f * playerScale);
+        GlStateManager.rotate(180.0f, 0.0f, 0.0f, 1.0f);
+        GlStateManager.rotate(135.0f, 0.0f, 1.0f, 0.0f);
+        RenderHelper.enableStandardItemLighting();
+        GlStateManager.rotate(-135.0f, 0.0f, 1.0f, 0.0f);
+        GlStateManager.rotate((float) ((-atan(y / 40.0f)) * 20.0f), 1.0f, 0.0f, 0.0f);
+        GlStateManager.translate(0.0f, 0.0f, 0.0f);
+        RenderManager renderManager = mc.getRenderManager();
+        try {
+            renderManager.setPlayerViewY(180.0f);
+            renderManager.renderEntity(player, 0.0, 0.0, 0.0, 0.0f, 1.0f, false);
+        } catch (Exception ignored) {
         }
-        tessellator.draw();
+        GlStateManager.popMatrix();
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        GlStateManager.disableTexture2D();
+        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+        GlStateManager.depthFunc(515);
+        GlStateManager.resetColor();
+        GlStateManager.disableDepth();
+        GlStateManager.popMatrix();
+        GlStateManager.popAttrib();
     }
 
-    public static void drawCoolCircle(float radius, int alpha) {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
+    public static void drawHead(Entity entity, Vec2d pos1, Vec2d pos2, float radius) {
+        GlStateManager.pushMatrix();
+        initStencilToWrite();
+        new RoundedTexture().drawRoundTextured((float) pos1.x, (float) pos1.y, (float) pos2.minus(pos1.x).x, (float) pos2.minus(pos1.y).y, radius, 1.0f);
+        readStencilBuffer(1);
 
-        GlStateManager.color(-1f, -1f, -1f, -1f);
-        buffer.begin(GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-        for (int i = 0; i <= 360; i++) {
-            double percent = (double) i / 360;
-            double progress = ((percent > 0.5) ? 1.0 - percent : percent) * 2.0;
-            Color color = ColorUtil.setAlpha(lerpColor(Colors.INSTANCE.getGradient()[1], Colors.INSTANCE.getGradient()[0], (float) progress), alpha);
+        if (entity instanceof AbstractClientPlayer) {
+            AbstractClientPlayer player = (AbstractClientPlayer) entity;
+            ResourceLocation skin = player.getLocationSkin();
+            Color headColor = Color.WHITE;
 
-            double dir = Math.toRadians(i - 180.0);
+            glColor3d(headColor.getRed() / 255.0, headColor.getGreen() / 255.0, headColor.getBlue() / 255.0);
+            mc.getTextureManager().bindTexture(skin);
 
-            double x = -Math.sin(dir) * radius;
-            double z = Math.cos(dir) * radius;
+            Vec2d uv1 = new Vec2d(8.0F, 8.0F); // head left top
+            Vec2d uv2 = new Vec2d(16.0F, 16.0F); // head right bottom
 
-            double x0 = Math.cos(i + dir) * radius;
-            double z0 = -Math.sin(i + dir) * radius;
+            float textureSize = 64.0F;
 
-            buffer.pos(x, 0.0, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
-            buffer.pos(x0, 0.0, z0).color(color.getRed(), color.getGreen(), color.getBlue(), 0).endVertex();
+            // normalized uv cords
+            Vec2d nuv1 = uv1.div(textureSize);
+            Vec2d nuv2 = uv2.div(textureSize);
+
+            Tessellator tessellator = Tessellator.getInstance();
+            BufferBuilder buffer = tessellator.getBuffer();
+            buffer.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+
+            buffer.pos(pos1.x, pos2.y, 0.0).tex(nuv1.x, nuv2.y).endVertex();
+            buffer.pos(pos2.x, pos2.y, 0.0).tex(nuv2.x, nuv2.y).endVertex();
+            buffer.pos(pos2.x, pos1.y, 0.0).tex(nuv2.x, nuv1.y).endVertex();
+            buffer.pos(pos1.x, pos1.y, 0.0).tex(nuv1.x, nuv1.y).endVertex();
+
+            tessellator.draw();
         }
-        tessellator.draw();
-    }
-
-    // Very long name
-    public static void drawFadeGradientCircleOutline(float radius, float size, int alpha) {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
-
-        GlStateManager.color(-1f, -1f, -1f, -1f);
-        buffer.begin(GL_QUAD_STRIP, DefaultVertexFormats.POSITION_COLOR);
-        for (int i = 0; i <= 360; i++) {
-            double percent = (double) i / 360;
-            double progress = ((percent > 0.5) ? 1.0 - percent : percent) * 2.0;
-            Color color = ColorUtil.setAlpha(lerpColor(Colors.INSTANCE.getGradient()[1], Colors.INSTANCE.getGradient()[0], (float) progress), alpha);
-
-            double dir = Math.toRadians(i - 180.0);
-
-            double x = -Math.sin(dir) * radius;
-            double z = Math.cos(dir) * radius;
-
-            double x0 = -Math.sin(dir) * (radius + size);
-            double z0 = Math.cos(dir) * (radius + size);
-
-            buffer.pos(x, 0.0, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
-            buffer.pos(x0, 0.0, z0).color(color.getRed(), color.getGreen(), color.getBlue(), 0).endVertex();
-        }
-        tessellator.draw();
-    }
-
-    public static void FillOnlyLine(Entity entity, AxisAlignedBB box) {
-        glBlendFunc(770, 771);
-        glEnable(GL_BLEND);
-        glLineWidth(2.0F);
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_DEPTH_TEST);
-        glDepthMask(false);
-
-        RenderGlobal.drawSelectionBoundingBox(box, 1, 0, 0, 1);
-
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_DEPTH_TEST);
-        glDepthMask(true);
-        glDisable(GL_BLEND);
+        uninitStencilBuffer();
+        GlStateManager.popMatrix();
     }
 
     public static void FillOnlyLinePlayerESP(Entity entity, AxisAlignedBB box, float r, float g, float b) {
@@ -232,9 +223,9 @@ public class RenderUtil implements Globals {
         glPopMatrix();
     }
 
-    /**
-     * ClickGUI
-     */
+    /****************************************************************
+     *                  ClickGUI Methods
+     ****************************************************************/
 
     public static void drawRect(float left, float top, float right, float bottom, int color) {
         if (left < right) {
@@ -334,16 +325,31 @@ public class RenderUtil implements Globals {
         RenderUtil.drawRect(right, top - borderWidth, right + borderWidth, bottom + borderWidth, color);
     }
 
-    public static void drawInBorderedRect(int left, int top, int right, int bottom, int borderWidth, int color) {
-        RenderUtil.drawRect(left + borderWidth, top + borderWidth, right - borderWidth, top, color);
-        RenderUtil.drawRect(left + borderWidth, bottom, right - borderWidth, bottom - borderWidth, color);
-        RenderUtil.drawRect(left + borderWidth, top + borderWidth, left, bottom - borderWidth, color);
-        RenderUtil.drawRect(right, top + borderWidth, right - borderWidth, bottom - borderWidth, color);
+    public static void drawOutlineRect(float left, float top, float right, float bottom, int color) {
+        float f = (float)(color >> 24 & 255) / 255.0F;
+        float f1 = (float)(color >> 16 & 255) / 255.0F;
+        float f2 = (float)(color >> 8 & 255) / 255.0F;
+        float f3 = (float)(color & 255) / 255.0F;
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.color(f1, f2, f3, f);
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        GlStateManager.glLineWidth(3.0F);
+        bufferbuilder.begin(2, DefaultVertexFormats.POSITION);
+        bufferbuilder.pos((double)left, (double)bottom, 0.0D).endVertex();
+        bufferbuilder.pos((double)right, (double)bottom, 0.0D).endVertex();
+        bufferbuilder.pos((double)right, (double)top, 0.0D).endVertex();
+        bufferbuilder.pos((double)left, (double)top, 0.0D).endVertex();
+        tessellator.draw();
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
     }
 
-    /**
-     * Shaders
-     */
+    /****************************************************************
+     *                  Shader Methods
+     ****************************************************************/
 
     public static void outlineShader(final BlockPos pos) {
         if (pos != null) {
@@ -568,7 +574,6 @@ public class RenderUtil implements Globals {
         GlStateManager.popMatrix();
     }
 
-
     public static void renderGradientLine(final double minX, final double minY, final double minZ,
                                           final double maxX, final double maxY, final double maxZ, final Color color) {
         final AxisAlignedBB bb = new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ).offset(RenderUtil.renderOffset());
@@ -608,6 +613,51 @@ public class RenderUtil implements Globals {
         GlStateManager.popMatrix();
     }
 
+    public static void drawFadeGradientCircleOutline(float radius, float size, int alpha) {
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
+
+        GlStateManager.color(-1f, -1f, -1f, -1f);
+        buffer.begin(GL_QUAD_STRIP, DefaultVertexFormats.POSITION_COLOR);
+        for (int i = 0; i <= 360; i++) {
+            double percent = (double) i / 360;
+            double progress = ((percent > 0.5) ? 1.0 - percent : percent) * 2.0;
+            Color color = ColorUtil.setAlpha(lerpColor(Colors.INSTANCE.getGradient()[1], Colors.INSTANCE.getGradient()[0], (float) progress), alpha);
+
+            double dir = Math.toRadians(i - 180.0);
+
+            double x = -Math.sin(dir) * radius;
+            double z = Math.cos(dir) * radius;
+
+            double x0 = -Math.sin(dir) * (radius + size);
+            double z0 = Math.cos(dir) * (radius + size);
+
+            buffer.pos(x, 0.0, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+            buffer.pos(x0, 0.0, z0).color(color.getRed(), color.getGreen(), color.getBlue(), 0).endVertex();
+        }
+        tessellator.draw();
+    }
+
+    public static void drawGradientCircleOutline(float radius, float outlineWidth, int alpha) {
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
+
+        GlStateManager.glLineWidth(outlineWidth);
+        GlStateManager.color(-1f, -1f, -1f, -1f);
+        buffer.begin(GL_LINE_LOOP, DefaultVertexFormats.POSITION_COLOR);
+        for (int i = 0; i <= 360; i++) {
+            double percent = (double) i / 360;
+            double progress = ((percent > 0.5) ? 1.0 - percent : percent) * 2.0;
+            Color color = ColorUtil.setAlpha(lerpColor(Colors.INSTANCE.getGradient()[1], Colors.INSTANCE.getGradient()[0], (float) progress), alpha);
+
+            double dir = Math.toRadians(i - 180.0);
+            double x = -Math.sin(dir) * radius;
+            double z = Math.cos(dir) * radius;
+            buffer.pos(x, 0.0, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+        }
+        tessellator.draw();
+    }
+
     private static void addVertexWithColor(BufferBuilder bufferBuilder, double x, double y, double z, Color color) {
         bufferBuilder.pos(x, y, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
     }
@@ -618,7 +668,6 @@ public class RenderUtil implements Globals {
         addVertexWithColor(bufferBuilder, startX, startY, startZ, color);
         addVertexWithColor(bufferBuilder, endX, endY, endZ, transparent);
     }
-
 
     public static void boxFaceShader(final BlockPos pos, EnumFacing face, Color color) {
         if (pos != null) {
@@ -669,6 +718,11 @@ public class RenderUtil implements Globals {
             glPopMatrix();
         }
     }
+
+    /****************************************************************
+     *                  Utility Methods
+     ****************************************************************/
+
     public static Vec3d renderOffset() {
         return new Vec3d(-mc.getRenderManager().viewerPosX, -mc.getRenderManager().viewerPosY, -mc.getRenderManager().viewerPosZ);
     }
@@ -686,83 +740,6 @@ public class RenderUtil implements Globals {
         buffer.pos(0.0F, 0.0F, 0.0F).tex(0F, 0F).color(color2.getRed(), color2.getGreen(), color2.getBlue(), color2.getAlpha()).endVertex();
 
         tessellator.draw();
-    }
-
-    public static void drawHead(Entity entity, Vec2d pos1, Vec2d pos2, float radius) {
-        GlStateManager.pushMatrix();
-        initStencilToWrite();
-        new RoundedTexture().drawRoundTextured((float) pos1.x, (float) pos1.y, (float) pos2.minus(pos1.x).x, (float) pos2.minus(pos1.y).y, radius , 1.0f);
-        readStencilBuffer(1);
-
-        if (entity instanceof AbstractClientPlayer) {
-            AbstractClientPlayer player = (AbstractClientPlayer) entity;
-            ResourceLocation skin = player.getLocationSkin();
-            Color headColor = Color.WHITE;
-
-            glColor3d(headColor.getRed() / 255.0, headColor.getGreen() / 255.0, headColor.getBlue() / 255.0);
-            mc.getTextureManager().bindTexture(skin);
-
-            Vec2d uv1 = new Vec2d(8.0F, 8.0F); // head left top
-            Vec2d uv2 = new Vec2d(16.0F, 16.0F); // head right bottom
-
-            float textureSize = 64.0F;
-
-            // normalized uv cords
-            Vec2d nuv1 = uv1.div(textureSize);
-            Vec2d nuv2 = uv2.div(textureSize);
-
-            Tessellator tessellator = Tessellator.getInstance();
-            BufferBuilder buffer = tessellator.getBuffer();
-            buffer.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-
-            buffer.pos(pos1.x, pos2.y, 0.0).tex(nuv1.x, nuv2.y).endVertex();
-            buffer.pos(pos2.x, pos2.y, 0.0).tex(nuv2.x, nuv2.y).endVertex();
-            buffer.pos(pos2.x, pos1.y, 0.0).tex(nuv2.x, nuv1.y).endVertex();
-            buffer.pos(pos1.x, pos1.y, 0.0).tex(nuv1.x, nuv1.y).endVertex();
-
-            tessellator.draw();
-        }
-        uninitStencilBuffer();
-        GlStateManager.popMatrix();
-    }
-
-    public static void drawPlayer(EntityPlayer player, float playerScale, float x, float y) {
-        GlStateManager.pushAttrib();
-        GlStateManager.pushMatrix();
-        GlStateManager.color(1.0f, 1.0f, 1.0f);
-        RenderHelper.enableStandardItemLighting();
-        GlStateManager.enableAlpha();
-        GlStateManager.shadeModel(7424);
-        GlStateManager.enableAlpha();
-        GlStateManager.enableDepth();
-        GlStateManager.rotate(0.0f, 0.0f, 5.0f, 0.0f);
-        GlStateManager.enableColorMaterial();
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, 50.0f);
-        GlStateManager.scale(-50.0f * playerScale, 50.0f * playerScale, 50.0f * playerScale);
-        GlStateManager.rotate(180.0f, 0.0f, 0.0f, 1.0f);
-        GlStateManager.rotate(135.0f, 0.0f, 1.0f, 0.0f);
-        RenderHelper.enableStandardItemLighting();
-        GlStateManager.rotate(-135.0f, 0.0f, 1.0f, 0.0f);
-        GlStateManager.rotate((float) ((-atan(y / 40.0f)) * 20.0f), 1.0f, 0.0f, 0.0f);
-        GlStateManager.translate(0.0f, 0.0f, 0.0f);
-        RenderManager renderManager = mc.getRenderManager();
-        try {
-            renderManager.setPlayerViewY(180.0f);
-            renderManager.renderEntity(player, 0.0, 0.0, 0.0, 0.0f, 1.0f, false);
-        } catch (Exception ignored) {
-        }
-        GlStateManager.popMatrix();
-        RenderHelper.disableStandardItemLighting();
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-        GlStateManager.disableTexture2D();
-        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-        GlStateManager.depthFunc(515);
-        GlStateManager.resetColor();
-        GlStateManager.disableDepth();
-        GlStateManager.popMatrix();
-        GlStateManager.popAttrib();
     }
 
     public static void bind(final ResourceLocation resourceLocation) {

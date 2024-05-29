@@ -1,4 +1,5 @@
 package xyz.templecheats.templeclient.util.time;
+
 public class TimerUtil {
 
     private long current;
@@ -8,6 +9,9 @@ public class TimerUtil {
         this.current = System.currentTimeMillis();
     }
 
+    /****************************************************************
+     *                  Reset Methods
+     ****************************************************************/
     public void reset() {
         this.current = System.currentTimeMillis();
     }
@@ -18,13 +22,19 @@ public class TimerUtil {
     }
 
     public void resetTms() {
-        time = System.currentTimeMillis();
+        this.time = System.currentTimeMillis();
     }
 
+    /****************************************************************
+     *                  Setter Methods
+     ****************************************************************/
     public void setMs(long ms) {
         this.time = System.nanoTime() - this.convertToNS(ms);
     }
 
+    /****************************************************************
+     *                  Getter Methods
+     ****************************************************************/
     public long getMs(long time) {
         return time / 1000000L;
     }
@@ -37,6 +47,9 @@ public class TimerUtil {
         return this.getMs(System.nanoTime() - this.time);
     }
 
+    /****************************************************************
+     *                  Time Check Methods
+     ****************************************************************/
     public boolean hasReached(final long delay) {
         return System.currentTimeMillis() - this.current >= delay;
     }
@@ -47,6 +60,7 @@ public class TimerUtil {
         }
         return System.currentTimeMillis() - this.current >= delay;
     }
+
     public boolean passedS(double s) {
         return this.passedMs((long) s * 1000L);
     }
@@ -67,14 +81,13 @@ public class TimerUtil {
         return System.nanoTime() - this.time >= ns;
     }
 
-    public long convertToNS(long time) {
-        return time * 1000000L;
-    }
-
     public boolean hasPassed(double ms) {
-        return System.currentTimeMillis() - time >= ms;
+        return System.currentTimeMillis() - this.time >= ms;
     }
 
+    /****************************************************************
+     *                  Utility Methods
+     ****************************************************************/
     public boolean sleep(final long time) {
         if (this.time() >= time) {
             this.reset();
@@ -85,5 +98,9 @@ public class TimerUtil {
 
     public long time() {
         return System.currentTimeMillis() - this.current;
+    }
+
+    public long convertToNS(long time) {
+        return time * 1000000L;
     }
 }

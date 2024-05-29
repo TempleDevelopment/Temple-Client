@@ -1,7 +1,5 @@
 package xyz.templecheats.templeclient.features.module.modules.render;
 
-import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
-import xyz.templecheats.templeclient.TempleClient;
 import com.google.common.collect.Lists;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -17,6 +15,8 @@ import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
+import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
+import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.event.events.render.Render3DPreEvent;
 import xyz.templecheats.templeclient.features.gui.font.CFont;
 import xyz.templecheats.templeclient.features.module.Module;
@@ -26,21 +26,19 @@ import xyz.templecheats.templeclient.mixins.accessor.IMixinRenderManager;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 
 import java.awt.*;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class NameTags extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final BooleanSetting border = new BooleanSetting("Border", this, true);
     private final BooleanSetting customFont = new BooleanSetting("Custom Font", this, false);
     private final BooleanSetting items = new BooleanSetting("Items", this, true);
     private final Set<EntityPlayer> players = new TreeSet<>(Comparator.comparing(player -> mc.player.getDistance((EntityPlayer) player)).reversed());
     private final CFont font = FontSettings.getFont(18);
+
     public NameTags() {
         super("Nametags", "Renders nametags above entities", Keyboard.KEY_NONE, Category.Render);
         registerSettings(border, customFont, items);
@@ -53,7 +51,7 @@ public class NameTags extends Module {
     }
 
     @SubscribeEvent
-    public void onRender(RenderLivingEvent.Specials.Pre < ? > event) {
+    public void onRender(RenderLivingEvent.Specials.Pre<?> event) {
         final EntityLivingBase e = event.getEntity();
 
         if (e instanceof EntityPlayer && (mc.gameSettings.thirdPersonView != 0 || !e.equals(mc.player)) && !e.isDead && e.getHealth() > 0 && !e.isInvisible()) {
@@ -63,7 +61,7 @@ public class NameTags extends Module {
 
     @Listener
     public void onRender3DPost(Render3DPreEvent event) {
-        for (EntityPlayer player: this.players) {
+        for (EntityPlayer player : this.players) {
             if (player.equals(mc.player) || player.isDead || player.getHealth() <= 0 || player.isInvisible()) {
                 continue;
             }
@@ -81,7 +79,8 @@ public class NameTags extends Module {
         String ping = "";
         try {
             ping = " " + Objects.requireNonNull(mc.getConnection()).getPlayerInfo(entity.getUniqueID()).getResponseTime() + "ms";
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         GL11.glPushMatrix();
         GL11.glTranslated(pos.x, pos.y + 1, pos.z);
@@ -119,11 +118,11 @@ public class NameTags extends Module {
         }
         if (entity instanceof EntityPlayer && this.items.booleanValue()) {
             final EntityPlayer player = (EntityPlayer) entity;
-            final List < ItemStack > armor = Lists.reverse(player.inventory.armorInventory);
+            final List<ItemStack> armor = Lists.reverse(player.inventory.armorInventory);
 
             boolean hasDurability = false;
             int totalItemsWidth = 0;
-            for (ItemStack stack: armor) {
+            for (ItemStack stack : armor) {
                 if (!stack.isEmpty()) {
                     totalItemsWidth += 16;
                     if (stack.getItem().showDurabilityBar(stack)) {
@@ -152,7 +151,7 @@ public class NameTags extends Module {
                 xOffset += 16;
             }
 
-            for (ItemStack stack: armor) {
+            for (ItemStack stack : armor) {
                 if (!stack.isEmpty()) {
                     this.renderItem(stack, xOffset, yOffset);
                     xOffset += 16;
@@ -169,7 +168,7 @@ public class NameTags extends Module {
     }
 
     private void renderItem(ItemStack stack, int x, int y) {
-        final int durability = (int)((stack.getMaxDamage() - stack.getItemDamage()) / (float) stack.getMaxDamage() * 100);
+        final int durability = (int) ((stack.getMaxDamage() - stack.getItemDamage()) / (float) stack.getMaxDamage() * 100);
         if (durability >= 0 && stack.getItem().showDurabilityBar(stack)) {
             final String duraString = String.valueOf(durability);
             if (!customFont.booleanValue()) {
@@ -236,13 +235,14 @@ public class NameTags extends Module {
             outsideB = outsideColor.getBlue() / 255.0f;
         }
         final int outsideA = insideA;
-        this.drawHorizontalLine(left, right - 1, top, (int)(outsideR * 255), (int)(outsideG * 255), (int)(outsideB * 255), outsideA);
-        this.drawHorizontalLine(left, right - 1, bottom - 1, (int)(outsideR * 255), (int)(outsideG * 255), (int)(outsideB * 255), outsideA);
-        this.drawVerticalLine(left, top, bottom - 1, (int)(outsideR * 255), (int)(outsideG * 255), (int)(outsideB * 255), outsideA);
-        this.drawVerticalLine(right - 1, top, bottom - 1, (int)(outsideR * 255), (int)(outsideG * 255), (int)(outsideB * 255), outsideA);
+        this.drawHorizontalLine(left, right - 1, top, (int) (outsideR * 255), (int) (outsideG * 255), (int) (outsideB * 255), outsideA);
+        this.drawHorizontalLine(left, right - 1, bottom - 1, (int) (outsideR * 255), (int) (outsideG * 255), (int) (outsideB * 255), outsideA);
+        this.drawVerticalLine(left, top, bottom - 1, (int) (outsideR * 255), (int) (outsideG * 255), (int) (outsideB * 255), outsideA);
+        this.drawVerticalLine(right - 1, top, bottom - 1, (int) (outsideR * 255), (int) (outsideG * 255), (int) (outsideB * 255), outsideA);
     }
+
     private int getHealthColor(EntityLivingBase entity) {
-        final int health = (int)((entity.getMaxHealth() - (entity.getHealth() + entity.getAbsorptionAmount())) / entity.getMaxHealth() * 36);
+        final int health = (int) ((entity.getMaxHealth() - (entity.getHealth() + entity.getAbsorptionAmount())) / entity.getMaxHealth() * 36);
 
         switch (MathHelper.clamp(health, 0, 36) / 6) {
             case 0:

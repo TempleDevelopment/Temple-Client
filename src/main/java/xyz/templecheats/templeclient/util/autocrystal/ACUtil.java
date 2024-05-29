@@ -2,10 +2,25 @@ package xyz.templecheats.templeclient.util.autocrystal;
 
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.util.math.BlockPos;
+import xyz.templecheats.templeclient.util.player.DamageUtil;
+import xyz.templecheats.templeclient.util.player.PlayerInfo;
 
 import java.util.List;
 
 public class ACUtil {
+
+    /****************************************************************
+     *                      Placement Calculation
+     ****************************************************************/
+
+    /**
+     * Calculates the best crystal placement based on the given settings, target, and possible locations.
+     *
+     * @param settings          The settings for AutoCrystal.
+     * @param target            The target player information.
+     * @param possibleLocations The list of possible block positions for placing crystals.
+     * @return The best placement information or null if no suitable position is found.
+     */
     public static CrystalInfo.PlaceInfo calculateBestPlacement(ACSettings settings, PlayerInfo target, List<BlockPos> possibleLocations) {
         double x = settings.playerPos.x;
         double y = settings.playerPos.y;
@@ -13,6 +28,7 @@ public class ACUtil {
 
         BlockPos best = null;
         float bestDamage = 0f;
+
         for (BlockPos pos : possibleLocations) {
             if (target.entity.getDistanceSq((double) pos.getX() + 0.5, (double) pos.getY() + 1.0, (double) pos.getZ() + 0.5) <= settings.enemyRangeSq) {
                 float currentDamage = DamageUtil.calculateDamageThreaded(pos, target);
@@ -37,6 +53,18 @@ public class ACUtil {
         return null;
     }
 
+    /****************************************************************
+     *                      Break Calculation
+     ****************************************************************/
+
+    /**
+     * Calculates the best crystal to break based on the given settings, target, and list of crystals.
+     *
+     * @param settings The settings for AutoCrystal.
+     * @param target   The target player information.
+     * @param crystals The list of ender crystals.
+     * @return The best break information or null if no suitable crystal is found.
+     */
     public static CrystalInfo.BreakInfo calculateBestBreakable(ACSettings settings, PlayerInfo target, List<EntityEnderCrystal> crystals) {
         double x = settings.playerPos.x;
         double y = settings.playerPos.y;
@@ -44,6 +72,7 @@ public class ACUtil {
 
         EntityEnderCrystal best = null;
         float bestDamage = 0f;
+
         for (EntityEnderCrystal crystal : crystals) {
             float currentDamage = DamageUtil.calculateDamageThreaded(crystal, target);
             if (currentDamage == bestDamage) {

@@ -1,16 +1,20 @@
 package xyz.templecheats.templeclient.util.setting.impl;
 
 import com.google.gson.JsonObject;
-import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.buttons.Button;
 import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.Item;
+import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.buttons.Button;
 import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.buttons.IntSlider;
 import xyz.templecheats.templeclient.util.setting.Setting;
 import xyz.templecheats.templeclient.util.setting.SettingHolder;
 
-public class IntSetting extends Setting < Integer > {
-    public final int min,
-            max;
+public class IntSetting extends Setting<Integer> {
+    public final int min;
+    public final int max;
     private int value;
+
+    /****************************************************************
+     *                  Constructor
+     ****************************************************************/
 
     public IntSetting(String name, SettingHolder parent, int min, int max, int defaultValue) {
         super(name, parent);
@@ -18,6 +22,10 @@ public class IntSetting extends Setting < Integer > {
         this.max = max;
         this.value = defaultValue;
     }
+
+    /****************************************************************
+     *                  Public Methods
+     ****************************************************************/
 
     public int intValue() {
         return this.value;
@@ -55,7 +63,8 @@ public class IntSetting extends Setting < Integer > {
     }
 
     @Override
-    public xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.Item createCsgoButton(xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.Button parent) {
+    public xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.Item createCsgoButton(
+            xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.Button parent) {
         return new xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.slider.IntSlider(this, parent);
     }
 }

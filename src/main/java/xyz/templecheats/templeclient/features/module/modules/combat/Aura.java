@@ -28,9 +28,9 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Aura extends Module {
     public static Aura INSTANCE;
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final BooleanSetting ignoreWalls = new BooleanSetting("Raytrace", this, true);
     private final BooleanSetting requireWeapon = new BooleanSetting("Sword-Only", this, true);
     private final BooleanSetting rotate = new BooleanSetting("Rotate", this, true);
@@ -45,15 +45,15 @@ public class Aura extends Module {
     private final DoubleSetting renderSpeed = new DoubleSetting("Render Speed", this, 0.1, 5, 2.5);
     private final EnumSetting<WaitMode> waitMode = new EnumSetting<>("Mode", this, WaitMode.Dynamic);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private int waitCounter;
     private EntityLivingBase target;
     public EntityLivingBase renderTarget = null;
 
     public Aura() {
-        super("Aura","Automatically attack entities nearby", Keyboard.KEY_NONE, Category.Combat);
+        super("Aura", "Automatically attack entities nearby", Keyboard.KEY_NONE, Category.Combat);
         INSTANCE = this;
         registerSettings(ignoreWalls, onlyCritical, requireWeapon, disableOnDeath, players, mobs, animals, waitTick, range, renderRange, renderSpeed, waitMode);
     }
@@ -105,22 +105,22 @@ public class Aura extends Module {
 
                 this.renderTarget = this.target;
 
-                if(this.target == null) {
+                if (this.target == null) {
                     return;
                 }
 
-                if(mc.player.onGround && onlyCritical.booleanValue()) {
+                if (mc.player.onGround && onlyCritical.booleanValue()) {
                     mc.player.motionY = 0.15;
                 }
 
-                if(this.rotate.booleanValue()) {
+                if (this.rotate.booleanValue()) {
                     final float[] rotations = RotationUtil.getRotations(this.target);
                     event.setYaw(rotations[0]);
                     event.setPitch(rotations[1]);
                 }
                 break;
             case POST:
-                if(this.target != null) {
+                if (this.target != null) {
                     mc.playerController.attackEntity(mc.player, this.target);
                     mc.player.swingArm(EnumHand.MAIN_HAND);
                     this.target = null;
@@ -132,15 +132,18 @@ public class Aura extends Module {
     private boolean hasSwordMainHand() {
         return mc.player.getHeldItemMainhand().getItem() instanceof ItemSword;
     }
+
     @Override
     public String getHudInfo() {
-        if(this.renderTarget != null) {
+        if (this.renderTarget != null) {
             return this.renderTarget.getName();
         }
 
         return "";
     }
+
     private float i = 0.0f;
+
     @Listener
     public void onRender3DPre(Render3DPrePreEvent event) {
         if (renderTarget != null && renderRange.booleanValue() && hasSwordMainHand()) {

@@ -15,15 +15,15 @@ import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ChunkAnimator extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     public final IntSetting length = new IntSetting("Length", this, 250, 5000, 1000);
     public final EnumSetting<Easing> easing = new EnumSetting<>("Easing", this, Easing.Linear);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private final WeakHashMap<RenderChunk, AtomicLong> lifespans = new WeakHashMap<>();
 
     public ChunkAnimator() {

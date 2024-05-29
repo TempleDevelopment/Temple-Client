@@ -20,7 +20,7 @@ public abstract class MixinAbstractClientPlayer extends MixinEntityPlayer {
     protected abstract NetworkPlayerInfo getPlayerInfo();
 
     @Inject(method = "getLocationCape", at = @At("HEAD"), cancellable = true)
-    public void preGetLocationCape(CallbackInfoReturnable < ResourceLocation > callback) {
+    public void preGetLocationCape(CallbackInfoReturnable<ResourceLocation> callback) {
         final NetworkPlayerInfo info = this.getPlayerInfo();
         if (info == null) {
             return;

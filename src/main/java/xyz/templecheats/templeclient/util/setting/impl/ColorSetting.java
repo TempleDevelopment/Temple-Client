@@ -1,22 +1,32 @@
 package xyz.templecheats.templeclient.util.setting.impl;
 
 import com.google.gson.JsonObject;
-import java.awt.Color;
-import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.buttons.Button;
 import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.Item;
+import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.buttons.Button;
 import xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.ColorButton;
 import xyz.templecheats.templeclient.util.setting.Setting;
 import xyz.templecheats.templeclient.util.setting.SettingHolder;
 
+import java.awt.*;
+
 public class ColorSetting extends Setting<Color> {
+
     private Color value;
     public String name;
+
+    /****************************************************************
+     *                  Constructor
+     ****************************************************************/
 
     public ColorSetting(String name, SettingHolder parent, Color defaultValue) {
         super(name, parent);
         this.name = name;
         this.value = defaultValue;
     }
+
+    /****************************************************************
+     *                  Public Methods
+     ****************************************************************/
 
     public String getName() {
         return this.name;
@@ -73,7 +83,8 @@ public class ColorSetting extends Setting<Color> {
     }
 
     @Override
-    public xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.Item createCsgoButton(xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.Button parent) {
+    public xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.Item createCsgoButton(
+            xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.Button parent) {
         return new ColorButton(this);
     }
 }

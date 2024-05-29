@@ -6,9 +6,9 @@ import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.features.module.modules.client.HUD;
 import xyz.templecheats.templeclient.manager.ModuleManager;
-import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
 import xyz.templecheats.templeclient.util.render.animation.Easing;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.ColorSetting;
 
@@ -19,13 +19,17 @@ import static xyz.templecheats.templeclient.features.gui.font.Fonts.font18;
 import static xyz.templecheats.templeclient.util.color.ColorUtil.setAlpha;
 
 public class ModuleList extends HUD.HudElement {
-    /**
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final ColorSetting color = new ColorSetting("Color", this, new Color(25, 25, 25, 255));
     private final BooleanSetting sideLine = new BooleanSetting("Side Line", this, false);
     private final BooleanSetting background = new BooleanSetting("Background", this, false);
     private final BooleanSetting metadata = new BooleanSetting("Metadata", this, true);
+
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private float progress = 0.0f;
 
     public ModuleList() {
@@ -51,8 +55,8 @@ public class ModuleList extends HUD.HudElement {
         double y = 0;
         float p = getSmoothedProgress();
 
-        for (Module mod: mods) {
-            Color fontColor = setAlpha(new Color(ClickGUI.INSTANCE.getClientColor((int) y)) , (int) (p * 255));
+        for (Module mod : mods) {
+            Color fontColor = setAlpha(new Color(ClickGUI.INSTANCE.getClientColor((int) y)), (int) (p * 255));
 
             final String text = this.getModText(mod);
             double textOffsetX = (!this.isLeftOfCenter() ? this.getWidth() - font18.getStringWidth(text) - 4 : 4);
@@ -63,14 +67,14 @@ public class ModuleList extends HUD.HudElement {
             double rectWidth = (!this.isLeftOfCenter() ? -font18.getStringWidth(text) - 4 : font18.getStringWidth(text) + 4);
 
             if (background.booleanValue()) { // Check if background setting is enabled
-                new RectBuilder(new Vec2d(this.getX() + rectOffsetX , rectY) , new Vec2d(this.getX() + 2 + rectOffsetX + rectWidth , offsetY))
+                new RectBuilder(new Vec2d(this.getX() + rectOffsetX, rectY), new Vec2d(this.getX() + 2 + rectOffsetX + rectWidth, offsetY))
                         .color(color.getColor()).radius(1.0).draw();
             }
             if (sideLine.booleanValue()) {
-                new RectBuilder(new Vec2d(this.getX() + rectOffsetX , rectY) , new Vec2d(this.getX() + 2 + rectOffsetX , offsetY))
+                new RectBuilder(new Vec2d(this.getX() + rectOffsetX, rectY), new Vec2d(this.getX() + 2 + rectOffsetX, offsetY))
                         .color(fontColor).radius(1.0).draw();
             }
-            font18.drawString(text , this.getX() + textOffsetX , this.getY() + y , fontColor.getRGB() , true);
+            font18.drawString(text, this.getX() + textOffsetX, this.getY() + y, fontColor.getRGB(), true);
 
             y += font18.getFontHeight() + 2D;
         }

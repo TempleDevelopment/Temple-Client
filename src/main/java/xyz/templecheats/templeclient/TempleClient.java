@@ -33,7 +33,7 @@ import java.lang.reflect.Field;
 public class TempleClient {
     public static final String MODID = "templeclient";
     public static final String NAME = "Temple Client";
-    public static final String VERSION = "1.9.3";
+    public static final String VERSION = "1.9.4";
     public static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
     public static String name = NAME + " " + VERSION;
     public static AnnotatedEventManager eventBus;
@@ -55,58 +55,68 @@ public class TempleClient {
     public void preInit(FMLPreInitializationEvent event) {
         Display.setTitle("Loading " + name);
         logger = event.getModLog();
+        logger.info("Pre-initialization complete.");
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
         Display.setTitle(name);
-        MinecraftForge.EVENT_BUS.register(new TempleClient());
+        MinecraftForge.EVENT_BUS.register(this);
 
         eventBus = new AnnotatedEventManager();
+        logger.info("EventBus initialized.");
+
         clientForgeEventManager = new ForgeEventManager();
         MinecraftForge.EVENT_BUS.register(clientForgeEventManager);
+        logger.info("Forge Event Manager registered.");
+
         configManager = new ConfigManager();
-        logger.info("Initialized Config!");
+        logger.info("Config Manager initialized.");
 
         altManager = new AltManager();
+        logger.info("Alt Manager initialized.");
 
         settingsManager = new SettingsManager();
+        logger.info("Settings Manager initialized.");
 
         moduleManager = new ModuleManager();
-        logger.info("Module Manager Loaded.");
+        logger.info("Module Manager initialized.");
 
         commandManager = new CommandManager();
-        logger.info("Commands Loaded.");
+        logger.info("Command Manager initialized.");
 
         capeManager = new CapeManager();
+        logger.info("Cape Manager initialized.");
 
         friendManager = new FriendManager();
+        logger.info("Friend Manager initialized.");
 
         threadManager = new ThreadManager();
+        logger.info("Thread Manager initialized.");
 
-        MinecraftForge.EVENT_BUS.register(clientForgeEventManager);
         MinecraftForge.EVENT_BUS.register(commandManager);
-
         MinecraftForge.EVENT_BUS.register(new KeyUtil());
         MinecraftForge.EVENT_BUS.register(new GuiEventsListener());
+        logger.info("KeyUtil and GuiEventsListener registered.");
 
         FontUtils.setupFonts();
         FontUtils.setupIcons();
-
-        configManager = new ConfigManager();
-
-        logger.info("Initialized Config!");
+        logger.info("Fonts and icons setup.");
 
         configManager.loadAll();
+        logger.info("Configurations loaded.");
 
         Runtime.getRuntime().addShutdownHook(new Thread(configManager::saveAll));
+        logger.info("Shutdown hook added for saving configurations.");
     }
 
     @SubscribeEvent
     public void onChat(ClientChatEvent event) {
-        if (event.getMessage().startsWith("."))
-            if (commandManager.executeCommand(event.getMessage()))
+        if (event.getMessage().startsWith(".")) {
+            if (commandManager.executeCommand(event.getMessage())) {
                 event.setCanceled(true);
+            }
+        }
     }
 
     public static void setSession(Session s) {
@@ -116,18 +126,21 @@ public class TempleClient {
             for (Field f : mc.getDeclaredFields()) {
                 if (f.getType().isInstance(s)) {
                     session = f;
+                    break;
                 }
             }
             if (session == null) {
-                throw new IllegalStateException("Session Null");
+                throw new IllegalStateException("Session field not found.");
             }
             session.setAccessible(true);
             session.set(Minecraft.getMinecraft(), s);
             session.setAccessible(false);
             name = "TempleClient 1.12.2 | User: " + Minecraft.getMinecraft().getSession().getUsername();
             Display.setTitle(name);
+            logger.info("Session set successfully.");
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("Failed to set session.", e);
         }
     }
 

@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.SoundEvents;
+import org.lwjgl.opengl.GL11;
 import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.features.gui.clickgui.csgo.CsgoGuiScreen;
 import xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.IContainer;
@@ -12,8 +13,8 @@ import xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items
 import xyz.templecheats.templeclient.features.gui.font.CFont;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
-import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.setting.Setting;
 
 import java.awt.*;
@@ -21,20 +22,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-
-import static xyz.templecheats.templeclient.features.gui.font.Fonts.*;
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font14;
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font20;
 
 public class ModuleButton extends Button implements IContainer {
     private final Module module;
     private List<Item> items = new ArrayList<>();
     int color0, color1, color2, color3;
     int offsetY;
+
     public ModuleButton(Module module) {
         super(module.getName());
         this.module = module;
 
-        if(!module.parent) {
+        if (!module.parent) {
             this.items.add(new BindButton(module));
         }
         final List<Setting<?>> settings = TempleClient.settingsManager.getSettingsByMod(module);
@@ -191,12 +192,12 @@ public class ModuleButton extends Button implements IContainer {
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         super.mouseClicked(mouseX, mouseY, mouseButton);
-        if(!this.items.isEmpty()) {
-            if(mouseButton == 1 && this.isHovering(mouseX, mouseY)) {
+        if (!this.items.isEmpty()) {
+            if (mouseButton == 1 && this.isHovering(mouseX, mouseY)) {
                 Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             }
-            for(Item item : getItems()) {
-                System.out.println(item.getLabel()+", "+item.getHeight());
+            for (Item item : getItems()) {
+                System.out.println(item.getLabel() + ", " + item.getHeight());
                 item.mouseClicked(mouseX, mouseY, mouseButton);
             }
         }
@@ -205,8 +206,8 @@ public class ModuleButton extends Button implements IContainer {
     @Override
     public void mouseReleased(int mouseX, int mouseY, int releaseButton) {
         super.mouseReleased(mouseX, mouseY, releaseButton);
-        if(!items.isEmpty()) {
-            for(Item item : getItems()) {
+        if (!items.isEmpty()) {
+            for (Item item : getItems()) {
                 item.mouseReleased(mouseX, mouseY, releaseButton);
             }
         }
@@ -215,8 +216,8 @@ public class ModuleButton extends Button implements IContainer {
     @Override
     public void keyTyped(char typedChar, int keyCode) throws IOException {
         super.keyTyped(typedChar, keyCode);
-        if(!items.isEmpty()) {
-            for(Item item : getItems()) {
+        if (!items.isEmpty()) {
+            for (Item item : getItems()) {
                 item.keyTyped(typedChar, keyCode);
             }
         }

@@ -9,9 +9,9 @@ import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 
 public class Log4jAlert extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final BooleanSetting DisconnectOnReceive = new BooleanSetting("Disconnect", this, false);
 
     public Log4jAlert() {

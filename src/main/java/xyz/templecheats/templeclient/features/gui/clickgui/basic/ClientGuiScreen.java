@@ -37,9 +37,9 @@ public class ClientGuiScreen extends GuiScreen {
         final int mouseY = (int) (unscaledMouseY / this.getScale());
         final int scroll = Mouse.getDWheel();
         this.panels.forEach(panel -> {
-            if(scroll < 0) {
+            if (scroll < 0) {
                 panel.setY(panel.getY() - ClickGUI.INSTANCE.scrollSpeed.intValue());
-            } else if(scroll > 0) {
+            } else if (scroll > 0) {
                 panel.setY(panel.getY() + ClickGUI.INSTANCE.scrollSpeed.intValue());
             }
             panel.drawScreen(mouseX, mouseY, partialTicks);
@@ -65,11 +65,11 @@ public class ClientGuiScreen extends GuiScreen {
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
         try {
-            for(Panel panel : panels) {
+            for (Panel panel : panels) {
                 panel.keyTyped(typedChar, keyCode);
             }
             super.keyTyped(typedChar, keyCode);
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

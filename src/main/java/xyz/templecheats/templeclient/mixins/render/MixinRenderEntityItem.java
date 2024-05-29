@@ -27,8 +27,11 @@ import static xyz.templecheats.templeclient.util.Globals.mc;
 @Mixin(RenderEntityItem.class)
 public abstract class MixinRenderEntityItem {
 
-    @Unique private double rotation;
-    @Final @Shadow private Random random;
+    @Unique
+    private double rotation;
+    @Final
+    @Shadow
+    private Random random;
 
     @Inject(method = "transformModelCount", at = @At("HEAD"), cancellable = true)
     private void onItemAnim(EntityItem itemIn, double p_177077_2_, double p_177077_4_, double p_177077_6_, float p_177077_8_, IBakedModel p_177077_9_, CallbackInfoReturnable<Integer> cir) {
@@ -50,13 +53,13 @@ public abstract class MixinRenderEntityItem {
             GlStateManager.pushMatrix();
 
             renderer.bindTexture(getEntityTexture());
-            renderer.getRenderManager().renderEngine.getTexture(getEntityTexture()).setBlurMipmap(false , false);
+            renderer.getRenderManager().renderEngine.getTexture(getEntityTexture()).setBlurMipmap(false, false);
 
             GlStateManager.enableRescaleNormal();
-            GlStateManager.alphaFunc(516 , 0.1F);
+            GlStateManager.alphaFunc(516, 0.1F);
             GlStateManager.enableBlend();
             RenderHelper.enableStandardItemLighting();
-            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA , GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA , GlStateManager.SourceFactor.ONE , GlStateManager.DestFactor.ZERO);
+            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
             GlStateManager.pushMatrix();
             IBakedModel ibakedmodel = mc.getRenderItem().getItemModelWithOverrides(itemstack, itemIn.world, null);
 
@@ -74,37 +77,38 @@ public abstract class MixinRenderEntityItem {
                 count = 2;
             }
 
-            GlStateManager.translate((float) p_177077_2_ , (float) p_177077_4_ , (float) p_177077_6_);
+            GlStateManager.translate((float) p_177077_2_, (float) p_177077_4_, (float) p_177077_6_);
 
-            GL11.glRotatef(90.0F , 1.0F , 0.0F , 0.0F);
-            GL11.glRotatef(itemIn.rotationYaw , 0.0F , 0.0F , 1.0F);
+            GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
+            GL11.glRotatef(itemIn.rotationYaw, 0.0F, 0.0F, 1.0F);
             if (is3D) {
-                GlStateManager.translate(0.0D , -0.2D , -0.08D);
+                GlStateManager.translate(0.0D, -0.2D, -0.08D);
             } else {
-                GlStateManager.translate(0.0D , 0.0D , -0.04D);
+                GlStateManager.translate(0.0D, 0.0D, -0.04D);
             }
             if ((is3D) || (mc.getRenderManager().options != null)) {
                 if (is3D) {
                     if (!itemIn.onGround) {
                         itemIn.rotationPitch = ((float) (itemIn.rotationPitch + rotation));
-                    } else if (oldRotation) if (itemIn.rotationPitch != 0.0F && itemIn.rotationPitch != 90.0F && itemIn.rotationPitch != 180.0F && itemIn.rotationPitch != 270.0F) {
-                        int minIndex = getIndex(itemIn);
+                    } else if (oldRotation)
+                        if (itemIn.rotationPitch != 0.0F && itemIn.rotationPitch != 90.0F && itemIn.rotationPitch != 180.0F && itemIn.rotationPitch != 270.0F) {
+                            int minIndex = getIndex(itemIn);
 
-                        switch (minIndex) {
-                            case 0:
-                                itemIn.rotationPitch += (float) ((itemIn.rotationPitch < 0.0F) ? rotation : -rotation);
-                                break;
-                            case 1:
-                                itemIn.rotationPitch += (float) ((itemIn.rotationPitch - 90.0F < 0.0F) ? rotation : -rotation);
-                                break;
-                            case 2:
-                                itemIn.rotationPitch += (float) ((itemIn.rotationPitch - 180.0F < 0.0F) ? rotation : -rotation);
-                                break;
-                            case 3:
-                                itemIn.rotationPitch += (float) ((itemIn.rotationPitch - 270.0F < 0.0F) ? rotation : -rotation);
-                                break;
+                            switch (minIndex) {
+                                case 0:
+                                    itemIn.rotationPitch += (float) ((itemIn.rotationPitch < 0.0F) ? rotation : -rotation);
+                                    break;
+                                case 1:
+                                    itemIn.rotationPitch += (float) ((itemIn.rotationPitch - 90.0F < 0.0F) ? rotation : -rotation);
+                                    break;
+                                case 2:
+                                    itemIn.rotationPitch += (float) ((itemIn.rotationPitch - 180.0F < 0.0F) ? rotation : -rotation);
+                                    break;
+                                case 3:
+                                    itemIn.rotationPitch += (float) ((itemIn.rotationPitch - 270.0F < 0.0F) ? rotation : -rotation);
+                                    break;
+                            }
                         }
-                    }
                 } else if (!Double.isNaN(itemIn.posX) && !Double.isNaN(itemIn.posY) && !Double.isNaN(itemIn.posZ) && itemIn.world != null) {
                     if (itemIn.onGround) {
                         itemIn.rotationPitch = 180.0F;
@@ -114,17 +118,17 @@ public abstract class MixinRenderEntityItem {
                 }
                 double height = 0.2D;
                 if (is3D) {
-                    GlStateManager.translate(0.0D , height , 0.0D);
+                    GlStateManager.translate(0.0D, height, 0.0D);
                 }
-                GlStateManager.rotate(itemIn.rotationPitch , 1.0F , 0.0F , 0.0F);
+                GlStateManager.rotate(itemIn.rotationPitch, 1.0F, 0.0F, 0.0F);
                 if (is3D) {
-                    GlStateManager.translate(0.0D , -height , 0.0D);
+                    GlStateManager.translate(0.0D, -height, 0.0D);
                 }
             }
-            GlStateManager.color(1.0F , 1.0F , 1.0F , 1.0F);
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
             double scale = ItemPhysic.INSTANCE.scale.floatValue();
-            GlStateManager.scale(scale , scale , scale);
+            GlStateManager.scale(scale, scale, scale);
 
             boolean renderOutlines = ((IRender) renderer).getRenderOutlines();
 
@@ -136,7 +140,7 @@ public abstract class MixinRenderEntityItem {
                 float xTranslation = -0.0F * (count - 1) * xScale;
                 float yTranslation = -0.0F * (count - 1) * yScale;
                 float zTranslation = -0.09375F * (count - 1) * 0.5f * zScale;
-                GlStateManager.translate(xTranslation , yTranslation , zTranslation);
+                GlStateManager.translate(xTranslation, yTranslation, zTranslation);
             }
             if (renderOutlines) {
                 GlStateManager.enableColorMaterial();
@@ -155,12 +159,12 @@ public abstract class MixinRenderEntityItem {
                         float zTranslation = (random.nextFloat() * 2.0F - 1.0F) * 0.15F + 0.2f;
                         GlStateManager.translate(xTranslation, yTranslation, zTranslation);
                     }
-                    mc.getRenderItem().renderItem(itemstack , ibakedmodel);
+                    mc.getRenderItem().renderItem(itemstack, ibakedmodel);
                     GlStateManager.popMatrix();
                 } else {
-                    mc.getRenderItem().renderItem(itemstack , ibakedmodel);
+                    mc.getRenderItem().renderItem(itemstack, ibakedmodel);
                     GlStateManager.popMatrix();
-                    GlStateManager.translate(0.0F , 0.0F , 0.09375);
+                    GlStateManager.translate(0.0F, 0.0F, 0.09375);
                 }
             }
             if (renderOutlines) {

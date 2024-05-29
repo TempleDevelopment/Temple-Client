@@ -11,13 +11,14 @@ import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.manager.InventoryManager;
 
 public class AutoFish extends Module {
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     public AutoFish() {
         super("AutoFish", "Automatically reels your fishing rod", Keyboard.KEY_NONE, Category.Player);
     }
-//TODO: add a delay to the rod going back to water. only if users noticed it's getting flagged by anti-cheat
+
+    //TODO: add a delay to the rod going back to water. only if users noticed it's getting flagged by anti-cheat
     @Listener
     public void onPacketRecieve(PacketEvent.Receive event) {
         if (InventoryManager.getHeldItem(Items.FISHING_ROD) && event.getPacket() instanceof SPacketSoundEffect

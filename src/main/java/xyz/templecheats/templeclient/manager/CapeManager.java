@@ -18,47 +18,77 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class CapeManager {
-    private final Map < UUID, String > capeUsers;
-    private final Map < String, ResourceLocation > capeTextures;
+
+    /****************************************************************
+     *                      Constants
+     ****************************************************************/
+
     private static final String CAPE_UUIDS = "https://raw.githubusercontent.com/TempleDevelopment/Temple-Client/main/github/assets/capes.txt";
     private static final String CAPE_DIR = "https://raw.githubusercontent.com/TempleDevelopment/Temple-Client/main/github/assets/%s.png";
 
-    public CapeManager() {
-        this.capeUsers = new HashMap < > ();
-        this.capeTextures = new HashMap < > ();
+    /****************************************************************
+     *                      Fields
+     ****************************************************************/
 
-        CompletableFuture.runAsync(() -> {
-            try (final BufferedReader reader = new BufferedReader(new InputStreamReader(new URL(CAPE_UUIDS).openStream(), StandardCharsets.UTF_8))) {
-                for (String line;
-                     (line = reader.readLine()) != null;) {
-                    final String[] split = line.split(":");
-                    this.addCape(UUID.fromString(split[0]), split[1]);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+    private final Map<UUID, String> capeUsers;
+    private final Map<String, ResourceLocation> capeTextures;
+
+    /****************************************************************
+     *                      Constructor
+     ****************************************************************/
+
+    public CapeManager() {
+        this.capeUsers = new HashMap<>();
+        this.capeTextures = new HashMap<>();
+
+        CompletableFuture.runAsync(this::loadCapeData);
     }
+
+    /****************************************************************
+     *                      Cape Data Loading
+     ****************************************************************/
+
+    private void loadCapeData() {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new URL(CAPE_UUIDS).openStream(), StandardCharsets.UTF_8))) {
+            for (String line; (line = reader.readLine()) != null; ) {
+                String[] split = line.split(":");
+                this.addCape(UUID.fromString(split[0]), split[1]);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /****************************************************************
+     *                      Cape Management
+     ****************************************************************/
+
     public void addCape(UUID uuid, String capeName) {
         this.capeUsers.put(uuid, capeName);
 
         if (!this.capeTextures.containsKey(capeName)) {
-            Minecraft.getMinecraft().addScheduledTask(() -> {
-                try {
-                    final URL url = new URL(String.format(CAPE_DIR, capeName));
-                    final InputStream stream = url.openStream();
-                    final BufferedImage image = ImageIO.read(stream);
-                    final DynamicTexture texture = new DynamicTexture(image);
-                    this.capeTextures.put(capeName, Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(capeName, texture));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
+            Minecraft.getMinecraft().addScheduledTask(() -> loadCapeTexture(capeName));
         }
     }
 
+    private void loadCapeTexture(String capeName) {
+        try {
+            URL url = new URL(String.format(CAPE_DIR, capeName));
+            InputStream stream = url.openStream();
+            BufferedImage image = ImageIO.read(stream);
+            DynamicTexture texture = new DynamicTexture(image);
+            this.capeTextures.put(capeName, Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(capeName, texture));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /****************************************************************
+     *                      Cape Retrieval
+     ****************************************************************/
+
     public ResourceLocation getCapeByUuid(UUID uuid) {
-        final String capeName = this.capeUsers.get(uuid);
+        String capeName = this.capeUsers.get(uuid);
         return capeName != null ? this.capeTextures.get(capeName) : null;
     }
 }

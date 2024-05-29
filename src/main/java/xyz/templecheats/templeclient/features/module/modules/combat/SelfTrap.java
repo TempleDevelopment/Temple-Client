@@ -1,9 +1,5 @@
 package xyz.templecheats.templeclient.features.module.modules.combat;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLiquid;
@@ -27,26 +23,30 @@ import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
+import xyz.templecheats.templeclient.util.rotation.RotationUtil;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
-import xyz.templecheats.templeclient.util.rotation.RotationUtil;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class SelfTrap extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final BooleanSetting rotate = new BooleanSetting("Rotate", this, true);
     private final IntSetting bps = new IntSetting("Blocks Per Second", this, 0, 10, 5);
     private final IntSetting delay = new IntSetting("Delay", this, 0, 10, 0);
     private final BooleanSetting render = new BooleanSetting("Render", this, true);
     private final BooleanSetting fill = new BooleanSetting("Box Fill", this, true);
     private final BooleanSetting outline = new BooleanSetting("Box Outline", this, true);
-    private final DoubleSetting opacity = new DoubleSetting("RenderOpacity", this, 0.0, 1, 0.5);
+    private final DoubleSetting opacity = new DoubleSetting("Opacity", this, 0.0, 1, 0.5);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private EntityPlayer closestTarget;
     private String lastTickTargetName;
     private int playerHotbarSlot = -1;
@@ -129,7 +129,7 @@ public class SelfTrap extends Module {
             offsetStep = 0;
         }
 
-        List < Vec3d > placeTargets = new ArrayList < > ();
+        List<Vec3d> placeTargets = new ArrayList<>();
         Collections.addAll(placeTargets, SelfTrap.Offsets.TRAPSIMPLE);
 
         int blocksPlaced = 0;
@@ -174,7 +174,7 @@ public class SelfTrap extends Module {
             return false;
         }
 
-        for (Entity entity: mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(pos))) {
+        for (Entity entity : mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(pos))) {
             if (!(entity instanceof EntityItem) && !(entity instanceof EntityXPOrb)) {
                 return false;
             }
@@ -242,10 +242,10 @@ public class SelfTrap extends Module {
     }
 
     private void findClosestTarget() {
-        List < EntityPlayer > playerList = mc.world.playerEntities;
+        List<EntityPlayer> playerList = mc.world.playerEntities;
         closestTarget = null;
 
-        for (EntityPlayer target: playerList) {
+        for (EntityPlayer target : playerList) {
 
             if (target == mc.player) {
                 closestTarget = target;
@@ -268,6 +268,7 @@ public class SelfTrap extends Module {
                 new Vec3d(0, 3, 0)
         };
     }
+
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
         if (render.booleanValue() && currentBlock != null && !finished) {

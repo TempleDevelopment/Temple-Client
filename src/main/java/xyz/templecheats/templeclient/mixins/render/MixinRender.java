@@ -8,11 +8,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.event.events.render.FireEvent;
-import xyz.templecheats.templeclient.util.Globals;
 import xyz.templecheats.templeclient.event.events.render.NamePlateEvent;
+import xyz.templecheats.templeclient.util.Globals;
 
 @Mixin(Render.class)
-public class MixinRender < T extends Entity > implements Globals {
+public class MixinRender<T extends Entity> implements Globals {
 
     @Inject(method = "renderEntityOnFire", at = @At("HEAD"), cancellable = true)
     private void renderEntityOnFire(Entity entity, double x, double y, double z, float partialTicks, CallbackInfo ci) {

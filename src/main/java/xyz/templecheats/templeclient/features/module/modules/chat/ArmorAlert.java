@@ -14,15 +14,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ArmorAlert extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     public final IntSetting armorThreshold = new IntSetting("Armor %", this, 1, 100, 20);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private final Map<String, Boolean> warningSent = new HashMap<>();
+
     public ArmorAlert() {
         super("ArmorAlert", "Alerts you when your armor durability is low", Keyboard.KEY_NONE, Module.Category.Chat);
         registerSettings(armorThreshold);

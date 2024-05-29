@@ -27,7 +27,7 @@ import xyz.templecheats.templeclient.event.events.network.PacketEvent;
 import xyz.templecheats.templeclient.event.events.player.AttackEvent;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.Panic;
-import xyz.templecheats.templeclient.util.autocrystal.DamageUtil;
+import xyz.templecheats.templeclient.util.player.DamageUtil;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 import xyz.templecheats.templeclient.util.setting.impl.StringSetting;
@@ -38,9 +38,9 @@ import java.util.Optional;
 import java.util.Random;
 
 public class FakePlayer extends Module {
-    /*
-     * Setting
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final StringSetting name = new StringSetting("Name", this, "FakePlayer");
     private final BooleanSetting copyInventory = new BooleanSetting("Copy Inven", this, false);
     private final BooleanSetting damageSimulate = new BooleanSetting("Damage", this, true);
@@ -50,9 +50,9 @@ public class FakePlayer extends Module {
     public final IntSetting tickRegen = new IntSetting("Tick Regen", this, 0, 30, 4);
     private final BooleanSetting moveButton = new BooleanSetting("Move", this, false);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private static final Random random = new Random();
     List<playerInfo> listPlayers = new ArrayList<>();
     private AttackableFakePlayer fakePlayer;
@@ -78,7 +78,7 @@ public class FakePlayer extends Module {
         fakePlayer.rotationYawHead = mc.player.rotationYawHead;
 
         if (resistance.booleanValue()) {
-            fakePlayer.addPotionEffect(new PotionEffect(Potion.getPotionById(11) , 6942032 , 0));
+            fakePlayer.addPotionEffect(new PotionEffect(Potion.getPotionById(11), 6942032, 0));
         }
         if (copyInventory.booleanValue()) {
             fakePlayer.inventory.copyInventory(mc.player.inventory);
@@ -140,11 +140,11 @@ public class FakePlayer extends Module {
                     !mc.player.isSprinting();
 
             if (critical) {
-                mc.player.playSound(SoundEvents.ENTITY_PLAYER_ATTACK_CRIT , 1f , 1f);
+                mc.player.playSound(SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1f);
             } else if (mc.player.getCooledAttackStrength(0.5f) > 0.9) {
-                mc.player.playSound(SoundEvents.ENTITY_PLAYER_ATTACK_STRONG , 1f , 1f);
+                mc.player.playSound(SoundEvents.ENTITY_PLAYER_ATTACK_STRONG, 1f, 1f);
             } else {
-                mc.player.playSound(SoundEvents.ENTITY_PLAYER_ATTACK_WEAK , 1f , 1f);
+                mc.player.playSound(SoundEvents.ENTITY_PLAYER_ATTACK_WEAK, 1f, 1f);
             }
             for (EntityPlayer entityPlayer : mc.world.playerEntities) {
                 if (entityPlayer.getName().equals(name.value())) {
@@ -173,12 +173,12 @@ public class FakePlayer extends Module {
                                             continue;
                                         }
 
-                                        float damage = DamageUtil.calculateDamageThreaded(packetSoundEffect.getX() , packetSoundEffect.getY() , packetSoundEffect.getZ() , entityPlayer);
+                                        float damage = DamageUtil.calculateDamageThreaded(packetSoundEffect.getX(), packetSoundEffect.getY(), packetSoundEffect.getZ(), entityPlayer);
 
                                         if (damage > entityPlayer.getHealth() || fakePlayer.getHealth() <= 3) {
                                             entityPlayer.setHealth(resetHealth.intValue());
-                                            mc.effectRenderer.emitParticleAtEntity(entityPlayer , EnumParticleTypes.TOTEM , 30);
-                                            mc.world.playSound(entityPlayer.posX , entityPlayer.posY , entityPlayer.posZ , SoundEvents.ITEM_TOTEM_USE , entity.getSoundCategory() , 1.0F , 1.0F , false);
+                                            mc.effectRenderer.emitParticleAtEntity(entityPlayer, EnumParticleTypes.TOTEM, 30);
+                                            mc.world.playSound(entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, SoundEvents.ITEM_TOTEM_USE, entity.getSoundCategory(), 1.0F, 1.0F, false);
                                         } else entityPlayer.setHealth(entityPlayer.getHealth() - damage);
 
                                         data.get().pop = 0;

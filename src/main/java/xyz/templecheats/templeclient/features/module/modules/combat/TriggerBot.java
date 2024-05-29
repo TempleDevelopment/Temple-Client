@@ -9,15 +9,27 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
+import scala.Int;
 import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.features.module.Module;
+import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
+import xyz.templecheats.templeclient.util.time.TimerUtil;
 
 public class TriggerBot extends Module {
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
+    private final IntSetting delay = new IntSetting("Delay", this, 100, 1000, 500);
 
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private EntityLivingBase renderTarget;
+    TimerUtil timer = new TimerUtil();
 
     public TriggerBot() {
         super("TriggerBot", "Automatically attack entities that are on your crosshair", Keyboard.KEY_NONE, Category.Combat);
+        registerSettings(delay);
     }
 
     @SubscribeEvent
@@ -32,10 +44,11 @@ public class TriggerBot extends Module {
                 if (entity instanceof EntityPlayer && !TempleClient.friendManager.isFriend(entity.getName())) {
                     this.renderTarget = (EntityLivingBase) entity;
 
-                    if (mc.player.getCooledAttackStrength(0) == 1) {
+                    if (mc.player.getCooledAttackStrength(0) == 1 && timer.hasReached(delay.intValue())) {
                         mc.playerController.attackEntity(Minecraft.getMinecraft().player, entity);
                         mc.player.swingArm(EnumHand.MAIN_HAND);
                         mc.player.resetCooldown();
+                        timer.reset();
                     }
                 } else {
                     this.renderTarget = null;
@@ -46,8 +59,8 @@ public class TriggerBot extends Module {
 
     @Override
     public String getHudInfo() {
-        if(this.renderTarget !=null)
+        if (this.renderTarget != null)
             return this.renderTarget.getName();
-        return"";
+        return "";
     }
 }

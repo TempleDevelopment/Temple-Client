@@ -34,10 +34,10 @@ import xyz.templecheats.templeclient.features.module.modules.combat.Aura;
 import xyz.templecheats.templeclient.features.module.modules.combat.AutoCrystal;
 import xyz.templecheats.templeclient.manager.InventoryManager;
 import xyz.templecheats.templeclient.mixins.accessor.IPlayerControllerMP;
-import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
 import xyz.templecheats.templeclient.util.math.MathUtil;
-import xyz.templecheats.templeclient.util.render.enums.ProgressBoxModifiers;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
+import xyz.templecheats.templeclient.util.render.enums.ProgressBoxModifiers;
+import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
 import xyz.templecheats.templeclient.util.rotation.RotationUtil;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
@@ -45,9 +45,9 @@ import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 import xyz.templecheats.templeclient.util.world.BlockUtil;
 
 public class FastBreak extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     public final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.Packet);
     public final EnumSetting<InventoryManager.Switch> mineSwitch = new EnumSetting<>("Switch", this, InventoryManager.Switch.Packet);
     public final DoubleSetting damage = new DoubleSetting("Damage", this, 0.0, 1.0, 0.8);
@@ -65,14 +65,16 @@ public class FastBreak extends Module {
     private final EnumSetting<ProgressBoxModifiers> renderMode = new EnumSetting<>("Render Mode", this, ProgressBoxModifiers.Grow);
     private final DoubleSetting opacity = new DoubleSetting("Opacity", this, 0, 255, 200);
     private final DoubleSetting defaultOpacityVal = new DoubleSetting("DefaultOpacity", this, 0, 255, 200);
+    private final DoubleSetting maxRenderSize = new DoubleSetting("Max Render Size", this, 0, 255, 100); // New setting
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private BlockPos minePosition;
     private BlockPos lastMinePos;
     private EnumFacing mineFacing;
     private float normalizedOpacity = opacity.floatValue() / opacity.floatValue();
+    private static final double MAX_RENDER_SIZE = 1.0;
     private static float mineDamage;
     private int mineBreaks;
     private int previousHaste;
@@ -81,7 +83,7 @@ public class FastBreak extends Module {
 
     public FastBreak() {
         super("FastBreak", "Break blocks faster", Keyboard.KEY_NONE, Category.World);
-        registerSettings(strict, strictReMine, reset, range, damage, render, defaultOpacityVal, opacity, renderMode, mineSwitch, rotate, mode);
+        registerSettings(strict, strictReMine, reset, range, damage, render, defaultOpacityVal, opacity, renderMode, mineSwitch, rotate, mode, maxRenderSize);
     }
 
     @Override
@@ -102,7 +104,7 @@ public class FastBreak extends Module {
                 if (mineBreaks >= 2 && strictReMine.booleanValue() || mineDistance > range.doubleValue()) {
                     minePosition = null;
                     mineFacing = null;
-                    mineDamage = 0;
+                    mineDamage = MathUtil.coerceIn(mineDamage, 0.0f, 1.0f);
                     mineBreaks = 0;
                 }
             }
@@ -112,9 +114,7 @@ public class FastBreak extends Module {
                     ((IPlayerControllerMP) mc.playerController).setCurBlockDamageMP(1);
                     mc.playerController.onPlayerDestroyBlock(minePosition);
                 }
-            }
-
-            else if (mode.value().equals(Mode.Packet)) {
+            } else if (mode.value().equals(Mode.Packet)) {
                 if (minePosition != null && !mc.world.isAirBlock(minePosition)) {
                     if (mineDamage >= 1) {
                         if (!AutoCrystal.INSTANCE.isEnabled() && !Aura.INSTANCE.isEnabled()) {
@@ -126,9 +126,7 @@ public class FastBreak extends Module {
 
                                 ItemStack itemstack = mc.player.openContainer.slotClick(swapSlot, mc.player.inventory.currentItem, ClickType.SWAP, mc.player);
                                 mc.player.connection.sendPacket(new CPacketClickWindow(mc.player.inventoryContainer.windowId, swapSlot, mc.player.inventory.currentItem, ClickType.SWAP, itemstack, nextTransactionID));
-                            }
-
-                            else {
+                            } else {
                                 TempleClient.inventoryManager.switchToItem(getEfficientItem(mc.world.getBlockState(minePosition)).getItem(), mineSwitch.value());
                             }
 
@@ -148,30 +146,23 @@ public class FastBreak extends Module {
                                     mc.player.connection.sendPacket(new CPacketClickWindow(mc.player.inventoryContainer.windowId, swapSlot, mc.player.inventory.currentItem, ClickType.SWAP, itemstack, nextTransactionID));
 
                                     mc.player.connection.sendPacket(new CPacketConfirmTransaction(mc.player.inventoryContainer.windowId, nextTransactionID, true));
-                                }
-                                else {
+                                } else {
                                     TempleClient.inventoryManager.switchToSlot(previousSlot, InventoryManager.Switch.Packet);
                                 }
                             }
 
-                            mineDamage = 0;
+                            mineDamage = MathUtil.coerceIn(mineDamage, 0.0f, 1.0f);
                             mineBreaks++;
                         }
                     }
                     mineDamage += getBlockStrength(mc.world.getBlockState(minePosition), minePosition);
+                } else {
+                    mineDamage = MathUtil.coerceIn(mineDamage, 0.0f, 1.0f);
                 }
-
-                else {
-                    mineDamage = 0;
-                }
-            }
-
-            else if (mode.value().equals(Mode.Vanilla)) {
+            } else if (mode.value().equals(Mode.Vanilla)) {
                 ((IPlayerControllerMP) mc.playerController).setBlockHitDelay(0);
                 mc.player.addPotionEffect(new PotionEffect(MobEffects.HASTE.setPotionName("SpeedMine"), 80950, 1, false, false));
-            }
-
-            else if (this.mode.value().equals(Mode.Breaker) && this.lastMinePos != null) {
+            } else if (this.mode.value().equals(Mode.Breaker) && this.lastMinePos != null) {
                 if (this.before) {
                     if (!(mc.world.getBlockState(lastMinePos).getBlock() instanceof BlockAir)) {
                         mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, lastMinePos, mineFacing));
@@ -233,44 +224,58 @@ public class FastBreak extends Module {
     private void drawProgressBox() {
         normalizedOpacity = opacity.floatValue() / opacity.floatValue();
 
-        AxisAlignedBB mineBox = mc.world.getBlockState(minePosition).getSelectedBoundingBox(mc.world , minePosition);
+        AxisAlignedBB mineBox = mc.world.getBlockState(minePosition).getSelectedBoundingBox(mc.world, minePosition);
         Vec3d mineCenter = mineBox.getCenter();
-        AxisAlignedBB shrunkMineBox = new AxisAlignedBB(mineCenter.x , mineCenter.y , mineCenter.z , mineCenter.x , mineCenter.y , mineCenter.z);
+        AxisAlignedBB shrunkMineBox = new AxisAlignedBB(
+                mineCenter.x, mineCenter.y, mineCenter.z,
+                mineCenter.x, mineCenter.y, mineCenter.z
+        );
 
-        RenderUtil.boxShader(shrunkMineBox.maxX , shrunkMineBox.maxY , shrunkMineBox.maxZ , shrunkMineBox.minX , shrunkMineBox.maxY , shrunkMineBox.minZ);
+        // Clamp the size to the maximum render size
+        shrunkMineBox = new AxisAlignedBB(
+                Math.max(shrunkMineBox.minX, mineCenter.x - MAX_RENDER_SIZE),
+                Math.max(shrunkMineBox.minY, mineCenter.y - MAX_RENDER_SIZE),
+                Math.max(shrunkMineBox.minZ, mineCenter.z - MAX_RENDER_SIZE),
+                Math.min(shrunkMineBox.maxX, mineCenter.x + MAX_RENDER_SIZE),
+                Math.min(shrunkMineBox.maxY, mineCenter.y + MAX_RENDER_SIZE),
+                Math.min(shrunkMineBox.maxZ, mineCenter.z + MAX_RENDER_SIZE)
+        );
+
+        RenderUtil.boxShader(shrunkMineBox.maxX, shrunkMineBox.maxY, shrunkMineBox.maxZ, shrunkMineBox.minX, shrunkMineBox.maxY, shrunkMineBox.minZ);
         float progress = (1 - mineDamage);
         switch (renderMode.value()) {
             case Grow: {
-                ProgressBoxModifiers.Grow.renderBreaking(shrunkMineBox , progress , opacity.floatValue());
+                ProgressBoxModifiers.Grow.renderBreaking(shrunkMineBox, progress, opacity.floatValue());
                 break;
             }
             case Shrink: {
-                ProgressBoxModifiers.Shrink.renderBreaking(shrunkMineBox , progress , opacity.floatValue());
+                ProgressBoxModifiers.Shrink.renderBreaking(shrunkMineBox, progress, opacity.floatValue());
                 break;
             }
             case Cross: {
-                ProgressBoxModifiers.Cross.renderBreaking(shrunkMineBox , progress , opacity.floatValue());
+                ProgressBoxModifiers.Cross.renderBreaking(shrunkMineBox, progress, opacity.floatValue());
                 break;
             }
             case Fade: {
-                ProgressBoxModifiers.Fade.renderBreaking(shrunkMineBox.offset(0.5 , 0.5 , 0.5).contract(1 , 1 , 1) , progress , opacity.floatValue());
+                ProgressBoxModifiers.Fade.renderBreaking(shrunkMineBox.offset(0.5, 0.5, 0.5).contract(1, 1, 1), progress, opacity.floatValue());
                 break;
             }
             case UnFill: {
-                ProgressBoxModifiers.UnFill.renderBreaking(shrunkMineBox.offset(0.5 , 0.5 , 0.5).contract(1 , 0 , 1) , progress , opacity.floatValue());
+                ProgressBoxModifiers.UnFill.renderBreaking(shrunkMineBox.offset(0.5, 0.5, 0.5).contract(1, 0, 1), progress, opacity.floatValue());
                 break;
             }
             case Fill: {
-                ProgressBoxModifiers.Fill.renderBreaking(shrunkMineBox.offset(0.5 , 0.5 , 0.5).contract(1 , 0 , 1) , progress , opacity.floatValue());
+                ProgressBoxModifiers.Fill.renderBreaking(shrunkMineBox.offset(0.5, 0.5, 0.5).contract(1, 0, 1), progress, opacity.floatValue());
                 break;
             }
             case Static: {
-                ProgressBoxModifiers.Static.renderBreaking(shrunkMineBox.offset(0.5 , 0.5 , 0.5).contract(1 , 1 , 1) , progress , opacity.floatValue());
+                ProgressBoxModifiers.Static.renderBreaking(shrunkMineBox.offset(0.5, 0.5, 0.5).contract(1, 1, 1), progress, opacity.floatValue());
                 break;
             }
         }
         lastMinePos = minePosition;
     }
+
 
     public boolean isActive() {
         return isEnabled() && minePosition != null && !mc.world.isAirBlock(minePosition) && mineDamage > 0;
@@ -296,8 +301,7 @@ public class FastBreak extends Module {
                         mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.ABORT_DESTROY_BLOCK, minePosition, EnumFacing.UP));
                     }
                 }
-            }
-            else if (mode.value().equals(Mode.Breaker)) {
+            } else if (mode.value().equals(Mode.Breaker)) {
                 if (this.lastMinePos == null || event.getPos().getX() != this.lastMinePos.getX() || event.getPos().getY() != this.lastMinePos.getY() || event.getPos().getZ() != this.lastMinePos.getZ()) {
                     mc.player.swingArm(EnumHand.MAIN_HAND);
                     mc.player.connection.sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.START_DESTROY_BLOCK, event.getPos(), event.getFace()));
@@ -352,6 +356,7 @@ public class FastBreak extends Module {
 
     /**
      * Searches the most efficient item for a specified position
+     *
      * @param state The {@link IBlockState} position to find the most efficient item for
      * @return The most efficient item for the specified position
      */
@@ -382,7 +387,8 @@ public class FastBreak extends Module {
 
     /**
      * Finds the block strength of a specified block
-     * @param state The {@link IBlockState} block state of the specified block
+     *
+     * @param state    The {@link IBlockState} block state of the specified block
      * @param position The {@link BlockPos} position of the specified block
      * @return The block strength of the specified block
      */
@@ -393,15 +399,15 @@ public class FastBreak extends Module {
         }
         if (!canHarvestBlock(state.getBlock(), position)) {
             return getDigSpeed(state) / hardness / 100F;
-        }
-        else {
+        } else {
             return getDigSpeed(state) / hardness / 30F;
         }
     }
 
     /**
      * Check whether or not a specified block can be harvested
-     * @param block The {@link Block} block to check
+     *
+     * @param block    The {@link Block} block to check
      * @param position The {@link BlockPos} position of the block to check
      * @return Whether or not the block can be harvested
      */
@@ -426,6 +432,7 @@ public class FastBreak extends Module {
 
     /**
      * Finds the dig speed of a specified block
+     *
      * @param state {@link IBlockState} The block state of the specified block
      * @return The dig speed of the specified block
      */
@@ -474,6 +481,7 @@ public class FastBreak extends Module {
 
     /**
      * Finds the destroy speed of a specified position
+     *
      * @param state {@link IBlockState} The position to get the destroy speed for
      * @return The destroy speed of the specified position
      */

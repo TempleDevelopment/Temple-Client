@@ -3,6 +3,7 @@
   "package": "xyz.templecheats.templeclient.mixins",
   "refmap": "refmap.templeclient.json",
   "mixins": [
+    "accessor.IMixinMinecraft",
     "accessor.ICPacketCloseWindow",
     "accessor.ICPacketPlayer",
     "accessor.ICPacketUseEntity",

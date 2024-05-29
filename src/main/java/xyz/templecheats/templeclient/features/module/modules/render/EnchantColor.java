@@ -6,18 +6,18 @@ import xyz.templecheats.templeclient.manager.ModuleManager;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.ColorSetting;
 
-import java.awt.Color;
+import java.awt.*;
 
 public class EnchantColor extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     public final ColorSetting enchantColor = new ColorSetting("EnchantColor", this, Color.WHITE);
     public final BooleanSetting rainbow = new BooleanSetting("Rainbow", this, false);
 
     public EnchantColor() {
         super("EnchantColor", "Makes the enchant glint colorful", Keyboard.KEY_NONE, Category.Render);
-        this.registerSettings( rainbow, enchantColor);
+        this.registerSettings(rainbow, enchantColor);
     }
 
     public static Color getColor() {

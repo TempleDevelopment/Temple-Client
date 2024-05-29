@@ -14,9 +14,9 @@ import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import java.util.Comparator;
 
 public class AimAssist extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final BooleanSetting modifyPitch = new BooleanSetting("Pitch", this, true);
     private final BooleanSetting modifyYaw = new BooleanSetting("Yaw", this, true);
     private final BooleanSetting visibility = new BooleanSetting("Visible-Only", this, true);
@@ -24,10 +24,11 @@ public class AimAssist extends Module {
     private final DoubleSetting fov = new DoubleSetting("FOV", this, 1.0f, 360.0f, 40.0f);
 
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private EntityLivingBase renderTarget;
+
     public AimAssist() {
         super("AimAssist", "Helps you aim", Keyboard.KEY_NONE, Category.Combat);
         registerSettings(fov, smoothing, modifyPitch, modifyYaw, visibility);
@@ -72,10 +73,10 @@ public class AimAssist extends Module {
 
         double u = MathHelper.sqrt(x * x + z * z);
 
-        float u2 = (float)(MathHelper.atan2(z, x) * (180D / Math.PI) - 90.0F);
-        float u3 = (float)(-MathHelper.atan2(y, u) * (180D / Math.PI));
+        float u2 = (float) (MathHelper.atan2(z, x) * (180D / Math.PI) - 90.0F);
+        float u3 = (float) (-MathHelper.atan2(y, u) * (180D / Math.PI));
 
-        return new float[] {
+        return new float[]{
                 u2,
                 u3
         };

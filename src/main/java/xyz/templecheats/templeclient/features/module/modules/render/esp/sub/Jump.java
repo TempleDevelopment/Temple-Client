@@ -27,20 +27,27 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Jump extends Module {
 
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.Jump);
-    private final DoubleSetting radius = new DoubleSetting( "Radius", this, 0.3, 5.0, 1.5);
-    private final DoubleSetting duration = new DoubleSetting( "Duration", this, 0.5, 3.0, 1.5);
-    private final DoubleSetting width = new DoubleSetting( "Width", this, 0.1, 3.0, 1.5);
-    private final DoubleSetting rotateSpeed = new DoubleSetting( "Rotate Speed", this, 0.1, 10.0, 2.0);
-    private final IntSetting opacity = new IntSetting( "Opacity", this, 0, 255, 255);
+    private final DoubleSetting radius = new DoubleSetting("Radius", this, 0.3, 5.0, 1.5);
+    private final DoubleSetting duration = new DoubleSetting("Duration", this, 0.5, 3.0, 1.5);
+    private final DoubleSetting width = new DoubleSetting("Width", this, 0.1, 3.0, 1.5);
+    private final DoubleSetting rotateSpeed = new DoubleSetting("Rotate Speed", this, 0.1, 10.0, 2.0);
+    private final IntSetting opacity = new IntSetting("Opacity", this, 0, 255, 255);
     private final BooleanSetting glowInside = new BooleanSetting("Glow Inside", this, false);
     private final BooleanSetting glowOutside = new BooleanSetting("Glow Outside", this, false);
-    private final DoubleSetting insideRadius = new DoubleSetting( "I-Radius", this, 0.3, 5.0, 1.5);
-    private final DoubleSetting outsideRadius = new DoubleSetting( "O-Radius", this, 0.3, 5.0, 1.5);
+    private final DoubleSetting insideRadius = new DoubleSetting("I-Radius", this, 0.3, 5.0, 1.5);
+    private final DoubleSetting outsideRadius = new DoubleSetting("O-Radius", this, 0.3, 5.0, 1.5);
 
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private boolean lastOnGround = false;
     private boolean hasJumped = false;
     private final List<Circle> circleList = new ArrayList<>();
+
     public Jump() {
         super("Jump", "Draw circle when you jump", Keyboard.KEY_NONE, Category.Render, true);
         registerSettings(glowInside, glowOutside, radius, duration, width, rotateSpeed, insideRadius, outsideRadius, opacity, mode);
@@ -59,7 +66,7 @@ public class Jump extends Module {
             return;
         }
         if (mc.player.collidedVertically && mode.value() != Mode.Jump && !lastOnGround) {
-            circleList.add(new Circle(mc.player.getPositionVector().add(0 , 0.06 , 0) , System.currentTimeMillis()));
+            circleList.add(new Circle(mc.player.getPositionVector().add(0, 0.06, 0), System.currentTimeMillis()));
         }
         if (lastOnGround && !mc.player.onGround) {
             hasJumped = false;
@@ -74,7 +81,7 @@ public class Jump extends Module {
             return;
         }
         // I have no idea what wrong with this game
-        Vec3d idk = Minecraft.getMinecraft().isSingleplayer() ? mc.player.getPositionVector().subtract(0 , 0.4 , 0) : mc.player.getPositionVector().add(0 , 0.06 , 0);
+        Vec3d idk = Minecraft.getMinecraft().isSingleplayer() ? mc.player.getPositionVector().subtract(0, 0.4, 0) : mc.player.getPositionVector().add(0, 0.06, 0);
 
         if (mode.value() != Mode.Impact && !hasJumped) {
             circleList.add(new Circle(idk, System.currentTimeMillis()));
@@ -103,10 +110,10 @@ public class Jump extends Module {
             //System.out.println("RenderEvent - x, y, z: " + x + " " + y + " " + z);
 
             if (glowOutside.booleanValue()) {
-                RenderUtil.drawFadeGradientCircleOutline(radius.floatValue() * progress , size * insideRadius.floatValue() * 0.2f, (int) (opacity.intValue() * (1 - progress)));
+                RenderUtil.drawFadeGradientCircleOutline(radius.floatValue() * progress, size * insideRadius.floatValue() * 0.2f, (int) (opacity.intValue() * (1 - progress)));
             }
             if (glowInside.booleanValue()) {
-                RenderUtil.drawFadeGradientCircleOutline(radius.floatValue() * progress , size * outsideRadius.floatValue() * -0.2f, (int) (opacity.intValue() * (1 - progress)));
+                RenderUtil.drawFadeGradientCircleOutline(radius.floatValue() * progress, size * outsideRadius.floatValue() * -0.2f, (int) (opacity.intValue() * (1 - progress)));
             }
             // Will be used in future
             //RenderUtil.drawCoolCircle(radius.floatValue() * progress, (int) (opacity.intValue() * (1 - progress)));

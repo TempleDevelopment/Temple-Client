@@ -9,10 +9,11 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.gui.clickgui.basic.ClickGuiScreen;
 import xyz.templecheats.templeclient.features.module.Module;
+
 public class GuiWalk extends Module {
-    /*
-     * Constants
-     */
+    /****************************************************************
+     *                      Constants
+     ****************************************************************/
     private static final double DEFAULT_SPEED = 0.05;
 
     public GuiWalk() {
@@ -45,26 +46,26 @@ public class GuiWalk extends Module {
 
     void moveForward(double speed) {
         float direction = getDirection();
-        mc.player.motionX -= (double)(MathHelper.sin(direction) * speed);
-        mc.player.motionZ += (double)(MathHelper.cos(direction) * speed);
+        mc.player.motionX -= (double) (MathHelper.sin(direction) * speed);
+        mc.player.motionZ += (double) (MathHelper.cos(direction) * speed);
     }
 
     void moveBack(double speed) {
         float direction = getDirection();
-        mc.player.motionX += (double)(MathHelper.sin(direction) * speed);
-        mc.player.motionZ -= (double)(MathHelper.cos(direction) * speed);
+        mc.player.motionX += (double) (MathHelper.sin(direction) * speed);
+        mc.player.motionZ -= (double) (MathHelper.cos(direction) * speed);
     }
 
     void moveLeft(double speed) {
         float direction = getDirection();
-        mc.player.motionZ += (double)(MathHelper.sin(direction) * speed);
-        mc.player.motionX += (double)(MathHelper.cos(direction) * speed);
+        mc.player.motionZ += (double) (MathHelper.sin(direction) * speed);
+        mc.player.motionX += (double) (MathHelper.cos(direction) * speed);
     }
 
     void moveRight(double speed) {
         float direction = getDirection();
-        mc.player.motionZ -= (double)(MathHelper.sin(direction) * speed);
-        mc.player.motionX -= (double)(MathHelper.cos(direction) * speed);
+        mc.player.motionZ -= (double) (MathHelper.sin(direction) * speed);
+        mc.player.motionX -= (double) (MathHelper.cos(direction) * speed);
     }
 
     void handleForward(double speed) {

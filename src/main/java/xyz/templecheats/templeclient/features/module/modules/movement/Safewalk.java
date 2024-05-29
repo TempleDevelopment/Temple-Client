@@ -8,16 +8,17 @@ import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 
 public class Safewalk extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final BooleanSetting slabs = new BooleanSetting("Slabs", this, true);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     Minecraft mc = Minecraft.getMinecraft();
     public static Safewalk INSTANCE;
+
     public Safewalk() {
         super("Safewalk", "Prevents you from falling off blocks", Keyboard.KEY_NONE, Category.Movement);
         INSTANCE = this;
@@ -35,7 +36,7 @@ public class Safewalk extends Module {
 
         if (mc.player.onGround) {
             double increment;
-            for (increment = 0.05D; x != 0.0D && isOffsetBBEmpty(x, yOffset, 0.0D);) {
+            for (increment = 0.05D; x != 0.0D && isOffsetBBEmpty(x, yOffset, 0.0D); ) {
                 if (x < increment && x >= -increment) {
                     x = 0.0D;
                 } else if (x > 0.0D) {
@@ -44,7 +45,7 @@ public class Safewalk extends Module {
                     x += increment;
                 }
             }
-            for (; z != 0.0D && isOffsetBBEmpty(0.0D, yOffset, z);) {
+            for (; z != 0.0D && isOffsetBBEmpty(0.0D, yOffset, z); ) {
                 if (z < increment && z >= -increment) {
                     z = 0.0D;
                 } else if (z > 0.0D) {
@@ -53,7 +54,7 @@ public class Safewalk extends Module {
                     z += increment;
                 }
             }
-            for (; x != 0.0D && z != 0.0D && isOffsetBBEmpty(x, yOffset, z);) {
+            for (; x != 0.0D && z != 0.0D && isOffsetBBEmpty(x, yOffset, z); ) {
                 if (x < increment && x >= -increment) {
                     x = 0.0D;
                 } else if (x > 0.0D) {

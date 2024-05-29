@@ -2,8 +2,8 @@ package xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.b
 
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
-import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.Item;
 import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.Panel;
+import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.Item;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
@@ -31,17 +31,17 @@ public class IntSlider extends Item {
 
         RenderUtil.drawRect(x, y, (float) (this.x + (percentBar * (this.getWidth() + 7.4f))), y + height, ClickGUI.INSTANCE.getStartColor().getRGB());
 
-        if(this.isHovering(mouseX, mouseY)) {
+        if (this.isHovering(mouseX, mouseY)) {
             RenderUtil.drawRect(x, y, (float) (this.x + (percentBar * (this.getWidth() + 7.4f))), y + height, 0x22000000);
         }
 
         font16.drawString(getLabel() + TextFormatting.GRAY + " " + value, this.x + 2.3, this.y + 4, 0xFFFFFFFF, false);
 
-        if(this.dragging) {
+        if (this.dragging) {
             int offset = (int) (MathHelper.clamp((mouseX - x) / (this.getWidth() + 7.4f), 0, 1) * range);
             this.value = setting.min + offset;
 
-            if(!(this.setting.parent instanceof ClickGUI) || !this.setting.name.equals("Scale")) {
+            if (!(this.setting.parent instanceof ClickGUI) || !this.setting.name.equals("Scale")) {
                 this.setting.setIntValue(this.value);
             }
         } else {
@@ -51,7 +51,7 @@ public class IntSlider extends Item {
 
     @Override
     public void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) {
-        if(this.isHovering(mouseX, mouseY) && mouseButton == 0) {
+        if (this.isHovering(mouseX, mouseY) && mouseButton == 0) {
             this.dragging = true;
             return;
         }
@@ -60,7 +60,7 @@ public class IntSlider extends Item {
 
     @Override
     public void mouseReleased(int mouseX, int mouseY, int state) {
-        if(state == 0 && this.dragging) {
+        if (state == 0 && this.dragging) {
             this.setting.setIntValue(this.value);
             this.dragging = false;
             return;
@@ -75,8 +75,8 @@ public class IntSlider extends Item {
 
     @Override
     protected boolean isHovering(final int mouseX, final int mouseY) {
-        for(final Panel panel : this.parentButton.getClientScreen().getPanels()) {
-            if(panel.drag) {
+        for (final Panel panel : this.parentButton.getClientScreen().getPanels()) {
+            if (panel.drag) {
                 return false;
             }
         }

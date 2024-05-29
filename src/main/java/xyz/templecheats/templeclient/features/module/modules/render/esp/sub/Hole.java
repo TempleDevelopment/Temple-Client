@@ -1,5 +1,6 @@
 package xyz.templecheats.templeclient.features.module.modules.render.esp.sub;
 
+import net.minecraft.util.math.AxisAlignedBB;
 import org.lwjgl.input.Keyboard;
 import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
 import xyz.templecheats.templeclient.TempleClient;
@@ -8,24 +9,22 @@ import xyz.templecheats.templeclient.event.events.render.Render3DPrePreEvent;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.Colors;
 import xyz.templecheats.templeclient.manager.HoleManager;
-import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
+import xyz.templecheats.templeclient.util.math.MathUtil;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
+import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
-
-import net.minecraft.util.math.AxisAlignedBB;
-import xyz.templecheats.templeclient.util.math.MathUtil;
 
 import java.awt.*;
 import java.util.ArrayList;
 
 
 public class Hole extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
 
     private final IntSetting range = new IntSetting("Range", this, 1, 20, 5);
     private final IntSetting speed = new IntSetting("Speed", this, 1, 200, 50);
@@ -33,9 +32,9 @@ public class Hole extends Module {
     private final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.Normal);
     private final BooleanSetting slideAnimation = new BooleanSetting("Gradient", this, false);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private final ArrayList<HoleInfo> renderHoles = new ArrayList<>();
 
     public Hole() {

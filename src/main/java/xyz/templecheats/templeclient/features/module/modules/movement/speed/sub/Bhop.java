@@ -1,16 +1,15 @@
 package xyz.templecheats.templeclient.features.module.modules.movement.speed.sub;
 
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.module.Module;
-import xyz.templecheats.templeclient.util.player.PlayerUtil;
 import xyz.templecheats.templeclient.util.world.EntityUtil;
 
 public class Bhop extends Module {
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private int counter = 0;
 
     public Bhop() {

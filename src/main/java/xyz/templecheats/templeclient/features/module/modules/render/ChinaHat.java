@@ -6,17 +6,17 @@ import net.minecraft.util.math.Vec3d;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import xyz.templecheats.templeclient.features.module.Module;
-import xyz.templecheats.templeclient.util.setting.impl.*;
+import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
+import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
+import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 
 import static org.lwjgl.opengl.GL11.*;
-import static xyz.templecheats.templeclient.util.color.ColorUtil.lerpColor;
-import static xyz.templecheats.templeclient.util.color.ColorUtil.setAlpha;
 import static xyz.templecheats.templeclient.util.render.RenderUtil.*;
 
 public class ChinaHat extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final BooleanSetting self = new BooleanSetting("Self", this, false);
     private final BooleanSetting other = new BooleanSetting("Other", this, true);
     private final BooleanSetting firstPerson = new BooleanSetting("FirstPerson", this, true);
@@ -38,9 +38,9 @@ public class ChinaHat extends Module {
     private boolean check() {
         if (firstPerson.booleanValue() && mc.gameSettings.thirdPersonView == 0) {
             return true;
-        }
-        else return mc.gameSettings.thirdPersonView != 0;
+        } else return mc.gameSettings.thirdPersonView != 0;
     }
+
     @Override
     public void onRenderWorld(float partialTicks) {
         if (mc.player == null || mc.world == null) return;

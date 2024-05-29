@@ -8,15 +8,13 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.event.events.player.AttackEvent;
 import xyz.templecheats.templeclient.event.events.player.BlockResetEvent;
 
 @Mixin(PlayerControllerMP.class)
 public class MixinPlayerControllerMP {
     @Inject(method = "attackEntity", at = @At("HEAD"), cancellable = true)
-    public void attackEntityPre(EntityPlayer playerIn , Entity targetEntity , CallbackInfo ci) {
+    public void attackEntityPre(EntityPlayer playerIn, Entity targetEntity, CallbackInfo ci) {
         if (targetEntity == null) return;
         AttackEvent event = new AttackEvent.Pre(targetEntity);
         MinecraftForge.EVENT_BUS.post(event);
@@ -24,7 +22,7 @@ public class MixinPlayerControllerMP {
     }
 
     @Inject(method = "attackEntity", at = @At("RETURN"))
-    public void attackEntityPost(EntityPlayer playerIn , Entity targetEntity , CallbackInfo ci) {
+    public void attackEntityPost(EntityPlayer playerIn, Entity targetEntity, CallbackInfo ci) {
         if (targetEntity == null) return;
         AttackEvent event = new AttackEvent.Post(targetEntity);
         MinecraftForge.EVENT_BUS.post(event);

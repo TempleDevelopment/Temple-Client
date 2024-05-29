@@ -17,13 +17,19 @@ import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.manager.ModuleManager;
 
 public class ForgeEventManager {
-    private boolean playerLoaded;
+
     public static long lastFrame, deltaTime;
+    private boolean playerLoaded;
 
     public ForgeEventManager() {
         MinecraftForge.EVENT_BUS.register(this);
         playerLoaded = false;
     }
+
+    /****************************************************************
+     *                      Event Handlers
+     ****************************************************************/
+
     @SubscribeEvent
     public void onTickEvent(TickEvent.ClientTickEvent event) {
         TempleClient.getModuleManager().onPlayerTick();
@@ -31,7 +37,6 @@ public class ForgeEventManager {
 
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        //TempleClient.configManager.loadAll();
     }
 
     @SubscribeEvent
@@ -44,22 +49,16 @@ public class ForgeEventManager {
         if (Minecraft.getMinecraft().player == null) {
             return;
         }
-        final Render3DPrePreEvent render3DPrePreEvent = new Render3DPrePreEvent(event.getPartialTicks());
-        TempleClient.eventBus.dispatchEvent(render3DPrePreEvent);
 
-        final Render3DPreEvent render3DPreEvent = new Render3DPreEvent(event.getPartialTicks());
-        TempleClient.eventBus.dispatchEvent(render3DPreEvent);
-
-        final Render3DEvent render3dEvent = new Render3DEvent(event.getPartialTicks());
-        TempleClient.eventBus.dispatchEvent(render3dEvent);
-
-        final Render3DPostEvent render3dEventPost = new Render3DPostEvent(event.getPartialTicks());
-        TempleClient.eventBus.dispatchEvent(render3dEventPost);
+        TempleClient.eventBus.dispatchEvent(new Render3DPrePreEvent(event.getPartialTicks()));
+        TempleClient.eventBus.dispatchEvent(new Render3DPreEvent(event.getPartialTicks()));
+        TempleClient.eventBus.dispatchEvent(new Render3DEvent(event.getPartialTicks()));
+        TempleClient.eventBus.dispatchEvent(new Render3DPostEvent(event.getPartialTicks()));
 
         deltaTime = System.currentTimeMillis() - lastFrame;
         lastFrame = System.currentTimeMillis();
 
-        for (Module module: ModuleManager.getModules()) {
+        for (Module module : ModuleManager.getModules()) {
             if (module.isToggled()) {
                 module.onRenderWorld(event.getPartialTicks());
             }

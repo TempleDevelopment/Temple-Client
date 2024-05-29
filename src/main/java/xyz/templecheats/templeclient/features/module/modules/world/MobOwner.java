@@ -1,32 +1,27 @@
 package xyz.templecheats.templeclient.features.module.modules.world;
 
-import com.google.gson.JsonParser;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.entity.passive.EntityTameable;
-import org.apache.commons.io.IOUtils;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 
-import java.io.IOException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.UUID;
 
 import static xyz.templecheats.templeclient.util.math.MathUtil.round;
 
 public class MobOwner extends Module {
 
-    /*
-     * Settings
-     */
-    private final BooleanSetting speed = new BooleanSetting("Speed" , this , true);
-    private final BooleanSetting jump = new BooleanSetting("Jump" , this , true);
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
+    private final BooleanSetting speed = new BooleanSetting("Speed", this, true);
+    private final BooleanSetting jump = new BooleanSetting("Jump", this, true);
 
     public MobOwner() {
-        super("MobOwner" , "Tells you the identity of who tamed a mob" , Keyboard.KEY_NONE , Category.World);
-        registerSettings(speed , jump);
+        super("MobOwner", "Tells you the identity of who tamed a mob", Keyboard.KEY_NONE, Category.World);
+        registerSettings(speed, jump);
     }
 
     @Override
@@ -71,7 +66,8 @@ public class MobOwner extends Module {
             try {
                 entity.setAlwaysRenderNameTag(false);
                 System.out.println("remove");
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
     }
 

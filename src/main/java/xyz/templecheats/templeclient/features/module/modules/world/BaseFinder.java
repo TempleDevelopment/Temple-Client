@@ -21,9 +21,9 @@ import java.io.File;
 import java.util.*;
 
 public class BaseFinder extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.Chat);
     private final IntSetting notifyDistance = new IntSetting("Distance", this, 1, 5000, 20);
     private final BooleanSetting notifyBeds = new BooleanSetting("Beds", this, true);
@@ -35,9 +35,9 @@ public class BaseFinder extends Module {
     private final BooleanSetting notifyHoppers = new BooleanSetting("Hoppers", this, true);
     private final BooleanSetting notifyDispensers = new BooleanSetting("Dispensers", this, true);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private final Set<ChunkPos> notifiedChunks = new HashSet<>();
     private long lastNotificationTime = 0L;
     private final long notificationCooldown = 5000L;
@@ -113,6 +113,7 @@ public class BaseFinder extends Module {
             lastNotificationTime = System.currentTimeMillis();
         }
     }
+
     private void sendNotification(String name, ChunkPos chunkPos) {
         String message = name + " found in your set distance!";
         if (mode.value() == Mode.Chat || mode.value() == Mode.Both) {

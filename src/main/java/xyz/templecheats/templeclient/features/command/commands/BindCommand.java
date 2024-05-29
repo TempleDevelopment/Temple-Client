@@ -14,6 +14,7 @@ public class BindCommand extends Command {
     public String getName() {
         return ".bind";
     }
+
     @Override
     public void execute(String[] args) {
         if (args.length != 3) {

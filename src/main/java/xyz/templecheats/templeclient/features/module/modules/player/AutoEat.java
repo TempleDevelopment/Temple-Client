@@ -8,24 +8,23 @@ import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RayTraceResult;
 import org.lwjgl.input.Keyboard;
-
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.render.esp.sub.Block;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 
 public class AutoEat extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final IntSetting hungerThreshold = new IntSetting("Hunger", this, 0, 20, 10);
     private final BooleanSetting gapples = new BooleanSetting("Golden Apples", this, false);
     private final BooleanSetting poisonous = new BooleanSetting("Poisonous", this, false);
     private final IntSetting healthThreshold = new IntSetting("Health", this, 1, 20, 10);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private int previousSlot = -1;
 
     public AutoEat() {
@@ -60,6 +59,7 @@ public class AutoEat extends Module {
             previousSlot = -1;
         }
     }
+
     @Override
     public void onDisable() {
         KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);

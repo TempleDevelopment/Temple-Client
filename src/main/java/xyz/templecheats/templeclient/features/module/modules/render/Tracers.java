@@ -11,9 +11,9 @@ import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 
 public class Tracers extends Module {
-    /**
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final BooleanSetting colorDistance = new BooleanSetting("Color Distance", this, false);
 
     public Tracers() {
@@ -24,7 +24,7 @@ public class Tracers extends Module {
 
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent e) {
-        for (Entity playerEntity: mc.world.playerEntities) {
+        for (Entity playerEntity : mc.world.playerEntities) {
             if (playerEntity != null && playerEntity != mc.player) {
                 float r = Colors.INSTANCE.getColor().getRed() / 255.0f;
                 float g = Colors.INSTANCE.getColor().getGreen() / 255.0f;

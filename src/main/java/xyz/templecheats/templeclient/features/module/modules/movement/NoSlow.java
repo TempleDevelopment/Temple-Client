@@ -10,10 +10,10 @@ import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 
 public class NoSlow extends Module {
-    /*
-     * Settings
-     */
-    private final EnumSetting < Mode > mode = new EnumSetting < > ("Mode", this, Mode.NCP);
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
+    private final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.NCP);
     public final IntSetting speed = new IntSetting("Speed", this, 1, 100, 100);
 
 
@@ -38,7 +38,8 @@ public class NoSlow extends Module {
             }
         }
 
-        if (mode.value() == Mode.Matrix && mc.player.isHandActive()) { {
+        if (mode.value() == Mode.Matrix && mc.player.isHandActive()) {
+            {
                 if (mc.player.onGround && !mc.gameSettings.keyBindJump.isKeyDown()) {
                     if (mc.player.ticksExisted % 2 == 0) {
                         mc.player.motionX *= 0.46;

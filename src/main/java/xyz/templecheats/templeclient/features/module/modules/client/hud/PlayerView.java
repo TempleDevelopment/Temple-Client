@@ -7,6 +7,9 @@ import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import static xyz.templecheats.templeclient.util.render.RenderUtil.drawPlayer;
 
 public class PlayerView extends HUD.HudElement {
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final DoubleSetting modelScale = new DoubleSetting("Scale", this, 0.4, 2.0, 0.8);
 
     public PlayerView() {

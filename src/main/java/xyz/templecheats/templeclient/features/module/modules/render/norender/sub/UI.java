@@ -8,9 +8,9 @@ import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 
 public class UI extends Module {
     public static UI INSTANCE;
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final BooleanSetting bossInfo = new BooleanSetting("Boss Info", this, false);
     public final BooleanSetting potionOverlay = new BooleanSetting("Potion Overlay", this, true);
 
@@ -19,8 +19,9 @@ public class UI extends Module {
         INSTANCE = this;
         registerSettings(bossInfo, potionOverlay);
     }
+
     @SubscribeEvent
-    public void onRenderGameOverlayPre(RenderGameOverlayEvent.Pre event ) {
+    public void onRenderGameOverlayPre(RenderGameOverlayEvent.Pre event) {
         if (event.getType() == RenderGameOverlayEvent.ElementType.BOSSINFO) {
             event.setCanceled(bossInfo.booleanValue());
         }

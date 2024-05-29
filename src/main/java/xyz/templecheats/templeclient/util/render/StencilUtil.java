@@ -5,21 +5,29 @@ import net.minecraft.client.shader.Framebuffer;
 import org.lwjgl.opengl.EXTFramebufferObject;
 import org.lwjgl.opengl.EXTPackedDepthStencil;
 import org.lwjgl.opengl.GL11;
-
 public class StencilUtil {
     private static final Minecraft mc = Minecraft.getMinecraft();
 
+    /****************************************************************
+     *                    Framebuffer Setup Methods
+     ****************************************************************/
+
+    /**
+     * Checks and sets up the framebuffer for stencil use if necessary.
+     *
+     * @param framebuffer The framebuffer to check and setup.
+     */
     public static void checkSetupFBO(Framebuffer framebuffer) {
-        if (framebuffer != null) {
-            if (framebuffer.depthBuffer > -1) {
-                setupFBO(framebuffer);
-                framebuffer.depthBuffer = -1;
-            }
+        if (framebuffer != null && framebuffer.depthBuffer > -1) {
+            setupFBO(framebuffer);
+            framebuffer.depthBuffer = -1;
         }
     }
 
     /**
-     * @implNote Sets up the Framebuffer for Stencil use
+     * Sets up the Framebuffer for stencil use.
+     *
+     * @param framebuffer The framebuffer to setup.
      */
     public static void setupFBO(Framebuffer framebuffer) {
         EXTFramebufferObject.glDeleteRenderbuffersEXT(framebuffer.depthBuffer);
@@ -30,11 +38,14 @@ public class StencilUtil {
         EXTFramebufferObject.glFramebufferRenderbufferEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT, EXTFramebufferObject.GL_DEPTH_ATTACHMENT_EXT, EXTFramebufferObject.GL_RENDERBUFFER_EXT, stencilDepthBufferID);
     }
 
+    /****************************************************************
+     *                    Stencil Buffer Initialization
+     ****************************************************************/
+
     /**
-     * @implNote Initializes the Stencil Buffer to write to
+     * Initializes the Stencil Buffer to write to.
      */
     public static void initStencilToWrite() {
-        //init
         mc.getFramebuffer().bindFramebuffer(false);
         checkSetupFBO(mc.getFramebuffer());
         GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
@@ -44,10 +55,14 @@ public class StencilUtil {
         GL11.glColorMask(false, false, false, false);
     }
 
+    /****************************************************************
+     *                   Stencil Buffer Manipulation
+     ****************************************************************/
+
     /**
-     * @param ref (usually 1)
-     * @implNote Reads the Stencil Buffer and stencils it onto everything until
-     * @see StencilUtil.uninitStencilBuffer
+     * Reads the Stencil Buffer and stencils it onto everything until {@link StencilUtil#uninitStencilBuffer()} is called.
+     *
+     * @param ref The reference value (usually 1).
      */
     public static void readStencilBuffer(int ref) {
         GL11.glColorMask(true, true, true, true);
@@ -55,8 +70,10 @@ public class StencilUtil {
         GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
     }
 
+    /**
+     * Disables the stencil test.
+     */
     public static void uninitStencilBuffer() {
         GL11.glDisable(GL11.GL_STENCIL_TEST);
     }
 }
-

@@ -12,14 +12,14 @@ import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 
 public class BowSpam extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final IntSetting ticks = new IntSetting("Ticks", this, 1, 10, 5);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private int tickCounter = 0;
 
     public BowSpam() {

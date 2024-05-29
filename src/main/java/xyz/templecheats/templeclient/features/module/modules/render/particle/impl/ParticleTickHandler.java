@@ -3,7 +3,6 @@ package xyz.templecheats.templeclient.features.module.modules.render.particle.im
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -52,9 +51,9 @@ public class ParticleTickHandler {
             motionY *= 0.9 + (inertiaAmount / 10.0);
             motionZ *= 0.9 + (inertiaAmount / 10.0);
 
-            if ( blockPos(pos.x, pos.y, pos.z) ) {
+            if (blockPos(pos.x, pos.y, pos.z)) {
                 motionY = -motionY;
-            } else if ( collisionCheck(pos.x, pos.y, pos.z, size / 10f, MathHelper.sqrt(motionX * motionY + motionZ * motionZ) * 1) ) {
+            } else if (collisionCheck(pos.x, pos.y, pos.z, size / 10f, MathHelper.sqrt(motionX * motionY + motionZ * motionZ) * 1)) {
                 motionX = -motionX + motionZ;
                 motionZ = -motionZ + motionX;
             }

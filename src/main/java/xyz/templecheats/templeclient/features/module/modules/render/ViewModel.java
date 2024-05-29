@@ -13,9 +13,9 @@ import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 
 public class ViewModel extends Module {
-    /**
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     public final BooleanSetting cancelEating = new BooleanSetting("No Eat", this, false);
     private final DoubleSetting fov = new DoubleSetting("FOV", this, 70d, 200d, 130d);
     private final DoubleSetting xLeft = new DoubleSetting("Left X", this, -2d, 2d, 0d);
@@ -27,7 +27,7 @@ public class ViewModel extends Module {
     private final DoubleSetting xScale = new DoubleSetting("X Scale", this, 0.1, 2d, 1d);
     private final DoubleSetting yScale = new DoubleSetting("Y Scale", this, 0.1, 2d, 1d);
     private final DoubleSetting zScale = new DoubleSetting("Z Scale", this, 0.1, 2d, 1d);
-    private final EnumSetting < Mode > mode = new EnumSetting < > ("Mode", this, Mode.Value);
+    private final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.Value);
 
     public ViewModel() {
         super("ViewModel", "Modify your viewmodel", Keyboard.KEY_NONE, Category.Render);

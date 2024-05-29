@@ -10,9 +10,9 @@ import java.util.function.BooleanSupplier;
 
 public class Player extends Module {
     public static Player INSTANCE;
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final BooleanSetting blindnessEffect = new BooleanSetting("Blindness", this, false);
     private final BooleanSetting bobbing = new BooleanSetting("NoBob", this, false);
     private final BooleanSetting hurtCam = new BooleanSetting("NoHurtCam", this, false);
@@ -29,9 +29,11 @@ public class Player extends Module {
         NoRender noRender = ModuleManager.getModule(NoRender.class);
         return noRender != null && noRender.isEnabled() && condition.getAsBoolean();
     }
+
     public static boolean preventBlindness() {
         return checkEffectEnabled(() -> INSTANCE.blindnessEffect.booleanValue());
     }
+
     public static boolean preventNausea() {
         return checkEffectEnabled(() -> INSTANCE.nauseaEffect.booleanValue());
     }

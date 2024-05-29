@@ -7,14 +7,16 @@ import net.minecraft.util.math.Vec3d;
 import xyz.templecheats.templeclient.util.Globals;
 
 import javax.sound.sampled.*;
-
 import java.io.IOException;
 
 import static java.lang.Math.*;
-import static java.lang.Math.signum;
 import static net.minecraft.util.math.MathHelper.wrapDegrees;
 
 public class SoundUtils implements Globals {
+
+    /****************************************************************
+     *                      Public Methods
+     ****************************************************************/
 
     public static void playSound(Vec3d pos, String sound, float volume, float max) {
         try {
@@ -48,6 +50,10 @@ public class SoundUtils implements Globals {
         }
     }
 
+    /****************************************************************
+     *                     Private Helper Methods
+     ****************************************************************/
+
     private static AudioInputStream getAudioInputStream(String sound) throws UnsupportedAudioFileException, IOException {
         return AudioSystem.getAudioInputStream(mc.getResourceManager().getResource(new ResourceLocation("sounds/" + sound + ".wav")).getInputStream());
     }
@@ -67,9 +73,9 @@ public class SoundUtils implements Globals {
             }
         }
         assert pos != null;
-        float f = (float)(mc.player.posX - pos.x);
-        float f1 = (float)(mc.player.posY - pos.y);
-        float f2 = (float)(mc.player.posZ - pos.z);
+        float f = (float) (mc.player.posX - pos.x);
+        float f1 = (float) (mc.player.posY - pos.y);
+        float f2 = (float) (mc.player.posZ - pos.z);
         floatControl.setValue(-(MathHelper.sqrt(f * f + f1 * f1 + f2 * f2) * 5) - (max / volume));
     }
 
@@ -90,5 +96,4 @@ public class SoundUtils implements Globals {
         assert entity != null;
         floatControl.setValue(-(mc.player.getDistance(entity) * 5) - (max / volume));
     }
-
 }

@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface IContainer {
     List<Item> getItems();
+
     void setItems(List<Item> items);
 }

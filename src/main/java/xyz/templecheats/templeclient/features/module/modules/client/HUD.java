@@ -22,23 +22,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HUD extends Module {
-    /**
-     * Instance
-     */
+    /****************************************************************
+     *                      Instances
+     ****************************************************************/
     public static HUD INSTANCE;
 
-    /**
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     public final DoubleSetting hudScale = new DoubleSetting("HUD Scale", this, 0.5d, 2d, 1.0d);
     public final BooleanSetting clamping = new BooleanSetting("Clamping", this, true);
     public final BooleanSetting icon = new BooleanSetting("Icon", this, true);
     public final BooleanSetting sync = new BooleanSetting("Color Sync", this, true);
 
-    /**
-     * Variables
-     */
-    private final List < HudElement > hudElements = new ArrayList < > ();
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
+    private final List<HudElement> hudElements = new ArrayList<>();
 
     public HUD() {
         super("HUD", "In-Game Heads up Display", Keyboard.KEY_GRAVE, Category.Client);
@@ -81,7 +81,7 @@ public class HUD extends Module {
             }
 
             if (mc.currentScreen instanceof HudEditorScreen && element.getWidth() > -1 && element.getHeight() > -1) {
-                RenderUtil.drawRect((float) element.getX(), (float) element.getY(), (float)(element.getX() + element.getWidth()), (float)(element.getY() + element.getHeight()), element.isDragging() ? 0x802D2D2D : 0x80000000);
+                RenderUtil.drawRect((float) element.getX(), (float) element.getY(), (float) (element.getX() + element.getWidth()), (float) (element.getY() + element.getHeight()), element.isDragging() ? 0x802D2D2D : 0x80000000);
             }
 
             final ScaledResolution sr = new ScaledResolution(mc);
@@ -101,7 +101,7 @@ public class HUD extends Module {
         GlStateManager.popMatrix();
     }
 
-    public List < HudElement > getHudElements() {
+    public List<HudElement> getHudElements() {
         return this.hudElements;
     }
 

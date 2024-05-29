@@ -4,7 +4,6 @@
 
 package xyz.templecheats.templeclient.features.module.modules.movement;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.Entity;
@@ -24,14 +23,14 @@ import xyz.templecheats.templeclient.mixins.accessor.IMixinCPacketPlayer;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 
 public class Jesus extends Module {
-    /**
-     * Settings
-     */
-    private final EnumSetting < Mode > mode = new EnumSetting < > ("Mode", this, Mode.NCP);
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
+    private final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.NCP);
 
-    /**
-     * Constants
-     */
+    /****************************************************************
+     *                      Constants
+     ****************************************************************/
     private final static double OFFSET = 0.05;
 
     public Jesus() {

@@ -2,7 +2,6 @@ package xyz.templecheats.templeclient.util.math;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -17,11 +16,13 @@ public final class MathUtil {
 
     public static final Minecraft mc = Minecraft.getMinecraft();
 
+    /****************************************************************
+     *                      Angle Calculation Methods
+     ****************************************************************/
+
     public static double degToRad(double deg) {
-        return deg * (float)(Math.PI / 180.0f);
+        return deg * (float) (Math.PI / 180.0f);
     }
-
-
 
     public static float[] calcAngle(Vec3d from, Vec3d to) {
         final double difX = to.x - from.x;
@@ -30,13 +31,18 @@ public final class MathUtil {
 
         final double dist = MathHelper.sqrt(difX * difX + difZ * difZ);
 
-        return new float[] {
-                (float) MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(difZ, difX)) - 90.0f), (float) MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(difY, dist)))
+        return new float[]{
+                (float) MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(difZ, difX)) - 90.0f),
+                (float) MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(difY, dist)))
         };
     }
 
+    /****************************************************************
+     *                      Block & Player Interaction
+     ****************************************************************/
+
     public static EnumFacing calcSide(BlockPos pos) {
-        for (EnumFacing side: EnumFacing.values()) {
+        for (EnumFacing side : EnumFacing.values()) {
             BlockPos sideOffset = pos.offset(side);
             IBlockState offsetState = mc.world.getBlockState(sideOffset);
             if (!offsetState.getBlock().canCollideCheck(offsetState, false)) continue;
@@ -44,6 +50,10 @@ public final class MathUtil {
         }
         return null;
     }
+
+    /****************************************************************
+     *                      Movement Calculation Methods
+     ****************************************************************/
 
     public static double[] directionSpeed(double speed) {
         float forward = mc.player.movementInput.moveForward;
@@ -58,7 +68,6 @@ public final class MathUtil {
             }
             side = 0;
 
-            //forward = clamp(forward, 0, 1);
             if (forward > 0) {
                 forward = 1;
             } else if (forward < 0) {
@@ -70,16 +79,19 @@ public final class MathUtil {
         final double cos = Math.cos(Math.toRadians(yaw + 90));
         final double posX = (forward * speed * cos + side * speed * sin);
         final double posZ = (forward * speed * sin - side * speed * cos);
-        return new double[] {
+        return new double[]{
                 posX,
                 posZ
         };
     }
 
+    /****************************************************************
+     *                      Randomization & Rounding
+     ****************************************************************/
+
     public static float random(float min, float max) {
         return (float) (Math.random() * (max - min) + min);
     }
-
 
     public static double round(double value, int places) {
         if (places < 0) {
@@ -88,6 +100,9 @@ public final class MathUtil {
         return new BigDecimal(value).setScale(places, RoundingMode.HALF_UP).doubleValue();
     }
 
+    /****************************************************************
+     *                      Miscellaneous Math Utilities
+     ****************************************************************/
 
     public static float clamp(float val, float min, float max) {
         if (val <= min) {
@@ -99,13 +114,8 @@ public final class MathUtil {
         return val;
     }
 
-
-
-    // linearly maps value from the range (a..b) to (c..d)
     public static double map(double value, double a, double b, double c, double d) {
-        // first map value from (a..b) to (0..1)
         value = (value - a) / (b - a);
-        // then map it from (0..1) to (c..d) and return it
         return c + value * (d - c);
     }
 
@@ -141,8 +151,9 @@ public final class MathUtil {
 
         final double delta = a1 * b2 - a2 * b1;
 
-        return new double[] {
-                (b2 * c1 - b1 * c2) / delta, (a1 * c2 - a2 * c1) / delta
+        return new double[]{
+                (b2 * c1 - b1 * c2) / delta,
+                (a1 * c2 - a2 * c1) / delta
         };
     }
 
@@ -168,7 +179,6 @@ public final class MathUtil {
         double output = 1.0 / Math.sqrt(2.0 * Math.PI * (sigma * sigma));
         return (float) (output * Math.exp(-(x * x) / (2.0 * (sigma * sigma))));
     }
-
 
     public static int randomBetween(int min, int max) {
         return min + (new Random().nextInt() * (max - min));

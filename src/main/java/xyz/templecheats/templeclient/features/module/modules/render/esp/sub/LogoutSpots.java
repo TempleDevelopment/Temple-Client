@@ -19,10 +19,10 @@ import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.Colors;
 import xyz.templecheats.templeclient.features.module.modules.client.hud.notification.NotificationType;
 import xyz.templecheats.templeclient.features.module.modules.client.hud.notification.Notifications;
-import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
-import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
+import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.setting.impl.*;
 import xyz.templecheats.templeclient.util.time.TimerUtil;
 
@@ -41,28 +41,36 @@ import static xyz.templecheats.templeclient.util.math.MathUtil.lerp;
 //TODO: render a model shader not just an entity box.
 public class LogoutSpots extends Module {
 
-    /*
-     * Settings
-     */
-    private final IntSetting range = new IntSetting("Range" , this , 10 , 250 , 100);
-    private final EnumSetting<Notify> notify = new EnumSetting<>("Notify" , this , Notify.None);
-    private final BooleanSetting nameTags = new BooleanSetting("NameTags" , this , true);
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
+    private final IntSetting range = new IntSetting("Range", this, 10, 250, 100);
+    private final EnumSetting<Notify> notify = new EnumSetting<>("Notify", this, Notify.None);
+    private final BooleanSetting nameTags = new BooleanSetting("NameTags", this, true);
     public final BooleanSetting fill = new BooleanSetting("Fill", this, true);
     public final BooleanSetting outline = new BooleanSetting("Outline", this, true);
     public final ColorSetting color = new ColorSetting("Fill Color", this, new Color(0, 0, 0, 255));
     public final ColorSetting outlineColor = new ColorSetting("Outline Color", this, new Color(33, 33, 33, 255));
-    private final BooleanSetting sync = new BooleanSetting("Outline sync" , this , true);
+    private final BooleanSetting sync = new BooleanSetting("Outline sync", this, true);
     public final DoubleSetting outlineWidth = new DoubleSetting("Width", this, 0.1, 5.0, 1.0);
     public final DoubleSetting roundRadius = new DoubleSetting("Radius", this, 0, 10.0, 3.0);
-    private final BooleanSetting time = new BooleanSetting("Timer" , this , true);
-    private final BooleanSetting coords = new BooleanSetting("Coords" , this , true);
+    private final BooleanSetting time = new BooleanSetting("Timer", this, true);
+    private final BooleanSetting coords = new BooleanSetting("Coords", this, true);
+
+    /****************************************************************
+     *                      Maps & Lists
+     ****************************************************************/
     private final Map<Entity, String> loggedPlayers = new ConcurrentHashMap<>();
     private Set<EntityPlayer> worldPlayers = ConcurrentHashMap.newKeySet();
+
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private final TimerUtil timer = new TimerUtil();
     private final Date date = new Date();
 
     public LogoutSpots() {
-        super("LogoutSpots" , "Render player logout spots" , Keyboard.KEY_NONE, Category.Render, true);
+        super("LogoutSpots", "Render player logout spots", Keyboard.KEY_NONE, Category.Render, true);
         registerSettings(
                 nameTags, fill, outline, sync, time, coords,
                 color, outlineColor,
@@ -220,8 +228,8 @@ public class LogoutSpots extends Module {
             );
 
             GradientShader.setup(0.5f);
-            RenderUtil.outlineShader(box.minX , box.minY , box.minZ , box.maxX, box.maxY, box.maxZ);
-            RenderUtil.boxShader(box.minX , box.minY , box.minZ , box.maxX, box.maxY, box.maxZ);
+            RenderUtil.outlineShader(box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
+            RenderUtil.boxShader(box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
             GradientShader.finish();
         }
     }
@@ -280,7 +288,7 @@ public class LogoutSpots extends Module {
                         sync.booleanValue() ? Colors.INSTANCE.getColor(0) : outlineColor.getColor()
                 )
                 .width(outline.booleanValue() ? outlineWidth.doubleValue() : 0)
-                .color(fill.booleanValue() ? color.getColor() : new Color(0,0,0,0))
+                .color(fill.booleanValue() ? color.getColor() : new Color(0, 0, 0, 0))
                 .radius(roundRadius.doubleValue())
                 .draw();
 

@@ -1,6 +1,8 @@
 package xyz.templecheats.templeclient.features.module.modules.render;
 
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
@@ -22,21 +24,26 @@ import static xyz.templecheats.templeclient.util.math.MathUtil.lerp;
 
 public class Trail extends Module {
     public static Trail INSTANCE;
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final DoubleSetting length = new DoubleSetting("Length", this, 1, 25, 10);
     private final BooleanSetting firstPerson = new BooleanSetting("FirstPerson", this, true);
     private final DoubleSetting lineWidth = new DoubleSetting("Line Width", this, 1.0, 10.0, 2.0);
     private final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.Fill);
+
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private final List<Point> points = new ArrayList<>();
     public final RainbowUtil rainbow = new RainbowUtil();
 
     public Trail() {
         super("Trail", "Draw trail behind player", Keyboard.KEY_NONE, Category.Render);
-        registerSettings( firstPerson, length, lineWidth, mode);
+        registerSettings(firstPerson, length, lineWidth, mode);
         INSTANCE = this;
     }
+
     private enum Mode {
         Line,
         Fill
@@ -45,8 +52,7 @@ public class Trail extends Module {
     private boolean check() {
         if (firstPerson.booleanValue() && mc.gameSettings.thirdPersonView == 0) {
             return true;
-        }
-        else return mc.gameSettings.thirdPersonView != 0;
+        } else return mc.gameSettings.thirdPersonView != 0;
     }
 
     @Listener
@@ -77,7 +83,7 @@ public class Trail extends Module {
                         break;
                 }
                 restore();
-                GL11.glColor4f(1,1,1,1);
+                GL11.glColor4f(1, 1, 1, 1);
             }
         }
     }
@@ -136,8 +142,7 @@ public class Trail extends Module {
             Vec3d vec = point.pos.subtract(x, y, z);
             if (withHeight) {
                 buffer.pos(vec.x, vec.y + mc.player.height, vec.z).color(red, green, blue, alpha).endVertex();
-            }
-            else {
+            } else {
                 buffer.pos(vec.x, vec.y, vec.z).color(red, green, blue, alpha).endVertex();
             }
             index++;

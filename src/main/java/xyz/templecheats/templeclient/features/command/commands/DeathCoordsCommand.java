@@ -10,11 +10,9 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import xyz.templecheats.templeclient.features.command.Command;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class DeathCoordsCommand extends Command {
     private BlockPos lastDeathCoords;
+
     public DeathCoordsCommand() {
         super();
         this.lastDeathCoords = null;
@@ -31,7 +29,7 @@ public class DeathCoordsCommand extends Command {
         Minecraft mc = Minecraft.getMinecraft();
 
         if (lastDeathCoords == null) {
-                sendMessage("No death coordinates recorded yet.", true);
+            sendMessage("No death coordinates recorded yet.", true);
         } else {
             String message = "Last death coordinates: X=" + lastDeathCoords.getX() +
                     " Y=" + lastDeathCoords.getY() +
@@ -48,6 +46,7 @@ public class DeathCoordsCommand extends Command {
         }
         Minecraft.getMinecraft().player.sendMessage(new TextComponentString(prefix + textColor + message));
     }
+
     @SubscribeEvent
     public void onPlayerDeath(LivingDeathEvent event) {
         if (!event.getEntityLiving().world.isRemote) {

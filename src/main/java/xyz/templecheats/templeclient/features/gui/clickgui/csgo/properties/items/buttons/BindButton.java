@@ -3,17 +3,17 @@ package xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.item
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
-
 import xyz.templecheats.templeclient.features.gui.clickgui.csgo.CsgoGuiScreen;
 import xyz.templecheats.templeclient.features.module.Module;
-import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
-import xyz.templecheats.templeclient.util.math.Vec2d;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
+import xyz.templecheats.templeclient.util.math.Vec2d;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 
 import java.awt.*;
 import java.io.IOException;
 
-import static xyz.templecheats.templeclient.features.gui.font.Fonts.*;
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font14;
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font20;
 import static xyz.templecheats.templeclient.util.math.MathUtil.lerp;
 
 public class BindButton extends Button {

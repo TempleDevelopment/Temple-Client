@@ -11,25 +11,31 @@ import xyz.templecheats.templeclient.event.events.render.Render3DPostEvent;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.mixins.accessor.IPlayerControllerMP;
 import xyz.templecheats.templeclient.mixins.accessor.IRenderGlobal;
-import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
-import xyz.templecheats.templeclient.util.render.enums.ProgressBoxModifiers;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
+import xyz.templecheats.templeclient.util.render.enums.ProgressBoxModifiers;
+import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 
 public class Break extends Module {
 
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final EnumSetting<ProgressBoxModifiers> renderMode = new EnumSetting<>("Render Mode", this, ProgressBoxModifiers.Grow);
     private final IntSetting displayRange = new IntSetting("Display Range", this, 5, 250, 20);
     private final DoubleSetting opacity = new DoubleSetting("Opacity", this, 0, 255, 200);
 
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private float normalizedOpacity = opacity.floatValue() / opacity.floatValue(); //we do this bcs GradientShader takes values from 1 to 0 and the setting above is 0 to 255
     private BlockPos lastMinePos;
     private BlockPos posPlayerLookingAt;
 
     public Break() {
-        super("Break" , "Show you block break process" , Keyboard.KEY_NONE , Category.Render, true);
+        super("Break", "Show you block break process", Keyboard.KEY_NONE, Category.Render, true);
         registerSettings(displayRange, opacity, renderMode);
     }
 
@@ -79,7 +85,7 @@ public class Break extends Module {
                     break;
                 }
             }
-        lastMinePos = pos;
+            lastMinePos = pos;
         } else {
             if (lastMinePos == null) return;
             if (normalizedOpacity > 0.0F && mc.world.getBlockState(lastMinePos).getBlock() == Blocks.AIR) {
@@ -92,13 +98,13 @@ public class Break extends Module {
         }
 
 
-
         ((IRenderGlobal) mc.renderGlobal).getDamagedBlocks().forEach(((integer, destroyBlockProgress) -> {
             if (destroyBlockProgress != null) {
                 BlockPos pos = destroyBlockProgress.getPosition();
                 if (mc.playerController.getIsHittingBlock() && !(mc.world.getBlockState(posPlayerLookingAt).getBlock() == Blocks.AIR)) {
                     if (((IPlayerControllerMP) mc.playerController).getCurrentBlock().equals(pos)) return;
-                    if (mc.player.getDistance(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) > displayRange.intValue()) return;
+                    if (mc.player.getDistance(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) > displayRange.intValue())
+                        return;
                     normalizedOpacity = opacity.floatValue() / opacity.floatValue();
                     lastMinePos = pos;
                 } else {

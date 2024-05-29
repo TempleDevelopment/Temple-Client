@@ -7,6 +7,9 @@ public class ESP extends Module {
 
     public ESP() {
         super("ESP", "Highlights entities in the world", Category.Render, true);
+        /****************************************************************
+         *                      Sub Module Registration
+         ****************************************************************/
         submodules.add(new Block());
         submodules.add(new Break());
         submodules.add(new Hand());

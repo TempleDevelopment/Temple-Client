@@ -1,7 +1,5 @@
 package xyz.templecheats.templeclient.features.module.modules.render.norender.sub;
 
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.render.norender.NoRender;
@@ -12,9 +10,9 @@ import java.util.function.BooleanSupplier;
 
 public class World extends Module {
     public static World INSTANCE;
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     public final BooleanSetting fog = new BooleanSetting("Fog", this, false);
     private final BooleanSetting weather = new BooleanSetting("Weather", this, false);
 

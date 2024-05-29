@@ -1,6 +1,5 @@
 package xyz.templecheats.templeclient.event.events.render;
 
-import xyz.templecheats.templeclient.event.EventCancellable;
 import xyz.templecheats.templeclient.event.EventStageable;
 
 public class Render3DEvent extends EventStageable {

@@ -29,17 +29,17 @@ public class StringButton extends Item {
         RenderUtil.drawRect(x, y, x + getWidth() + 7.4F, y + height, !isHovering(mouseX, mouseY) ? 0x11555555 : 0x88555555);
 
         GlStateManager.pushMatrix();
-        if(this.typing) {
+        if (this.typing) {
             font16.drawString(this.currentString.getString() + typingIcon(), this.x + 2.3f, this.y + 4, -1, false);
         } else {
-            font16.drawString(this.setting.getName() + ": " + this.setting.value(), this.x + 2.3f, this.y + 4, -1,false);
+            font16.drawString(this.setting.getName() + ": " + this.setting.value(), this.x + 2.3f, this.y + 4, -1, false);
         }
         GlStateManager.popMatrix();
     }
 
     @Override
     public void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) {
-        if(this.isHovering(mouseX, mouseY) && mouseButton == 0) {
+        if (this.isHovering(mouseX, mouseY) && mouseButton == 0) {
             toggle();
             return;
         }
@@ -80,10 +80,10 @@ public class StringButton extends Item {
         this.currentString = new CurrentString(newString);
     }
 
-    public static String removeLastChar ( String str ) {
+    public static String removeLastChar(String str) {
         String output = "";
-        if ( str != null && !str.isEmpty()) {
-            output = str.substring ( 0 , str.length ( ) - 1 );
+        if (str != null && !str.isEmpty()) {
+            output = str.substring(0, str.length() - 1);
         }
         return output;
     }
@@ -98,8 +98,8 @@ public class StringButton extends Item {
 
     @Override
     protected boolean isHovering(final int mouseX, final int mouseY) {
-        for(final Panel panel : this.parentButton.getClientScreen().getPanels()) {
-            if(panel.drag) {
+        for (final Panel panel : this.parentButton.getClientScreen().getPanels()) {
+            if (panel.drag) {
                 return false;
             }
         }
@@ -120,13 +120,11 @@ public class StringButton extends Item {
     public static class CurrentString {
         private final String string;
 
-        public
-        CurrentString(String string) {
+        public CurrentString(String string) {
             this.string = string;
         }
 
-        public
-        String getString() {
+        public String getString() {
             return this.string;
         }
     }

@@ -51,6 +51,11 @@ public class Quad<T> {
 
     @Override
     public String toString() {
-        return "Quad{" + "first=" + first + ", second=" + second + ", third=" + third + ", fourth=" + fourth + '}';
+        return "Quad{" +
+                "first=" + first +
+                ", second=" + second +
+                ", third=" + third +
+                ", fourth=" + fourth +
+                '}';
     }
 }

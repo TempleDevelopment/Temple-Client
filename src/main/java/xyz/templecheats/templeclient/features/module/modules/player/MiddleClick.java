@@ -3,9 +3,7 @@ package xyz.templecheats.templeclient.features.module.modules.player;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemEnderPearl;
-import net.minecraft.item.ItemFirework;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
@@ -19,14 +17,14 @@ import xyz.templecheats.templeclient.util.friend.Friend;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 
 public class MiddleClick extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final BooleanSetting friend = new BooleanSetting("Friend", this, true);
     private final BooleanSetting pearl = new BooleanSetting("Pearl", this, false);
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private boolean isButtonPressed = false;
 
     public MiddleClick() {

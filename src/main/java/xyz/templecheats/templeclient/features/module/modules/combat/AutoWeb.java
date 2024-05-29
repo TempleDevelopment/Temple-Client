@@ -23,16 +23,16 @@ import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 import java.util.concurrent.TimeUnit;
 
 public class AutoWeb extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final IntSetting delay = new IntSetting("Delay", this, 0, 10, 0);
     private final BooleanSetting toggled = new BooleanSetting("Toggle", this, false);
     private final EnumSetting<Target> target = new EnumSetting<>("Target", this, Target.Self);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     BlockPos feet;
     int d;
     public static float yaw;
@@ -79,7 +79,7 @@ public class AutoWeb extends Module {
                 Minecraft.getMinecraft().player.posY + Minecraft.getMinecraft().player.getEyeHeight(),
                 Minecraft.getMinecraft().player.posZ);
         Vec3d posVec = (new Vec3d(pos)).add(0.5D, 0.5D, 0.5D);
-        for (EnumFacing side: EnumFacing.values()) {
+        for (EnumFacing side : EnumFacing.values()) {
             BlockPos neighbor = pos.offset(side);
             if (canBeClicked(neighbor)) {
                 Vec3d hitVec = posVec.add((new Vec3d(side.getDirectionVec())).scale(0.5D));

@@ -24,6 +24,10 @@ import static xyz.templecheats.templeclient.util.Globals.mc;
 
 public class TargetUtil {
 
+    /****************************************************************
+     *                      Entity Targeting Methods
+     ****************************************************************/
+
     public static ArrayList<Entity> getItems(boolean items) {
         ArrayList<Entity> itemList = new ArrayList<>();
         for (Entity entity : mc.player.world.loadedEntityList) {
@@ -34,24 +38,7 @@ public class TargetUtil {
         return itemList;
     }
 
-    public static void updateEntityList(LinkedHashSet<Entity> entityList, boolean crystal, boolean self, boolean player, boolean items, boolean hostiles, boolean animals, double range) {
-        entityList.clear();
-        entityList.addAll(getTargetList(player, hostiles, animals, true));
-        entityList.addAll(getItems(items));
-        if (crystal) {
-            for (Entity entity : mc.world.loadedEntityList) {
-                if (entity instanceof EntityEnderCrystal) {
-                    entityList.add(entity);
-                }
-            }
-        }
-        if (self && mc.gameSettings.thirdPersonView != 0) {
-            entityList.add(mc.player);
-        }
-        entityList.removeIf(entity -> entity.getPositionVector().distanceTo(mc.player.getPositionVector()) > range);
-    }
-
-    public static ArrayList<EntityLivingBase> getTargetList(boolean players, boolean hostile , boolean animal , boolean invisible) {
+    public static ArrayList<EntityLivingBase> getTargetList(boolean players, boolean hostile, boolean animal, boolean invisible) {
         Predicate<EntityLivingBase> filterPredicate = e -> {
             if ((e == mc.getRenderViewEntity()) || (e == mc.player) || (e.isInvisible() && !invisible) || e.isDead || (e.getHealth() <= 0)) {
                 return false;
@@ -72,6 +59,27 @@ public class TargetUtil {
                 .filter(filterPredicate)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
+
+    public static void updateEntityList(LinkedHashSet<Entity> entityList, boolean crystal, boolean self, boolean player, boolean items, boolean hostiles, boolean animals, double range) {
+        entityList.clear();
+        entityList.addAll(getTargetList(player, hostiles, animals, true));
+        entityList.addAll(getItems(items));
+        if (crystal) {
+            for (Entity entity : mc.world.loadedEntityList) {
+                if (entity instanceof EntityEnderCrystal) {
+                    entityList.add(entity);
+                }
+            }
+        }
+        if (self && mc.gameSettings.thirdPersonView != 0) {
+            entityList.add(mc.player);
+        }
+        entityList.removeIf(entity -> entity.getPositionVector().distanceTo(mc.player.getPositionVector()) > range);
+    }
+
+    /****************************************************************
+     *                    Helper Methods
+     ****************************************************************/
 
     private static boolean isPassive(EntityLivingBase entity) {
         return entity instanceof EntityAnimal ||

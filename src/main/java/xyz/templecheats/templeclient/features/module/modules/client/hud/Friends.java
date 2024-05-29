@@ -12,9 +12,9 @@ import java.util.List;
 import static xyz.templecheats.templeclient.features.gui.font.Fonts.font18;
 
 public class Friends extends HUD.HudElement {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final BooleanSetting leftOfCenter = new BooleanSetting("LeftOfCenter", this, true);
 
     public Friends() {
@@ -23,7 +23,7 @@ public class Friends extends HUD.HudElement {
 
     @Override
     public void renderElement(ScaledResolution sr) {
-        List < Friend > friends = TempleClient.friendManager.getFriends();
+        List<Friend> friends = TempleClient.friendManager.getFriends();
 
         friends.sort((Friend friend1, Friend friend2) -> {
             String name1 = friend1.getName();
@@ -36,7 +36,7 @@ public class Friends extends HUD.HudElement {
         double maxWidth = 0;
         double totalHeight = 0;
 
-        for (Friend friend: friends) {
+        for (Friend friend : friends) {
             String name = friend.getName();
 
             double width = font18.getStringWidth(name) + 10;

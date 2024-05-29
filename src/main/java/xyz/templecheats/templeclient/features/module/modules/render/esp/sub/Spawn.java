@@ -24,39 +24,39 @@ import static xyz.templecheats.templeclient.util.render.RenderUtil.drawGradientC
 
 public class Spawn extends Module {
 
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final IntSetting range = new IntSetting("Range", this, 0, 30, 12);
     private final DoubleSetting lineWidth = new DoubleSetting("Line Width", this, 0.1, 5, 1);
     private final DoubleSetting radius = new DoubleSetting("Radius", this, 0.0, 6.0, 2.0);
     private final DoubleSetting delay = new DoubleSetting("Delay", this, 0, 10000, 300);
     private final DoubleSetting globalsLength = new DoubleSetting("Length", this, 0, 10000, 100);
     private final IntSetting alpha = new IntSetting("Alpha", this, 0, 255, 255);
-    private final IntSetting points = new IntSetting("Points",this,1,100, 20);
+    private final IntSetting points = new IntSetting("Points", this, 1, 100, 20);
     private final DoubleSetting rotateSpeed = new DoubleSetting("Rotate Speed", this, 0.0, 10.0, 2.0);
     private final IntSetting interval = new IntSetting("Interval", this, 1, 100, 2);
     private final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.Normal);
 
-    /*
-     * Extension settings
-     */
+    /****************************************************************
+     *                      Extension Settings
+     ****************************************************************/
     private final BooleanSetting extension = new BooleanSetting("Extension", this, true);
     private final EnumSetting<Easing> extensionEasing = new EnumSetting<>("E-Easing", this, Easing.Linear);
     private final DoubleSetting extensionLength = new DoubleSetting("E-Length", this, 100, 5000, 1000);
     private final DoubleSetting extensionRadius = new DoubleSetting("E-Radius", this, 0.0, 6.0, 2.0);
 
-    /*
-     * Rising settings
-     */
+    /****************************************************************
+     *                     Rising Settings
+     ****************************************************************/
     private final BooleanSetting rising = new BooleanSetting("Rising", this, true);
     private final EnumSetting<Easing> risingEasing = new EnumSetting<>("R-Easing", this, Easing.Linear);
     private final DoubleSetting risingLength = new DoubleSetting("R-Length", this, 100, 5000, 1000);
     private final DoubleSetting risingHeight = new DoubleSetting("R-Height", this, -2.0, 2.0, 1.0);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private final ConcurrentHashMap<EntityEnderCrystal, Long> crystals = new ConcurrentHashMap<>();
     private final TimerUtil timer = new TimerUtil();
 
@@ -177,6 +177,6 @@ public class Spawn extends Module {
     }
 
     private enum Mode {
-        Normal , New
+        Normal, New
     }
 }

@@ -14,7 +14,8 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 
 public class CFont implements AbstractFont {
     private static final Tessellator tessellator = Tessellator.getInstance();
@@ -73,7 +74,8 @@ public class CFont implements AbstractFont {
     }
 
     public void drawIcon(String text, float x, float y, Color color, boolean shadow) {
-        if (shadow) drawString(text, x + 0.5f, y + 0.5f, color.getRGB(), true, FontSettings.INSTANCE.smooth.booleanValue());
+        if (shadow)
+            drawString(text, x + 0.5f, y + 0.5f, color.getRGB(), true, FontSettings.INSTANCE.smooth.booleanValue());
         drawString(text, x, y, color.getRGB(), false, FontSettings.INSTANCE.smooth.booleanValue());
     }
 

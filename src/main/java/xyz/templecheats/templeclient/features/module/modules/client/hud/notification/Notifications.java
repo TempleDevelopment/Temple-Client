@@ -3,14 +3,14 @@ package xyz.templecheats.templeclient.features.module.modules.client.hud.notific
 import net.minecraft.client.gui.ScaledResolution;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.features.module.modules.client.HUD;
-import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
 import xyz.templecheats.templeclient.util.render.animation.Easing;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static xyz.templecheats.templeclient.features.gui.font.Fonts.*;
@@ -21,7 +21,7 @@ public class Notifications extends HUD.HudElement {
     /*
      * Settings
      */
-    public final EnumSetting<Easing> easing = new EnumSetting <>("Easing", this, Easing.Linear);
+    public final EnumSetting<Easing> easing = new EnumSetting<>("Easing", this, Easing.Linear);
     public final DoubleSetting keepTime = new DoubleSetting("KeepTime", this, 1, 5, 2);
     public final DoubleSetting showTime = new DoubleSetting("ShowTime", this, 1, 5, 3);
     public final DoubleSetting hideTime = new DoubleSetting("HieTime", this, 5, 10, 10);
@@ -79,7 +79,7 @@ public class Notifications extends HUD.HudElement {
         new RectBuilder(new Vec2d(pos.x, pos.y), new Vec2d(pos.x + textWidth, pos.y + getHeight()))
                 .outlineColor(outlineColor.getColor())
                 .width(outline.booleanValue() ? outlineWidth.doubleValue() : 0)
-                .color(fill.booleanValue() ? color.getColor() : new Color(0,0,0,0))
+                .color(fill.booleanValue() ? color.getColor() : new Color(0, 0, 0, 0))
                 .radius(2.0)
                 .blur(blur.booleanValue() ? blurRadius.doubleValue() : 0)
                 .drawBlur()

@@ -5,7 +5,6 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.features.command.Command;
-import xyz.templecheats.templeclient.config.ConfigManager;
 
 import java.io.File;
 
@@ -23,7 +22,7 @@ public class ConfigCommand extends Command {
 
         if (args.length < 2) {
             Minecraft.getMinecraft().player.sendMessage(
-                    new TextComponentString(errorPrefix + "Usage: .config <load/save> <name>")
+                    new TextComponentString(errorPrefix + "Usage: .config <list/load/save> <name>")
             );
             return;
         }
@@ -55,6 +54,25 @@ public class ConfigCommand extends Command {
                 Minecraft.getMinecraft().player.sendMessage(
                         new TextComponentString(templePrefix + "Config saved: " + configName)
                 );
+                break;
+            case "list":
+                File[] files = TempleClient.configManager.getConfigDirectory().listFiles();
+                if (files != null) {
+                    Minecraft.getMinecraft().player.sendMessage(
+                            new TextComponentString(templePrefix + "Config files: ")
+                    );
+                    for (File file : files) {
+                        if (file.isFile() && file.getName().endsWith(".cfg")) {
+                            Minecraft.getMinecraft().player.sendMessage(
+                                    new TextComponentString(" - " + file.getName())
+                            );
+                        }
+                    }
+                } else {
+                    Minecraft.getMinecraft().player.sendMessage(
+                            new TextComponentString(errorPrefix + "No config files found.")
+                    );
+                }
                 break;
 
             default:

@@ -5,9 +5,9 @@ import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 
 public class Ores extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final BooleanSetting renderDiamondOres = new BooleanSetting("Diamond Ores", this, true);
     private final BooleanSetting renderIronOres = new BooleanSetting("Iron Ores", this, true);
     private final BooleanSetting renderGoldOres = new BooleanSetting("Gold Ores", this, true);

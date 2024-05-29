@@ -1,9 +1,12 @@
 package xyz.templecheats.templeclient.features.module.modules.misc;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.*;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.item.EntityMinecart;
+import net.minecraft.entity.passive.EntityDonkey;
+import net.minecraft.entity.passive.EntityHorse;
+import net.minecraft.entity.passive.EntityLlama;
+import net.minecraft.entity.passive.EntityPig;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
@@ -14,9 +17,9 @@ import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 import java.util.List;
 
 public class AutoMount extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final BooleanSetting horses = new BooleanSetting("Horses", this, true);
     private final BooleanSetting donkeys = new BooleanSetting("Donkeys", this, true);
     private final BooleanSetting llamas = new BooleanSetting("Llamas", this, true);
@@ -26,15 +29,16 @@ public class AutoMount extends Module {
     private final IntSetting range = new IntSetting("Range", this, 1, 6, 3);
     private final IntSetting delay = new IntSetting("Delay", this, 1, 10, 5);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private int ticks = 0;
 
     public AutoMount() {
         super("AutoMount", "Automatically mounts entities", Keyboard.KEY_NONE, Category.Misc);
         this.registerSettings(horses, donkeys, llamas, boats, minecarts, pigs, range, delay);
     }
+
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.START) {
@@ -54,8 +58,8 @@ public class AutoMount extends Module {
 
             ticks = 0;
 
-            List < Entity > entities = mc.world.getEntitiesWithinAABBExcludingEntity(mc.player, mc.player.getEntityBoundingBox().grow(range.intValue()));
-            for (Entity entity: entities) {
+            List<Entity> entities = mc.world.getEntitiesWithinAABBExcludingEntity(mc.player, mc.player.getEntityBoundingBox().grow(range.intValue()));
+            for (Entity entity : entities) {
                 if ((entity instanceof EntityHorse && horses.booleanValue()) ||
                         (entity instanceof EntityDonkey && donkeys.booleanValue()) ||
                         (entity instanceof EntityLlama && llamas.booleanValue()) ||

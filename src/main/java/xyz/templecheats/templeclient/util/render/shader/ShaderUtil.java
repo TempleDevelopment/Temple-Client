@@ -14,13 +14,22 @@ import static org.lwjgl.opengl.GL20.*;
 public class ShaderUtil implements Globals {
     private final int programID;
 
+    /****************************************************************
+     *                     Constructor
+     ****************************************************************/
     public ShaderUtil(String shader) {
         int program = glCreateProgram();
         try {
-            int fragmentShaderID = createShader(mc.getResourceManager().getResource(new ResourceLocation("textures/shaders/" + shader + ".frag")).getInputStream(), GL_FRAGMENT_SHADER);
+            int fragmentShaderID = createShader(
+                    mc.getResourceManager().getResource(new ResourceLocation("textures/shaders/" + shader + ".frag")).getInputStream(),
+                    GL_FRAGMENT_SHADER
+            );
             glAttachShader(program, fragmentShaderID);
 
-            int vertexShaderID = createShader(mc.getResourceManager().getResource(new ResourceLocation("textures/shaders/vertex.vsh")).getInputStream(), GL_VERTEX_SHADER);
+            int vertexShaderID = createShader(
+                    mc.getResourceManager().getResource(new ResourceLocation("textures/shaders/vertex.vsh")).getInputStream(),
+                    GL_VERTEX_SHADER
+            );
             glAttachShader(program, vertexShaderID);
         } catch (Exception ignored) {
         }
@@ -34,6 +43,9 @@ public class ShaderUtil implements Globals {
         this.programID = program;
     }
 
+    /****************************************************************
+     *                     Shader Management
+     ****************************************************************/
     public void attachShader() {
         glUseProgram(programID);
     }
@@ -42,6 +54,9 @@ public class ShaderUtil implements Globals {
         glUseProgram(0);
     }
 
+    /****************************************************************
+     *                     Uniform Management
+     ****************************************************************/
     public void colorUniform(String name, Color color) {
         setUniformf(name, color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f, color.getAlpha() / 255.0f);
     }
@@ -77,6 +92,9 @@ public class ShaderUtil implements Globals {
         }
     }
 
+    /****************************************************************
+     *                     Shader Creation
+     ****************************************************************/
     private int createShader(InputStream inputStream, int shaderType) {
         int shader = glCreateShader(shaderType);
         glShaderSource(shader, readInputStream(inputStream));
@@ -87,7 +105,9 @@ public class ShaderUtil implements Globals {
         return shader;
     }
 
-
+    /****************************************************************
+     *                     Utility Methods
+     ****************************************************************/
     public String readInputStream(InputStream inputStream) {
         StringBuilder stringBuilder = new StringBuilder();
         try {
@@ -96,13 +116,15 @@ public class ShaderUtil implements Globals {
             while ((line = bufferedReader.readLine()) != null) {
                 stringBuilder.append(line).append('\n');
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
         return stringBuilder.toString();
     }
 
+    /****************************************************************
+     *                     Render Method
+     ****************************************************************/
     public void render(float x, float y, float width, float height) {
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(0.0f, 0.0f);

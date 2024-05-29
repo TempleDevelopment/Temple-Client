@@ -8,9 +8,9 @@ import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 
 public class Parkour extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final BooleanSetting slabs = new BooleanSetting("Slabs", this, true);
 
     public Parkour() {

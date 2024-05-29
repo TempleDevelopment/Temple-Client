@@ -7,6 +7,9 @@ import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.module.Module;
 
 public class AutoWalk extends Module {
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     public AutoWalk() {
         super("AutoWalk", "Automatically walks", Keyboard.KEY_NONE, Category.Movement);
     }

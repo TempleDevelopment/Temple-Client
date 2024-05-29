@@ -22,16 +22,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Flight extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final EnumSetting<FlightMode> mode = new EnumSetting<>("Mode", this, FlightMode.Vanilla);
     private final BooleanSetting noKick = new BooleanSetting("No Kick", this, false);
     private final DoubleSetting speed = new DoubleSetting("Speed", this, 0.1, 5, 1);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private int teleportId;
     private final List<CPacketPlayer> packets = new ArrayList<>();
 

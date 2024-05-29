@@ -1,7 +1,7 @@
 package xyz.templecheats.templeclient.features.module.modules.render.esp.sub;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
@@ -11,26 +11,28 @@ import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.Colors;
 import xyz.templecheats.templeclient.features.module.modules.combat.Aura;
 import xyz.templecheats.templeclient.features.module.modules.combat.AutoCrystal;
-import xyz.templecheats.templeclient.util.setting.impl.*;
+import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
+import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
+
 import java.awt.*;
 
-import static xyz.templecheats.templeclient.util.render.RenderUtil.interpolateEntity;
 import static xyz.templecheats.templeclient.util.math.MathUtil.lerp;
+import static xyz.templecheats.templeclient.util.render.RenderUtil.interpolateEntity;
 import static xyz.templecheats.templeclient.util.render.RenderUtil.renderTexture;
 
 public class Target extends Module {
-    /*
-     * Settings
-     */
-    private final EnumSetting < ESP > texture = new EnumSetting < > ("Texture", this, ESP.TriangleCapture);
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
+    private final EnumSetting<ESP> texture = new EnumSetting<>("Texture", this, ESP.TriangleCapture);
     private final DoubleSetting scale = new DoubleSetting("Scale", this, 0.3, 1.0, 0.75);
     private final DoubleSetting maxSpin = new DoubleSetting("MaxSpin", this, 10.0, 30.0, 15.0);
     private final DoubleSetting opacity = new DoubleSetting("Opacity", this, 0.1, 1, 0.5);
 
     // TODO: Rewrite this shit
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     boolean flip = false;
     float spinSpeed = 1.0f;
     float prevSpinStep = 1.0f;

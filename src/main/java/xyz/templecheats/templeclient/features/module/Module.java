@@ -13,9 +13,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 public class Module extends SettingHolder {
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
+
     public static final Minecraft mc = Minecraft.getMinecraft();
     public ArrayList<Module> submodules = new ArrayList<>();
     private final String description;
@@ -26,6 +27,10 @@ public class Module extends SettingHolder {
     public boolean submodule = false;
     public boolean parent = false;
     private boolean queueEnable;
+
+    /****************************************************************
+     *                      Constructors
+     ****************************************************************/
 
     public Module(String name, String description, int keyCode, Category c) {
         super(name);
@@ -54,12 +59,15 @@ public class Module extends SettingHolder {
 
                 sub.category = category;
                 submodules.add(sub);
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                     NoSuchMethodException e) {
-                TempleClient.logger.error("Cant create new instance of submodule of " + name + " module!", e, e.getCause());
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                TempleClient.logger.error("Cannot create new instance of submodule of " + name + " module!", e, e.getCause());
             }
         }
     }
+
+    /****************************************************************
+     *                      Getters and Setters
+     ****************************************************************/
 
     public String getDescription() {
         return this.description;
@@ -72,6 +80,23 @@ public class Module extends SettingHolder {
     public int getKey() {
         return KeyCode;
     }
+
+    public void setKey(int key) {
+        this.KeyCode = key;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public boolean isToggled() {
+        return toggled;
+    }
+
+    /****************************************************************
+     *                      Module Lifecycle Methods
+     ****************************************************************/
+
     public final void onUpdateInternal() {
         if (mc.player != null) {
             if (this.queueEnable) {
@@ -87,12 +112,17 @@ public class Module extends SettingHolder {
         this.onUpdateConstant();
     }
 
-    public void onUpdate() {}
+    public void onUpdate() {
+    }
 
-    public void onUpdateConstant() {}
+    public void onUpdateConstant() {
+    }
 
-    public void onRenderWorld(float partialTicks) {}
-    public void onEnable() {}
+    public void onRenderWorld(float partialTicks) {
+    }
+
+    public void onEnable() {
+    }
 
     public void onDisable() {
         GradientShader.finish();
@@ -101,6 +131,10 @@ public class Module extends SettingHolder {
     public String getHudInfo() {
         return "";
     }
+
+    /****************************************************************
+     *                      Toggle Methods
+     ****************************************************************/
 
     public void enable() {
         this.toggled = true;
@@ -111,7 +145,7 @@ public class Module extends SettingHolder {
 
         if (mc.player != null) {
             this.onEnable();
-            Notifications.addMessage(this.getName(), "Has been" + TextFormatting.GREEN + " enable", NotificationType.SUCCESS);
+            Notifications.addMessage(this.getName(), "Has been" + TextFormatting.GREEN + " enabled", NotificationType.SUCCESS);
         } else {
             this.queueEnable = true;
         }
@@ -142,17 +176,9 @@ public class Module extends SettingHolder {
         }
     }
 
-    public boolean isToggled() {
-        return toggled;
-    }
-
-    public void setKey(int key) {
-        this.KeyCode = key;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
+    /****************************************************************
+     *                      Module Category Enum
+     ****************************************************************/
 
     public enum Category {
         Chat,

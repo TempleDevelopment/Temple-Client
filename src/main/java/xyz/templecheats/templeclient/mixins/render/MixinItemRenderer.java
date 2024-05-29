@@ -1,17 +1,14 @@
 package xyz.templecheats.templeclient.mixins.render;
 
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.event.events.render.TransformSideFirstPersonEvent;
-import xyz.templecheats.templeclient.features.module.modules.render.EnchantColor;
 import xyz.templecheats.templeclient.features.module.modules.render.ViewModel;
 import xyz.templecheats.templeclient.manager.ModuleManager;
 

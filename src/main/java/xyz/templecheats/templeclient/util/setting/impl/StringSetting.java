@@ -8,14 +8,23 @@ import xyz.templecheats.templeclient.util.setting.Setting;
 import xyz.templecheats.templeclient.util.setting.SettingHolder;
 
 public class StringSetting extends Setting<String> {
+
     private String value;
     private final String name;
+
+    /****************************************************************
+     *                  Constructor
+     ****************************************************************/
 
     public StringSetting(String name, SettingHolder parent, String value) {
         super(name, parent);
         this.name = name;
         this.value = value;
     }
+
+    /****************************************************************
+     *                  Public Methods
+     ****************************************************************/
 
     public String getName() {
         return this.name;
@@ -54,7 +63,8 @@ public class StringSetting extends Setting<String> {
     }
 
     @Override
-    public xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.Item createCsgoButton(xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.Button parent) {
+    public xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.Item createCsgoButton(
+            xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.Button parent) {
         return new xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.StringButton(name, this);
     }
 }

@@ -6,8 +6,15 @@ import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 import xyz.templecheats.templeclient.util.setting.impl.StringSetting;
 
 public class Spammer extends Module {
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final IntSetting delay = new IntSetting("Delay", this, 1, 10, 5);
     private final StringSetting message = new StringSetting("Message", this, "Hello World");
+
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private int timer = 0;
 
     public Spammer() {

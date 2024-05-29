@@ -32,18 +32,26 @@ import static xyz.templecheats.templeclient.util.sound.SoundUtils.playSound;
 
 // IDK
 public class DeathEffect extends Module {
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final BooleanSetting thunder = new BooleanSetting("Thunder", this, true);
-    private final IntSetting numbersThunder = new IntSetting("Number Thunder", this , 1, 10, 1);
+    private final IntSetting numbersThunder = new IntSetting("Number Thunder", this, 1, 10, 1);
     private final BooleanSetting beam = new BooleanSetting("Beam", this, true);
     private final BooleanSetting beamSound = new BooleanSetting("Beam Sound", this, true);
     private final BooleanSetting skull = new BooleanSetting("Skull", this, true);
     private final BooleanSetting circle = new BooleanSetting("Circle", this, true);
-    private final DoubleSetting radius = new DoubleSetting( "Radius", this, 0.5, 5.0, 1.5);
-    private final DoubleSetting duration = new DoubleSetting( "Duration", this, 2.0, 10.0, 5.0);
+    private final DoubleSetting radius = new DoubleSetting("Radius", this, 0.5, 5.0, 1.5);
+    private final DoubleSetting duration = new DoubleSetting("Duration", this, 2.0, 10.0, 5.0);
+
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private final ArrayList<DrawCircle> circleList = new ArrayList<>();
     private final ArrayList<EntityPlayer> deadList = new ArrayList<>();
     private final TimerUtil thunderTimer = new TimerUtil();
     private final TimerUtil timer = new TimerUtil();
+
     public DeathEffect() {
         super("DeathEffect", "Spawns a thunder at player's location when they die", Keyboard.KEY_NONE, Category.Render);
         this.registerSettings(thunder, numbersThunder, beam, beamSound, skull, circle, radius, duration);
@@ -56,7 +64,7 @@ public class DeathEffect extends Module {
 
     @Override
     public void onEnable() {
-       reset();
+        reset();
     }
 
     @Override
@@ -77,12 +85,12 @@ public class DeathEffect extends Module {
                     if (beamSound.booleanValue()) {
                         circleList.forEach(it -> {
                             float progress = (float) it.getProgress(duration.floatValue());
-                            playSound(it.pos , "beam" , !it.shouldFadeOut ? 0.8f * progress : 0.8f * (1 - progress) , 1f);
+                            playSound(it.pos, "beam", !it.shouldFadeOut ? 0.8f * progress : 0.8f * (1 - progress), 1f);
                         });
                     }
                     if (thunder.booleanValue() && thunderTimer.passedMs((long) (2000L * duration.floatValue()))) {
                         for (int i = 0; i < numbersThunder.intValue(); i++) {
-                            mc.world.addWeatherEffect(new EntityLightningBolt(entity.world , entity.posX , entity.posY , entity.posZ , true));
+                            mc.world.addWeatherEffect(new EntityLightningBolt(entity.world, entity.posX, entity.posY, entity.posZ, true));
                             mc.player.playSound(SoundEvents.ENTITY_LIGHTNING_THUNDER, 1f, 1.f);
                         }
                     }
@@ -100,7 +108,7 @@ public class DeathEffect extends Module {
                 it.beam();
                 it.texture();
             });
-        }catch (ConcurrentModificationException ignored) {
+        } catch (ConcurrentModificationException ignored) {
         }
     }
 
@@ -110,7 +118,7 @@ public class DeathEffect extends Module {
         private final long maxScaleTime;
         private boolean shouldFadeOut = false;
 
-        public DrawCircle(Vec3d pos , long spawnTime) {
+        public DrawCircle(Vec3d pos, long spawnTime) {
             this.pos = pos;
             this.spawnTime = spawnTime;
             this.maxScaleTime = spawnTime + (long) (duration.floatValue() * 1000 * 0.8);
@@ -118,14 +126,15 @@ public class DeathEffect extends Module {
 
         public double getProgress(double duration) {
             double currentTime = System.currentTimeMillis();
-            return clamp((currentTime - spawnTime) / (duration * 1000.0) , 0.0 , 1.0);
+            return clamp((currentTime - spawnTime) / (duration * 1000.0), 0.0, 1.0);
         }
 
         public void beam() {
             beamSetup();
             double progress = Math.pow(getProgress(duration.floatValue()), 2);
             GL11.glTranslated(pos.x - mc.getRenderManager().viewerPosX, pos.y - mc.getRenderManager().viewerPosY, pos.z - mc.getRenderManager().viewerPosZ);
-            if (beam.booleanValue()) drawBeam(!(shouldFadeOut) ? (float) (radius.floatValue() * (progress / 1.2)) : 0f , (float) (255 * (1 - getProgress(duration.floatValue()) * 3.7)) , 255F , shouldFadeOut ? 200 : (int) (200 * (1 - getProgress(duration.floatValue()))) , shouldFadeOut ? 200 : (int) (200 * (1 - getProgress(duration.floatValue()))));
+            if (beam.booleanValue())
+                drawBeam(!(shouldFadeOut) ? (float) (radius.floatValue() * (progress / 1.2)) : 0f, (float) (255 * (1 - getProgress(duration.floatValue()) * 3.7)), 255F, shouldFadeOut ? 200 : (int) (200 * (1 - getProgress(duration.floatValue()))), shouldFadeOut ? 200 : (int) (200 * (1 - getProgress(duration.floatValue()))));
             beamRestore();
         }
 
@@ -146,7 +155,8 @@ public class DeathEffect extends Module {
             if (System.currentTimeMillis() >= maxScaleTime) {
                 shouldFadeOut = true;
             }
-            if (circle.booleanValue()) drawTexture("rune_1", progress); // Don't delete other rune I'll use after I'm back
+            if (circle.booleanValue())
+                drawTexture("rune_1", progress); // Don't delete other rune I'll use after I'm back
             textureRestore();
         }
 

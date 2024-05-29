@@ -13,6 +13,7 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.spec.KeySpec;
 import java.util.Base64;
+
 public class ChatCrypt extends Module {
     private static final String PASSWORD = "temple";
     private static final byte[] SALT = new byte[16];
@@ -31,6 +32,7 @@ public class ChatCrypt extends Module {
             e.printStackTrace();
         }
     }
+
     public ChatCrypt() {
         super("ChatCrypt", "Encrypt and Decrypt chat messages that users with Decrypt online can see", 0, Module.Category.Chat);
     }

@@ -14,9 +14,9 @@ import java.awt.*;
 
 public class Ambience extends Module {
     public static Ambience INSTANCE;
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
 
     // LightMap
     public final BooleanSetting LightMapState = new BooleanSetting("LightMapState", this, false);
@@ -27,14 +27,14 @@ public class Ambience extends Module {
     // Time
     // TODO: Change to better name
     private final BooleanSetting timeState = new BooleanSetting("TimeState", this, false);
-    private final EnumSetting < Time > time = new EnumSetting < > ("Time", timeState.parent, Time.Midnight);
+    private final EnumSetting<Time> time = new EnumSetting<>("Time", timeState.parent, Time.Midnight);
     private final DoubleSetting timeCustom = new DoubleSetting("TimeCustom", timeState.parent, 4.0, 24000.0, 600.0);
     private final BooleanSetting speedUp = new BooleanSetting("Speed Up", timeState.parent, false);
     private final DoubleSetting speed = new DoubleSetting("Speed", timeState.parent, 0.0, 100.0, 1.0);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     double counter = 0.0;
 
     public Ambience() {
@@ -77,7 +77,7 @@ public class Ambience extends Module {
                         counter = 0.0;
                     }
 
-                    t = (long)(timeCustom.doubleValue() + counter);
+                    t = (long) (timeCustom.doubleValue() + counter);
                     break;
             }
             mc.world.setWorldTime(t);

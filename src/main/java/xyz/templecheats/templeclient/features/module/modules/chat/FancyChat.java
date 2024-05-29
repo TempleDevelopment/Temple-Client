@@ -10,16 +10,17 @@ import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 import java.util.Random;
 
 public class FancyChat extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.Uwu);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private static final Char2ObjectMap<String> MORSE_CODE_MAP = new Char2ObjectOpenHashMap<>();
     private static final Random random = new Random();
+
     public FancyChat() {
         super("FancyChat", "Makes your text look gamer", 0, Category.Chat);
 
@@ -58,7 +59,7 @@ public class FancyChat extends Module {
                 .replace("ve", "v")
                 .replace("l", "w");
 
-        if(random.nextBoolean()) {
+        if (random.nextBoolean()) {
             uwuMessage += " " + getRandomUwuExpression();
         }
 
@@ -81,6 +82,7 @@ public class FancyChat extends Module {
         }
         return morseMessage.toString();
     }
+
     private String translateToReverse(String message) {
         return new StringBuilder(message).reverse().toString();
     }

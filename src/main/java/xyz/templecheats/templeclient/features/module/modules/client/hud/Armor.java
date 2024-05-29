@@ -9,10 +9,10 @@ import xyz.templecheats.templeclient.features.module.modules.client.HUD;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 
 public class Armor extends HUD.HudElement {
-    /*
-     * Settings
-     */
-    private final EnumSetting < DisplayMode > displayMode = new EnumSetting < > ("Display", this, DisplayMode.Horizontal);
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
+    private final EnumSetting<DisplayMode> displayMode = new EnumSetting<>("Display", this, DisplayMode.Horizontal);
 
     public Armor() {
         super("Armor", "Shows your Armor in the HUD");
@@ -35,7 +35,7 @@ public class Armor extends HUD.HudElement {
         int startX = (int) this.getX();
         int startY = (int) this.getY();
 
-        for (ItemStack stack: Lists.reverse(mc.player.inventory.armorInventory)) {
+        for (ItemStack stack : Lists.reverse(mc.player.inventory.armorInventory)) {
             if (!stack.isEmpty()) {
                 mc.getRenderItem().renderItemAndEffectIntoGUI(stack, startX, startY);
                 mc.getRenderItem().renderItemOverlays(mc.fontRenderer, stack, startX, startY);

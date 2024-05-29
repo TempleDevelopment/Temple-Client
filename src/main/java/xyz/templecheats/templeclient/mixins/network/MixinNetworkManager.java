@@ -13,7 +13,7 @@ import xyz.templecheats.templeclient.event.events.network.PacketEvent;
 @Mixin(value = NetworkManager.class)
 public class MixinNetworkManager {
     @Inject(method = "channelRead0", at = @At("HEAD"), cancellable = true)
-    public void IchannelRead0(ChannelHandlerContext context, Packet < ? > packet, CallbackInfo callback) {
+    public void IchannelRead0(ChannelHandlerContext context, Packet<?> packet, CallbackInfo callback) {
         final PacketEvent.Receive event = new PacketEvent.Receive(packet);
         TempleClient.eventBus.dispatchEvent(event);
         if (event.isCanceled()) {
@@ -22,7 +22,7 @@ public class MixinNetworkManager {
     }
 
     @Inject(method = "sendPacket(Lnet/minecraft/network/Packet;)V", at = @At("HEAD"), cancellable = true)
-    public void IsendPacket(Packet < ? > packet, CallbackInfo callback) {
+    public void IsendPacket(Packet<?> packet, CallbackInfo callback) {
         final PacketEvent.Send event = new PacketEvent.Send(packet);
         TempleClient.eventBus.dispatchEvent(event);
         if (event.isCanceled()) {

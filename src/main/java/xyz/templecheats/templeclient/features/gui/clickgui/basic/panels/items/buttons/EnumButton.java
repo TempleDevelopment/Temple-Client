@@ -34,11 +34,11 @@ public class EnumButton<T extends Enum<T>> extends Button {
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         super.mouseClicked(mouseX, mouseY, mouseButton);
-        if(isHovering(mouseX, mouseY)) {
+        if (isHovering(mouseX, mouseY)) {
             int count = this.setting.index();
-            if(mouseButton == 0) {
+            if (mouseButton == 0) {
                 count++;
-            } else if(mouseButton == 1) {
+            } else if (mouseButton == 1) {
                 count--;
             } else {
                 return;

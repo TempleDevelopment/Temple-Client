@@ -5,19 +5,20 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import xyz.templecheats.templeclient.features.module.modules.client.HUD;
-import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 
 import java.awt.*;
 
-import static xyz.templecheats.templeclient.features.gui.font.Fonts.*;
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font18;
 
 public class Inventory extends HUD.HudElement {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final BooleanSetting showText = new BooleanSetting("Text", this, true);
+
     public Inventory() {
         super("Inventory", "Shows your inventory in the HUD");
         registerSettings(fill, outline, blur, showText, color, outlineColor, outlineWidth, blurRadius);
@@ -31,7 +32,7 @@ public class Inventory extends HUD.HudElement {
         int startX = (int) this.getX();
         int startY = (int) this.getY();
 
-        double iconOffset = (!this.isLeftOfCenter() ? this.getWidth() - (font18.getStringWidth("Inventory") + 6): -2);
+        double iconOffset = (!this.isLeftOfCenter() ? this.getWidth() - (font18.getStringWidth("Inventory") + 6) : -2);
         double textOffset = (!this.isLeftOfCenter() ? getWidth() - font18.getStringWidth("Inventory") - 3 : 0);
 
         //Nice border

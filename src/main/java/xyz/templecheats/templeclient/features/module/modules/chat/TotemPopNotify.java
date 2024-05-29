@@ -21,16 +21,16 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class TotemPopNotify extends Module {
-    /*
-     * Settings
-     */
-    private final EnumSetting<Mode> mode = new EnumSetting <>("Mode", this, Mode.Chat);
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
+    private final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.Chat);
     private final BooleanSetting countSelf = new BooleanSetting("Count Self", this, true);
 
-    /*
-     * Variables
-     */ 
-    private final Map<EntityPlayer, Integer> popped = new HashMap <>();
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
+    private final Map<EntityPlayer, Integer> popped = new HashMap<>();
 
     public TotemPopNotify() {
         super("PopNotify", "Count popped totems", Keyboard.KEY_NONE, Category.Chat);
@@ -77,7 +77,7 @@ public class TotemPopNotify extends Module {
             popped.clear();
             return;
         }
-        Iterator <Map.Entry<EntityPlayer, Integer>> iterator = popped.entrySet().iterator();
+        Iterator<Map.Entry<EntityPlayer, Integer>> iterator = popped.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<EntityPlayer, Integer> entry = iterator.next();
             EntityPlayer diedPlayer = entry.getKey();

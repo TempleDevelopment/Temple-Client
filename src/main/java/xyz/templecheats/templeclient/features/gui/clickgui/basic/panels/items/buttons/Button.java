@@ -7,8 +7,8 @@ import xyz.templecheats.templeclient.features.gui.clickgui.basic.ClientGuiScreen
 import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.Panel;
 import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.Item;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
-import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 
 import java.awt.*;
 
@@ -17,6 +17,7 @@ import static xyz.templecheats.templeclient.util.color.ColorUtil.setAlpha;
 
 public abstract class Button extends Item {
     public boolean state;
+
     public Button(String label) {
         super(label);
         this.height = 15;
@@ -57,7 +58,7 @@ public abstract class Button extends Item {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if(mouseButton == 0 && this.isHovering(mouseX, mouseY)) {
+        if (mouseButton == 0 && this.isHovering(mouseX, mouseY)) {
             this.toggle();
             Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
         }
@@ -74,8 +75,8 @@ public abstract class Button extends Item {
     public abstract ClientGuiScreen getClientScreen();
 
     protected boolean isHovering(int mouseX, int mouseY) {
-        for(Panel panel : this.getClientScreen().getPanels()) {
-            if(!panel.drag) continue;
+        for (Panel panel : this.getClientScreen().getPanels()) {
+            if (!panel.drag) continue;
             return false;
         }
         return (float) mouseX >= this.getX() && (float) mouseX <= this.getX() + (float) this.getWidth() && (float) mouseY >= this.getY() && (float) mouseY <= this.getY() + (float) this.height;

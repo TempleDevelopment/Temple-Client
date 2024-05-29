@@ -20,7 +20,7 @@ public class BindButton extends Button {
         this.module = module;
         height = 15;
     }
-    
+
     @Override
     public void drawScreen(final int mouseX, final int mouseY, final float partialTicks) {
         RenderUtil.drawRect(x, y, x + getWidth() + 7.4F, y + height, !isHovering(mouseX, mouseY) ? 0x11555555 : 0x88555555);
@@ -31,8 +31,8 @@ public class BindButton extends Button {
     @Override
     public void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) {
         super.mouseClicked(mouseX, mouseY, mouseButton);
-        if(this.isHovering(mouseX, mouseY)) {
-            if(mouseButton == 0) {
+        if (this.isHovering(mouseX, mouseY)) {
+            if (mouseButton == 0) {
                 listening = true;
             }
         }
@@ -40,8 +40,8 @@ public class BindButton extends Button {
 
     @Override
     public void keyTyped(char typedChar, int keyCode) throws IOException {
-        if(listening) {
-            if(keyCode != Keyboard.KEY_ESCAPE && keyCode != Keyboard.KEY_DELETE && keyCode != Keyboard.KEY_BACK) {
+        if (listening) {
+            if (keyCode != Keyboard.KEY_ESCAPE && keyCode != Keyboard.KEY_DELETE && keyCode != Keyboard.KEY_BACK) {
                 module.setKey(keyCode);
             } else {
                 module.setKey(Keyboard.KEY_NONE);
@@ -49,20 +49,21 @@ public class BindButton extends Button {
             listening = false;
         }
     }
-    
+
     @Override
     public int getHeight() {
         return 14;
     }
-    
+
     @Override
-    public void toggle() {}
-    
+    public void toggle() {
+    }
+
     @Override
     public boolean getState() {
         return false;
     }
-    
+
     @Override
     public ClientGuiScreen getClientScreen() {
         return ClickGuiScreen.getInstance();

@@ -5,9 +5,9 @@ import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 
 public class ExtraTooltips extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     public final BooleanSetting shulkerPreview = new BooleanSetting("Shulker Preview", this, true);
 
     public ExtraTooltips() {

@@ -1,12 +1,12 @@
 package xyz.templecheats.templeclient.features.command.commands;
 
-import java.awt.Desktop;
-import java.net.URI;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import xyz.templecheats.templeclient.features.command.Command;
+
+import java.awt.*;
+import java.net.URI;
 
 public class NameMcCommand extends Command {
     @Override

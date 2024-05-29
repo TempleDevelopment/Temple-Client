@@ -1,10 +1,14 @@
 package xyz.templecheats.templeclient.manager;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockObsidian;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketHeldItemChange;
+import xyz.templecheats.templeclient.features.module.modules.combat.AutoTotem;
 import xyz.templecheats.templeclient.mixins.accessor.IPlayerControllerMP;
 import xyz.templecheats.templeclient.util.Globals;
 
@@ -13,7 +17,11 @@ import java.util.List;
 
 public class InventoryManager implements Globals {
 
-    public void switchToSlot(int in , Switch swap) {
+    /****************************************************************
+     *                    Inventory Switch Methods
+     ****************************************************************/
+
+    public void switchToSlot(int in, Switch swap) {
         if (InventoryPlayer.isHotbar(in)) {
             if (mc.player.inventory.currentItem != in) {
                 switch (swap) {
@@ -29,12 +37,17 @@ public class InventoryManager implements Globals {
             }
         }
     }
-    public void switchToItem(Item in , Switch swap) {
+
+    public void switchToItem(Item in, Switch swap) {
         int slot = searchSlot(in, InventoryRegion.HOTBAR);
         switchToSlot(slot, swap);
     }
 
-    public int searchSlot(Item in , InventoryRegion inventoryRegion) {
+    /****************************************************************
+     *                    Inventory Search Methods
+     ****************************************************************/
+
+    public int searchSlot(Item in, InventoryRegion inventoryRegion) {
         int slot = -1;
         for (int i = inventoryRegion.getStart(); i < inventoryRegion.getBound(); i++) {
             if (mc.player.inventory.getStackInSlot(i).getItem().equals(in)) {
@@ -42,21 +55,91 @@ public class InventoryManager implements Globals {
                 break;
             }
         }
-
         return slot;
     }
+
+    public static int findTotemSlot(int lower, int upper) {
+        int slot = -1;
+        List<ItemStack> mainInventory = mc.player.inventory.mainInventory;
+        for (int i = lower; i <= upper; i++) {
+            ItemStack stack = mainInventory.get(i);
+            if (stack == ItemStack.EMPTY || stack.getItem() != Items.TOTEM_OF_UNDYING) continue;
+
+            slot = i;
+            break;
+        }
+        return slot;
+    }
+
+    public static int findObsidianSlot(boolean offHandActived, boolean activeBefore) {
+        int slot = -1;
+        List<ItemStack> mainInventory = mc.player.inventory.mainInventory;
+
+        if (offHandActived && AutoTotem.isActive()) {
+            if (!activeBefore) {
+                AutoTotem.requestObsidian();
+            }
+            return 9;
+        }
+
+        for (int i = 0; i < 9; i++) {
+            ItemStack stack = mainInventory.get(i);
+            if (stack == ItemStack.EMPTY || !(stack.getItem() instanceof ItemBlock)) continue;
+
+            Block block = ((ItemBlock) stack.getItem()).getBlock();
+            if (block instanceof BlockObsidian) {
+                slot = i;
+                break;
+            }
+        }
+        return slot;
+    }
+
+    public static int findFirstBlockSlot(Class<? extends Block> blockToFind, int lower, int upper) {
+        int slot = -1;
+        List<ItemStack> mainInventory = mc.player.inventory.mainInventory;
+
+        for (int i = lower; i <= upper; i++) {
+            ItemStack stack = mainInventory.get(i);
+            if (stack == ItemStack.EMPTY || !(stack.getItem() instanceof ItemBlock)) continue;
+
+            if (blockToFind.isInstance(((ItemBlock) stack.getItem()).getBlock())) {
+                slot = i;
+                break;
+            }
+        }
+        return slot;
+    }
+
+    public static int findFirstItemSlot(Class<? extends Item> itemToFind, int lower, int upper) {
+        int slot = -1;
+        List<ItemStack> mainInventory = mc.player.inventory.mainInventory;
+
+        for (int i = lower; i <= upper; i++) {
+            ItemStack stack = mainInventory.get(i);
+            if (stack == ItemStack.EMPTY || !(itemToFind.isInstance(stack.getItem()))) continue;
+
+            if (itemToFind.isInstance(stack.getItem())) {
+                slot = i;
+                break;
+            }
+        }
+        return slot;
+    }
+
     public static List<Integer> getItemInventory(Item item) {
-        ArrayList<Integer> ints = new ArrayList<Integer>();
+        ArrayList<Integer> slots = new ArrayList<>();
         for (int i = 9; i < 36; ++i) {
             Item target = mc.player.inventory.getStackInSlot(i).getItem();
-            if (!(item instanceof ItemBlock) || !((ItemBlock)item).getBlock().equals((Object)item)) continue;
-            ints.add(i);
+            if (!(item instanceof ItemBlock) || !((ItemBlock) item).getBlock().equals((Object) item)) continue;
+            slots.add(i);
         }
-        if (ints.size() == 0) {
-            ints.add(-1);
+        if (slots.isEmpty()) {
+            slots.add(-1);
         }
-        return ints;
+        return slots;
     }
+
 
     public static int getItemHotbar(Item input) {
         for (int i = 0; i < 9; ++i) {
@@ -71,6 +154,10 @@ public class InventoryManager implements Globals {
         return mc.player.getHeldItemMainhand().getItem().equals(item) || mc.player.getHeldItemOffhand().getItem().equals(item);
     }
 
+    /****************************************************************
+     *                      Inventory Enums
+     ****************************************************************/
+
     public enum Switch {
         Normal,
         Packet,
@@ -82,6 +169,7 @@ public class InventoryManager implements Globals {
         HOTBAR(0, 8),
         CRAFTING(80, 83),
         ARMOR(100, 103);
+
         private final int start, bound;
 
         InventoryRegion(int start, int bound) {

@@ -15,9 +15,9 @@ import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 import java.util.Comparator;
 
 public class BowAimbot extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final BooleanSetting players = new BooleanSetting("Players", this, true);
     private final BooleanSetting mobs = new BooleanSetting("Mobs", this, false);
     private final BooleanSetting animals = new BooleanSetting("Animals", this, false);

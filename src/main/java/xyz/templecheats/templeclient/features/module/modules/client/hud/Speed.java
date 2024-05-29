@@ -7,17 +7,18 @@ import net.minecraft.util.math.Vec3d;
 import xyz.templecheats.templeclient.features.gui.font.TempleIcon;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.features.module.modules.client.HUD;
-import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 
 import java.awt.*;
 
-import static xyz.templecheats.templeclient.features.gui.font.Fonts.*;
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font18;
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.icon34;
 
 public class Speed extends HUD.HudElement {
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private Vec3d lastPos = Vec3d.ZERO;
 
     public Speed() {
@@ -39,13 +40,13 @@ public class Speed extends HUD.HudElement {
         new RectBuilder(new Vec2d(getX(), getY()), new Vec2d(getX() + getWidth(), getY() + getHeight()))
                 .outlineColor(outlineColor.getColor())
                 .width(outline.booleanValue() ? outlineWidth.doubleValue() : 0)
-                .color(fill.booleanValue() ? color.getColor() : new Color(0,0,0,0))
+                .color(fill.booleanValue() ? color.getColor() : new Color(0, 0, 0, 0))
                 .radius(2.5)
                 .blur(blur.booleanValue() ? blurRadius.doubleValue() : 0)
                 .drawBlur()
                 .draw();
 
-        double iconOffset = (!this.isLeftOfCenter() ? this.getWidth() - icon34.getStringWidth(TempleIcon.MOVEMENT.getIcon()): -1);
+        double iconOffset = (!this.isLeftOfCenter() ? this.getWidth() - icon34.getStringWidth(TempleIcon.MOVEMENT.getIcon()) : -1);
         double textOffset = (!this.isLeftOfCenter() ? 1 : 13);
 
         if (HUD.INSTANCE.icon.booleanValue()) {

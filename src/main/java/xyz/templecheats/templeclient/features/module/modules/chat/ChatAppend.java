@@ -7,9 +7,9 @@ import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.StringSetting;
 
 public class ChatAppend extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final StringSetting suffix = new StringSetting("Suffix", this, " | templeclient");
     private final StringSetting prefix = new StringSetting("Prefix", this, "templeclient | ");
     private final BooleanSetting enableSuffix = new BooleanSetting("Enable Suffix", this, true);

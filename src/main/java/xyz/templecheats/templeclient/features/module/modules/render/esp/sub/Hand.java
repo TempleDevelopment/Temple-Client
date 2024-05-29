@@ -23,25 +23,28 @@ import java.awt.*;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
 
 public class Hand extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final BooleanSetting showHand = new BooleanSetting("Show origin", this, true);
-    private final ColorSetting outlineColor = new ColorSetting("Color" , this , Color.RED);
+    private final ColorSetting outlineColor = new ColorSetting("Color", this, Color.RED);
     private final DoubleSetting blurRadius = new DoubleSetting("Blur Radius", this, 0.0, 16.0, 1.0);
-    private final DoubleSetting lineWidth = new DoubleSetting("LineWidth" , this , 0.0 , 5.0 , 1);
-    private final DoubleSetting opacity = new DoubleSetting("Opacity" , this , 0.0 , 1.0 , 0.5);
+    private final DoubleSetting lineWidth = new DoubleSetting("LineWidth", this, 0.0, 5.0, 1);
+    private final DoubleSetting opacity = new DoubleSetting("Opacity", this, 0.0, 1.0, 0.5);
+
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     public static boolean rendering;
     public static Hand INSTANCE;
-    private final ShaderHelper shaderHelper = new ShaderHelper(new ResourceLocation("shaders/post/esp_outline.json") , "final");
+    private final ShaderHelper shaderHelper = new ShaderHelper(new ResourceLocation("shaders/post/esp_outline.json"), "final");
     private final Framebuffer frameBuffer = this.shaderHelper.getFrameBuffer("final");
 
     public Hand() {
-        super("Hand", "Highlights hand with shader" , Keyboard.KEY_NONE , Category.Render , true);
-        registerSettings(showHand, outlineColor, blurRadius, lineWidth , opacity);
+        super("Hand", "Highlights hand with shader", Keyboard.KEY_NONE, Category.Render, true);
+        registerSettings(showHand, outlineColor, blurRadius, lineWidth, opacity);
         INSTANCE = this;
     }
 
@@ -65,7 +68,7 @@ public class Hand extends Module {
         frameBuffer.bindFramebuffer(false);
 
         rendering = true;
-        ((IEntityRenderer) mc.entityRenderer).invokeRenderHand(partialTicks , pass);
+        ((IEntityRenderer) mc.entityRenderer).invokeRenderHand(partialTicks, pass);
         rendering = false;
 
         // Setup
@@ -73,7 +76,7 @@ public class Hand extends Module {
         glLineWidth(1f);
         glEnable(GL_LINE_SMOOTH);
         glEnable(GL32.GL_DEPTH_CLAMP);
-        glHint(GL_LINE_SMOOTH_HINT , GL_NICEST);
+        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
         GlStateManager.disableAlpha();
         GlStateManager.shadeModel(GL_SMOOTH);
         GlStateManager.disableCull();
@@ -96,7 +99,7 @@ public class Hand extends Module {
 
         // Draw it on the main frame buffer
         mc.getFramebuffer().bindFramebuffer(false);
-        frameBuffer.framebufferRenderExt(mc.displayWidth , mc.displayHeight , false);
+        frameBuffer.framebufferRenderExt(mc.displayWidth, mc.displayHeight, false);
 
         // Revert states
         GlStateManager.enableBlend();
@@ -121,13 +124,13 @@ public class Hand extends Module {
         GlStateManager.depthMask(true);
         GL11.glDisable(GL32.GL_DEPTH_CLAMP);
         GL11.glDisable(GL11.GL_LINE_SMOOTH);
-        GlStateManager.color(1f , 1f , 1f , 1f);
+        GlStateManager.color(1f, 1f, 1f, 1f);
         GL11.glLineWidth(1f);
         GlStateManager.popMatrix();
 
         GradientShader.setup((float) opacity.doubleValue());
         rendering = true;
-        ((IEntityRenderer) mc.entityRenderer).invokeRenderHand(partialTicks , pass);
+        ((IEntityRenderer) mc.entityRenderer).invokeRenderHand(partialTicks, pass);
         rendering = false;
         GradientShader.finish();
     }
@@ -141,7 +144,7 @@ public class Hand extends Module {
 
         for (net.minecraft.client.shader.Shader shader : shaders) {
             if (shader.getShaderManager().getShaderUniform("color") != null) {
-                shader.getShaderManager().getShaderUniform("color").set(outlineColor.getColor().getRed() / 255f , outlineColor.getColor().getGreen() / 255f , outlineColor.getColor().getBlue() / 255f);
+                shader.getShaderManager().getShaderUniform("color").set(outlineColor.getColor().getRed() / 255f, outlineColor.getColor().getGreen() / 255f, outlineColor.getColor().getBlue() / 255f);
             }
             if (shader.getShaderManager().getShaderUniform("filledAlpha") != null) {
                 shader.getShaderManager().getShaderUniform("filledAlpha").set((float) opacity.doubleValue());

@@ -7,9 +7,9 @@ import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 
 public class NoFall extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final DoubleSetting fallDistance = new DoubleSetting("Fall Distance", this, 0d, 3d, 1.5d);
 
     public NoFall() {

@@ -74,20 +74,19 @@ public class ColorButton extends Item {
                     Color.RGBtoHSB(setting.getColor().getRed(), setting.getColor().getGreen(), setting.getColor().getBlue(), null)[1],
                     Color.RGBtoHSB(setting.getColor().getRed(), setting.getColor().getGreen(), setting.getColor().getBlue(), null)[2]
             };
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             Notifications.addMessage("Picker", "Invalid color!", NotificationType.INFO);
         }
         if (this.draggingRGBSlider) {
             position = Math.min(Math.max(pickerPosX, mouseX), pickerPosX + getWidth());
-            color[0] = (position - pickerPosX) / (float)getWidth();
+            color[0] = (position - pickerPosX) / (float) getWidth();
         } else if (this.draggingAlphaSlider) {
             position = ColorUtil.getAlphaFromPosition((int) (mouseX - pickerPosX), getWidth());
-            setting.setAlpha((int)position);
+            setting.setAlpha((int) position);
         } else if (this.draggingPickerBase) {
             position = Math.min(Math.max(pickerPosX, mouseX), pickerPosX + getWidth());
             float restrictedY = Math.min(Math.max(pickerPosY, mouseY), pickerPosY + 54f);
-            color[1] = (position - pickerPosX) / (float)getWidth();
+            color[1] = (position - pickerPosX) / (float) getWidth();
             color[2] = 1.0f - (restrictedY - pickerPosY) / 54f;
         }
         finalColor = getColor(new Color(Color.HSBtoRGB(color[0], color[1], color[2])), setting.getColor().getAlpha() / 255.f);
@@ -245,7 +244,7 @@ public class ColorButton extends Item {
         float pickerPosX = x;
         float pickerPosY = y + 15;
         return mouseX >= pickerPosX + getWidth() - 3 - font18.getStringWidth("paste") &&
-                mouseX <= (pickerPosX + getWidth() - font18.getStringWidth("paste")) + font18.getStringWidth("paste")&&
+                mouseX <= (pickerPosX + getWidth() - font18.getStringWidth("paste")) + font18.getStringWidth("paste") &&
                 mouseY >= pickerPosY + 82 &&
                 mouseY <= pickerPosY + 84 + font18.getFontHeight();
     }
@@ -279,9 +278,8 @@ public class ColorButton extends Item {
 
     public static String readClipboard() {
         try {
-            return (String)Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
-        }
-        catch (UnsupportedFlavorException | IOException exception) {
+            return (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+        } catch (UnsupportedFlavorException | IOException exception) {
             return null;
         }
     }

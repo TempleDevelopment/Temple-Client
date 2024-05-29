@@ -1,129 +1,288 @@
+/*
+ * This HoleFiller was made by GameSense, and was modified.
+ */
 package xyz.templecheats.templeclient.features.module.modules.combat;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
+import net.minecraft.block.*;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.client.CPacketEntityAction;
-import net.minecraft.network.play.client.CPacketPlayer;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.module.Module;
+import xyz.templecheats.templeclient.manager.InventoryManager;
+import xyz.templecheats.templeclient.util.player.PlacementUtil;
+import xyz.templecheats.templeclient.util.player.PlayerUtil;
+import xyz.templecheats.templeclient.util.render.RenderUtil;
+import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
+import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
+import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
+import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
+import xyz.templecheats.templeclient.util.world.EntityUtil;
+import xyz.templecheats.templeclient.util.world.HoleUtil;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class HoleFiller extends Module {
-    /*
-     * Settings
-     */
-    private final IntSetting range = new IntSetting("Range", this, 1, 5, 3);
-    private final IntSetting radius = new IntSetting("Radius", this, 1, 10, 5);
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
+    private final EnumSetting<Mode> mode = new EnumSetting<>("Type", this, Mode.Obby);
+    private final IntSetting placeDelay = new IntSetting("Delay", this, 0, 10, 2);
+    private final IntSetting retryDelay = new IntSetting("Retry Delay", this, 0, 50, 10);
+    private final IntSetting bpc = new IntSetting("Block pre Cycle", this, 1, 5, 2);
+    private final DoubleSetting range = new DoubleSetting("Range", this, 0.0, 10.0, 4.0);
+    private final DoubleSetting playerRange = new DoubleSetting("Player Range", this, 1.0, 6.0, 3.0);
+    private final BooleanSetting onlyPlayer = new BooleanSetting("Only Player", this, false);
+    private final BooleanSetting rotate = new BooleanSetting("Rotate", this, true);
+    private final BooleanSetting autoSwitch = new BooleanSetting("Switch", this, true);
+    private final BooleanSetting offHandObby = new BooleanSetting("Off Hand Obby", this, false);
+    private final BooleanSetting disableOnFinish = new BooleanSetting("Disable on Finish", this, true);
+    private final BooleanSetting render = new BooleanSetting("Render", this, true);
+    private final BooleanSetting fill = new BooleanSetting("Box Fill", this, true);
+    private final BooleanSetting outline = new BooleanSetting("Box Outline", this, true);
+    private final DoubleSetting opacity = new DoubleSetting("Opacity", this, 0.0, 1.0, 0.5);
+
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
+    private int delayTicks = 0;
+    private int oldHandEnable = -1;
+    private boolean activedOff;
+    private int obbySlot;
+    private BlockPos currentBlock;
+    private boolean finished;
+    private final HashMap<BlockPos, Integer> recentPlacements = new HashMap<>();
 
     public HoleFiller() {
-        super("HoleFiller", "Automatically places blocks in holes", Keyboard.KEY_NONE, Category.Combat);
-        registerSettings(range, radius);
+        super("HoleFill", "Automatically places blocks in holes", 0, Category.Combat);
+        this.registerSettings(
+                onlyPlayer, rotate, autoSwitch, offHandObby, disableOnFinish,
+                placeDelay, retryDelay, bpc, range, playerRange,
+                mode,
+                render, fill, outline, opacity);
     }
 
-    public int a(final Block block) {
-        return a(new ItemStack(block).getItem());
-    }
-
-    public int a(final Item item) {
-        try {
-            for (int i = 0; i < 9; ++i) {
-                if (item == mc.player.inventory.getStackInSlot(i).getItem()) {
-                    return i;
-                }
+    @Override
+    public void onEnable() {
+        activedOff = false;
+        PlacementUtil.onEnable();
+        if (mc.player != null) {
+            if (autoSwitch.booleanValue()) {
+                oldHandEnable = mc.player.inventory.currentItem;
             }
-        } catch (Exception ex) {}
-        return -1;
-    }
-
-    public void a(final BlockPos blockPos) {
-        a(EnumHand.MAIN_HAND, blockPos);
-    }
-
-    public void a(final EnumHand enumHand, final BlockPos blockPos) {
-        final Vec3d vec3d = new Vec3d(mc.player.posX, mc.player.posY + mc.player.getEyeHeight(), mc.player.posZ);
-        for (final EnumFacing enumFacing: EnumFacing.values()) {
-            final BlockPos offset = blockPos.offset(enumFacing);
-            final EnumFacing opposite = enumFacing.getOpposite();
-            if (mc.world.getBlockState(offset).getBlock().canCollideCheck(mc.world.getBlockState(offset), false)) {
-                final Vec3d add = new Vec3d(offset).add(0.5, 0.5, 0.5)
-                        .add(new Vec3d(opposite.getDirectionVec()).scale(0.5));
-                if (vec3d.squareDistanceTo(add) <= 18.0625) {
-                    final double n = add.x - vec3d.x;
-                    final double n2 = add.y - vec3d.y;
-                    final double n3 = add.z - vec3d.z;
-                    final float[] array = {
-                            mc.player.rotationYaw + MathHelper.wrapDegrees(
-                                    (float) Math.toDegrees(Math.atan2(n3, n)) - 90.0f - mc.player.rotationYaw),
-                            mc.player.rotationPitch + MathHelper
-                                    .wrapDegrees((float)(-Math.toDegrees(Math.atan2(n2, Math.sqrt(n * n + n3 * n3)))) -
-                                            mc.player.rotationPitch)
-                    };
-                    mc.player.connection
-                            .sendPacket((Packet) new CPacketPlayer.Rotation(array[0], array[1], mc.player.onGround));
-                    mc.player.connection.sendPacket((Packet) new CPacketEntityAction((Entity) mc.player,
-                            CPacketEntityAction.Action.START_SNEAKING));
-                    mc.playerController.processRightClickBlock(mc.player, mc.world, offset, opposite, add, enumHand);
-                    mc.player.swingArm(enumHand);
-                    mc.player.connection.sendPacket((Packet) new CPacketEntityAction((Entity) mc.player,
-                            CPacketEntityAction.Action.STOP_SNEAKING));
-                    return;
-                }
+            obbySlot = InventoryManager.findObsidianSlot(offHandObby.booleanValue(), activedOff);
+            if (obbySlot == 9) {
+                activedOff = true;
             }
         }
+        finished = false;
+    }
+
+    @Override
+    public void onDisable() {
+        PlacementUtil.onDisable();
+        if (mc.player != null && autoSwitch.booleanValue()) {
+            mc.player.inventory.currentItem = oldHandEnable;
+        }
+        recentPlacements.clear();
+
+        if (offHandObby.booleanValue() && AutoTotem.isActive()) {
+            AutoTotem.removeObsidian();
+            activedOff = false;
+        }
+        currentBlock = null;
+    }
+
+    @Override
+    public void onUpdate() {
+        if (mc.player == null || mc.world == null) {
+            disable();
+            return;
+        }
+
+        recentPlacements.replaceAll((blockPos, integer) -> integer + 1);
+        recentPlacements.values().removeIf(integer -> integer > retryDelay.intValue() * 2);
+
+        if (delayTicks <= placeDelay.intValue() * 2) {
+            delayTicks++;
+            return;
+        }
+
+        if (obbySlot == 9) {
+            if (!(mc.player.getHeldItemOffhand().getItem() instanceof ItemBlock
+                    && ((ItemBlock) mc.player.getHeldItemOffhand().getItem()).getBlock() instanceof BlockObsidian)) {
+                return;
+            }
+        }
+
+        if (autoSwitch.booleanValue()) {
+            int newHand = findRightBlock();
+            if (newHand != -1) {
+                mc.player.inventory.currentItem = newHand;
+                mc.playerController.updateController();
+            } else {
+                return;
+            }
+        }
+
+        List<BlockPos> holePos = new ArrayList<>(findHoles());
+        holePos.removeAll(recentPlacements.keySet());
+
+        AtomicInteger placements = new AtomicInteger();
+        holePos = holePos.stream()
+                .sorted(Comparator.comparing(blockPos -> blockPos.distanceSq(mc.player.posX, mc.player.posY, mc.player.posZ)))
+                .collect(Collectors.toList());
+
+        List<EntityPlayer> listPlayer = new ArrayList<>(mc.world.playerEntities);
+        listPlayer.removeIf(player -> EntityUtil.basicChecksEntity(player) ||
+                (!onlyPlayer.booleanValue() || mc.player.getDistance(player) > 6 + playerRange.doubleValue()));
+
+        holePos.removeIf(placePos -> {
+            if (placements.get() >= bpc.intValue()) {
+                return false;
+            }
+
+            if (mc.world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(placePos)).stream()
+                    .anyMatch(entity -> entity instanceof EntityPlayer)) {
+                return true;
+            }
+
+            boolean output = false;
+
+            if (isHoldingRightBlock(mc.player.inventory.currentItem, mc.player.getHeldItem(EnumHand.MAIN_HAND).getItem())
+                    || offHandObby.booleanValue()) {
+                boolean found = false;
+                if (onlyPlayer.booleanValue()) {
+                    for (EntityPlayer player : listPlayer) {
+                        if (player.getDistanceSqToCenter(placePos) < playerRange.doubleValue() * playerRange.doubleValue()) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found)
+                        return false;
+                }
+                if (placeBlock(placePos)) {
+                    placements.getAndIncrement();
+                    output = true;
+                    delayTicks = 0;
+                }
+                recentPlacements.put(placePos, 0);
+            }
+            return output;
+        });
+
+        if (disableOnFinish.booleanValue() && holePos.size() == 0) {
+            disable();
+        }
+    }
+
+    private boolean placeBlock(BlockPos pos) {
+        EnumHand handSwing = EnumHand.MAIN_HAND;
+        if (offHandObby.booleanValue()) {
+            int obsidianSlot = InventoryManager.findObsidianSlot(offHandObby.booleanValue(), activedOff);
+
+            if (obsidianSlot == -1) {
+                return false;
+            }
+
+            if (obsidianSlot == 9) {
+                activedOff = true;
+                if (mc.player.getHeldItemOffhand().getItem() instanceof ItemBlock
+                        && ((ItemBlock) mc.player.getHeldItemOffhand().getItem()).getBlock() instanceof BlockObsidian) {
+                    handSwing = EnumHand.OFF_HAND;
+                } else return false;
+            }
+        }
+
+        boolean placed = PlacementUtil.place(pos, handSwing, rotate.booleanValue(), true);
+        if (placed) {
+            currentBlock = pos;
+        }
+        return placed;
+    }
+
+    private List<BlockPos> findHoles() {
+        NonNullList<BlockPos> holes = NonNullList.create();
+        List<BlockPos> blockPosList = EntityUtil.getSphere(PlayerUtil.getPlayerPos(), (float) range.doubleValue(), range.intValue(), false, true, 0);
+
+        for (BlockPos blockPos : blockPosList) {
+            if (HoleUtil.isHole(blockPos, true, true).getType() == HoleUtil.HoleType.SINGLE) {
+                holes.add(blockPos);
+            }
+        }
+        return holes;
+    }
+
+    private int findRightBlock() {
+        switch (mode.value()) {
+            case Both:
+                int newHand = InventoryManager.findFirstBlockSlot(BlockObsidian.class, 0, 8);
+                if (newHand == -1) return InventoryManager.findFirstBlockSlot(BlockEnderChest.class, 0, 8);
+                else return newHand;
+            case Obby:
+                return InventoryManager.findFirstBlockSlot(BlockObsidian.class, 0, 8);
+            case Echest:
+                return InventoryManager.findFirstBlockSlot(BlockEnderChest.class, 0, 8);
+            case Web:
+                return InventoryManager.findFirstBlockSlot(BlockWeb.class, 0, 8);
+            case Plate:
+                return InventoryManager.findFirstBlockSlot(BlockPressurePlate.class, 0, 8);
+            default:
+                return -1;
+        }
+    }
+
+    private Boolean isHoldingRightBlock(int hand, Item item) {
+        if (hand == -1) return false;
+        if (item instanceof ItemBlock) {
+            Block block = ((ItemBlock) item).getBlock();
+            switch (mode.value()) {
+                case Both:
+                    return block instanceof BlockObsidian || block instanceof BlockEnderChest;
+                case Obby:
+                    return block instanceof BlockObsidian;
+                case Echest:
+                    return block instanceof BlockEnderChest;
+                case Web:
+                    return block instanceof BlockWeb;
+                case Plate:
+                    return block instanceof BlockPressurePlate;
+                default:
+                    return false;
+            }
+        }
+        return false;
     }
 
     @SubscribeEvent
-    public void onTick(TickEvent.ClientTickEvent event) {
-        if (mc.player == null || mc.world == null)
-            return;
-        for (final EntityPlayer entityPlayer: mc.world.playerEntities) {
-            if (!entityPlayer.getUniqueID().equals(mc.player.getUniqueID())) {
-                final double doubleValue = this.radius.intValue();
-                final BlockPos position = entityPlayer.getPosition();
-                for (final BlockPos blockPos: BlockPos.getAllInBox(
-                        position.add(-doubleValue, -doubleValue, -doubleValue),
-                        position.add(doubleValue, doubleValue, doubleValue))) {
-                    if (mc.player.getDistanceSqToCenter(blockPos) > this.range.intValue()) {
-                        continue;
-                    }
-                    if (!mc.world.getBlockState(blockPos).getMaterial().isReplaceable() ||
-                            !mc.world.getBlockState(blockPos.add(0, 1, 0)).getMaterial().isReplaceable() ||
-                            (!mc.world.getBlockState(blockPos.add(0, -1, 0)).getMaterial().isSolid() ||
-                                    !mc.world.getBlockState(blockPos.add(1, 0, 0)).getMaterial().isSolid() ||
-                                    !mc.world.getBlockState(blockPos.add(0, 0, 1)).getMaterial().isSolid() ||
-                                    !mc.world.getBlockState(blockPos.add(-1, 0, 0)).getMaterial().isSolid() ||
-                                    !mc.world.getBlockState(blockPos.add(0, 0, -1)).getMaterial().isSolid() ||
-                                    mc.world.getBlockState(blockPos.add(0, 0, 0)).getMaterial() != Material.AIR ||
-                                    mc.world.getBlockState(blockPos.add(0, 1, 0)).getMaterial() != Material.AIR ||
-                                    mc.world.getBlockState(blockPos.add(0, 2, 0)).getMaterial() != Material.AIR) ||
-                            !mc.world.getEntitiesWithinAABB((Class) Entity.class, new AxisAlignedBB(blockPos))
-                                    .isEmpty()) {
-                        continue;
-                    }
-                    final int a = a(Blocks.OBSIDIAN);
-                    if (a == -1) {
-                        continue;
-                    }
-                    final int currentItem = mc.player.inventory.currentItem;
-                    mc.player.inventory.currentItem = a;
-                    a(blockPos);
-                    mc.player.inventory.currentItem = currentItem;
-                }
-            }
+    public void onRender(RenderWorldLastEvent event) {
+        if (render.booleanValue() && currentBlock != null && !finished) {
+            GradientShader.setup((float) opacity.doubleValue());
+            if (fill.booleanValue())
+                RenderUtil.boxShader(currentBlock);
+            if (outline.booleanValue())
+                RenderUtil.outlineShader(currentBlock);
+            GradientShader.finish();
         }
+    }
+
+    public enum Mode {
+        Obby,
+        Echest,
+        Both,
+        Web,
+        Plate
     }
 }

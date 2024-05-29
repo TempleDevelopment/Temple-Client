@@ -8,14 +8,14 @@ import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 
 public class AutoDisconnect extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final IntSetting healthThreshold = new IntSetting("Health", this, 1, 20, 10);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private boolean shouldDisconnect = false;
 
     public AutoDisconnect() {

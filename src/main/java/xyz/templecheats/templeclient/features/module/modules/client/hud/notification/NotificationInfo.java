@@ -1,7 +1,7 @@
 package xyz.templecheats.templeclient.features.module.modules.client.hud.notification;
 
 import static net.minecraft.util.math.MathHelper.clamp;
-import static xyz.templecheats.templeclient.features.module.modules.client.hud.notification.Notifications.*;
+import static xyz.templecheats.templeclient.features.module.modules.client.hud.notification.Notifications.INSTANCE;
 
 public class NotificationInfo {
     String text;

@@ -10,8 +10,8 @@ import org.lwjgl.input.Keyboard;
 import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
 import xyz.templecheats.templeclient.event.events.network.PacketEvent;
 import xyz.templecheats.templeclient.features.module.Module;
-import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
+import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 
@@ -19,14 +19,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NewChunks extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     IntSetting yLevel = new IntSetting("Y Offset", this, 0, 255, 0);
     DoubleSetting distance = new DoubleSetting("MaxDistance", this, 0.0, 50000.0, 1000.0);
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private final List<ChunkData> chunkDataList = new ArrayList<>();
 
     public NewChunks() {
@@ -70,7 +70,7 @@ public class NewChunks extends Module {
             ChunkData chunkData = this.chunkDataList.get(i);
             if (chunkData == null) continue;
 
-            if (mc.player.getDistanceSq(chunkData.x , mc.player.posY, chunkData.z) > distance.doubleValue()) {
+            if (mc.player.getDistanceSq(chunkData.x, mc.player.posY, chunkData.z) > distance.doubleValue()) {
                 found.add(chunkData);
             }
 

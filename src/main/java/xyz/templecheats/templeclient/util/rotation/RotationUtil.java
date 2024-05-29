@@ -14,13 +14,12 @@ import net.minecraft.util.math.Vec3d;
 import xyz.templecheats.templeclient.util.Globals;
 
 public class RotationUtil implements Globals {
-    /*
-     * Variable
-     */
+
     private static final Minecraft mc = Minecraft.getMinecraft();
-    public static final RotationUtil INVALID_ROTATION = new RotationUtil(Float.NaN, Float.NaN);
-    private float yaw, pitch;
-    private final Rotate rotate;
+
+    /****************************************************************
+     *                  Rotation Calculation Methods
+     ****************************************************************/
 
     public static Vec2f getRotationTo(Vec3d posTo) {
         EntityPlayerSP player = mc.player;
@@ -38,9 +37,6 @@ public class RotationUtil implements Globals {
 
         return new Vec2f((float) yaw, (float) pitch);
     }
-    public static Vec3d getEyesPos() {
-        return new Vec3d(mc.player.posX, mc.player.posY + mc.player.getEyeHeight(), mc.player.posZ);
-    }
 
     public static double normalizeAngle(double angle) {
         angle %= 360.0;
@@ -55,6 +51,7 @@ public class RotationUtil implements Globals {
 
         return angle;
     }
+
     public static RotationUtil rotationCalculate(BlockPos to) {
         double deltaX = to.getX() - mc.player.getPositionEyes(1).x;
         double deltaY = to.getY() - mc.player.getPositionEyes(1).y;
@@ -73,13 +70,10 @@ public class RotationUtil implements Globals {
 
         double u = MathHelper.sqrt(x * x + z * z);
 
-        float yaw = (float)(MathHelper.atan2(z, x) * (180D / Math.PI) - 90.0F);
-        float pitch = (float)(-MathHelper.atan2(y, u) * (180D / Math.PI));
+        float yaw = (float) (MathHelper.atan2(z, x) * (180D / Math.PI) - 90.0F);
+        float pitch = (float) (-MathHelper.atan2(y, u) * (180D / Math.PI));
 
-        return new float[] {
-                yaw,
-                pitch
-        };
+        return new float[]{yaw, pitch};
     }
 
     private static float[] getRotations2(Vec3d vec) {
@@ -92,56 +86,12 @@ public class RotationUtil implements Globals {
         double diffXZ = Math.sqrt(diffX * diffX + diffZ * diffZ);
 
         float yaw = (float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90F;
-        float pitch = (float) - Math.toDegrees(Math.atan2(diffY, diffXZ));
+        float pitch = (float) -Math.toDegrees(Math.atan2(diffY, diffXZ));
 
-        return new float[] {
+        return new float[]{
                 mc.player.rotationYaw + MathHelper.wrapDegrees(yaw - mc.player.rotationYaw),
                 mc.player.rotationPitch + MathHelper.wrapDegrees(pitch - mc.player.rotationPitch)
         };
-    }
-
-    public static EnumFacing getPlaceableSide(BlockPos pos) {
-
-        for (EnumFacing side: EnumFacing.values()) {
-
-            BlockPos neighbour = pos.offset(side);
-
-            if (!mc.world.getBlockState(neighbour).getBlock().canCollideCheck(mc.world.getBlockState(neighbour),
-                    false)) {
-                continue;
-            }
-
-            IBlockState blockState = mc.world.getBlockState(neighbour);
-            if (!blockState.getMaterial().isReplaceable()) {
-                return side;
-            }
-
-        }
-
-        return null;
-    }
-
-    public static Block getBlock(BlockPos pos) {
-        return getState(pos).getBlock();
-    }
-
-    public static IBlockState getState(BlockPos pos) {
-        return mc.world.getBlockState(pos);
-    }
-
-    public static void faceVectorPacketInstant(Vec3d vec) {
-        float[] rotations = getRotations2(vec);
-
-        mc.player.connection.sendPacket(new CPacketPlayer.Rotation(rotations[0], rotations[1], mc.player.onGround));
-    }
-    public static boolean canBeClicked(BlockPos pos) {
-        return getBlock(pos).canCollideCheck(getState(pos), false);
-    }
-
-    public RotationUtil(float yaw, float pitch, Rotate rotate) {
-        this.yaw = yaw;
-        this.pitch = pitch;
-        this.rotate = rotate;
     }
 
     public static float[] getRotations3(BlockPos blockPos, EnumFacing enumFacing) {
@@ -157,20 +107,82 @@ public class RotationUtil implements Globals {
         double d5 = d3;
         double d6 = Math.sqrt(d4 * d4 + d5 * d5);
 
-        float f = (float)(Math.toDegrees(Math.atan2(d3, d)) - 90.0f);
-        float f2 = (float)(-Math.toDegrees(Math.atan2(d2, d6)));
+        float f = (float) (Math.toDegrees(Math.atan2(d3, d)) - 90.0f);
+        float f2 = (float) (-Math.toDegrees(Math.atan2(d2, d6)));
 
         float[] ret = new float[2];
-        ret[0] = mc.player.rotationYaw + MathHelper.wrapDegrees((float)(f - mc.player.rotationYaw));
-        ret[1] = mc.player.rotationPitch + MathHelper.wrapDegrees((float)(f2 - mc.player.rotationPitch));
+        ret[0] = mc.player.rotationYaw + MathHelper.wrapDegrees((float) (f - mc.player.rotationYaw));
+        ret[1] = mc.player.rotationPitch + MathHelper.wrapDegrees((float) (f2 - mc.player.rotationPitch));
 
         return ret;
+    }
+
+    /****************************************************************
+     *                  Block Interaction Methods
+     ****************************************************************/
+
+    public static EnumFacing getPlaceableSide(BlockPos pos) {
+        for (EnumFacing side : EnumFacing.values()) {
+            BlockPos neighbour = pos.offset(side);
+
+            if (!mc.world.getBlockState(neighbour).getBlock().canCollideCheck(mc.world.getBlockState(neighbour), false)) {
+                continue;
+            }
+
+            IBlockState blockState = mc.world.getBlockState(neighbour);
+            if (!blockState.getMaterial().isReplaceable()) {
+                return side;
+            }
+        }
+
+        return null;
+    }
+
+    public static Block getBlock(BlockPos pos) {
+        return getState(pos).getBlock();
+    }
+
+    public static IBlockState getState(BlockPos pos) {
+        return mc.world.getBlockState(pos);
+    }
+
+    public static boolean canBeClicked(BlockPos pos) {
+        return getBlock(pos).canCollideCheck(getState(pos), false);
+    }
+
+    /****************************************************************
+     *                  Packet Sending Methods
+     ****************************************************************/
+
+    public static void faceVectorPacketInstant(Vec3d vec) {
+        float[] rotations = getRotations2(vec);
+        mc.player.connection.sendPacket(new CPacketPlayer.Rotation(rotations[0], rotations[1], mc.player.onGround));
+    }
+
+    /****************************************************************
+     *                  Position and Angle Helpers
+     ****************************************************************/
+
+    public static Vec3d getEyesPos() {
+        return new Vec3d(mc.player.posX, mc.player.posY + mc.player.getEyeHeight(), mc.player.posZ);
     }
 
     public static Vec3d getEyePosition() {
         return new Vec3d(mc.player.posX, mc.player.posY + mc.player.getEyeHeight(), mc.player.posZ);
     }
 
+    /****************************************************************
+     *                  RotationUtil Class
+     ****************************************************************/
+
+    private float yaw, pitch;
+    private final Rotate rotate;
+
+    public RotationUtil(float yaw, float pitch, Rotate rotate) {
+        this.yaw = yaw;
+        this.pitch = pitch;
+        this.rotate = rotate;
+    }
 
     public RotationUtil(float yaw, float pitch) {
         this(yaw, pitch, Rotate.None);
@@ -180,7 +192,7 @@ public class RotationUtil implements Globals {
         return yaw;
     }
 
-    public void setYaw(float in ) {
+    public void setYaw(float in) {
         yaw = in;
     }
 
@@ -188,13 +200,14 @@ public class RotationUtil implements Globals {
         return pitch;
     }
 
-    public void setPitch(float in ) {
+    public void setPitch(float in) {
         pitch = in;
     }
 
     public Rotate getRotation() {
         return rotate;
     }
+
     public boolean isValid() {
         return !Float.isNaN(getYaw()) && !Float.isNaN(getPitch());
     }

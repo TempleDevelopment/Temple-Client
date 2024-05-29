@@ -20,18 +20,18 @@ import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 
 public final class Velocity extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.CancelPacket);
     private final IntSetting horizontalVelocity = new IntSetting("Horizontal", this, 1, 100, 100);
     private final IntSetting verticalVelocity = new IntSetting("Vertical", this, 1, 100, 100);
     private final BooleanSetting explosions = new BooleanSetting("Explosions", this, true);
     private boolean cancelVelocity = false;
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
 
     public final Minecraft mc = Minecraft.getMinecraft();
 

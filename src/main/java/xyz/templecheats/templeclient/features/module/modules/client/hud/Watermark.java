@@ -5,16 +5,21 @@ import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.features.gui.font.TempleIcon;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.features.module.modules.client.HUD;
-import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 
 import java.awt.*;
 
-import static xyz.templecheats.templeclient.features.gui.font.Fonts.*;
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font18;
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.icon32;
 
 public class Watermark extends HUD.HudElement {
-    private final EnumSetting<Mode> mode =  new EnumSetting<>("Mode", this, Mode.Normal);
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
+    private final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.Normal);
+
     public Watermark() {
         super("Watermark", "Shows watermark in the HUD");
         registerSettings(mode, fill, outline, blur, color, outlineColor, outlineWidth, blurRadius);
@@ -38,7 +43,7 @@ public class Watermark extends HUD.HudElement {
             new RectBuilder(new Vec2d(getX(), getY()), new Vec2d(getX() + getWidth(), getY() + getHeight()))
                     .outlineColor(outlineColor.getColor())
                     .width(outline.booleanValue() ? outlineWidth.doubleValue() : 0)
-                    .color(fill.booleanValue() ? color.getColor() : new Color(0,0,0,0))
+                    .color(fill.booleanValue() ? color.getColor() : new Color(0, 0, 0, 0))
                     .radius(3.0)
                     .blur(3.0)
                     .drawBlur()

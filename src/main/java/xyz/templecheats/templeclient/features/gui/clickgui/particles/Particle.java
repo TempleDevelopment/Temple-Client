@@ -22,10 +22,10 @@ public class Particle {
     }
 
     public static Particle getParticle() {
-        Vector2f velocity = new Vector2f((float)(Math.random() * 3.0 - 1.0), (float)(Math.random() * 3.0 - 1.0));
+        Vector2f velocity = new Vector2f((float) (Math.random() * 3.0 - 1.0), (float) (Math.random() * 3.0 - 1.0));
         float x = (float) random.nextInt(Display.getWidth());
         float y = (float) random.nextInt(Display.getHeight());
-        float size = (float)(Math.random() * 4.0) + 2.0f;
+        float size = (float) (Math.random() * 4.0) + 2.0f;
         return new Particle(velocity, x, y, size);
     }
 
@@ -68,14 +68,14 @@ public class Particle {
 
     public static class Util {
 
-        private final List < Particle > particles;
+        private final List<Particle> particles;
 
-        public Util(int in ) {
-            particles = new ArrayList < > ();
+        public Util(int in) {
+            particles = new ArrayList<>();
             addParticle(in);
         }
 
-        public void addParticle(int in ) {
+        public void addParticle(int in) {
             for (int i = 0; i < in; ++i) particles.add(getParticle());
         }
 
@@ -94,7 +94,7 @@ public class Particle {
 
             glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-            for (Particle particle: particles) {
+            for (Particle particle : particles) {
                 particle.setup(2, 0.1f);
                 glPointSize(particle.size);
                 glBegin(GL_POINTS);

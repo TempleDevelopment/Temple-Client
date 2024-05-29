@@ -13,9 +13,9 @@ import xyz.templecheats.templeclient.features.module.Module;
 import java.util.Random;
 
 public class Nuker extends Module {
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private static final Random random = new Random();
 
     public Nuker() {

@@ -8,18 +8,18 @@ import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 
 //TODO: Add Move & Sneak, i was running into issues with the player not moving and sneaking when i added it.
 public class AntiAFK extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final IntSetting delay = new IntSetting("Delay", this, 10, 60, 15);
     private final BooleanSetting jump = new BooleanSetting("Jump", this, true);
     private final BooleanSetting swing = new BooleanSetting("Swing", this, true);
     private final BooleanSetting rotate = new BooleanSetting("Rotate", this, true);
     private final BooleanSetting chat = new BooleanSetting("Chat", this, true);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private int tickCount = 0;
 
     public AntiAFK() {

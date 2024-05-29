@@ -42,7 +42,7 @@ public class Animation {
 
     public double getProgress() {
         long currentTime = System.currentTimeMillis();
-        return clamp((float) ((currentTime - this.lastMillis) / (double) this.length) , 0f, 1f);
+        return clamp((float) ((currentTime - this.lastMillis) / (double) this.length), 0f, 1f);
     }
 
     public void reset() {

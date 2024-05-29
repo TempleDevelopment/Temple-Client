@@ -7,6 +7,11 @@ import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 
 public class FullBright extends Module {
+
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
+
     public final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.Gamma);
 
     public FullBright() {

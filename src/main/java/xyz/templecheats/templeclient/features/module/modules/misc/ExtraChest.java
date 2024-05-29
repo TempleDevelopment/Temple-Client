@@ -10,9 +10,9 @@ import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 
 public class ExtraChest extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.Steal);
     private final IntSetting dropDelay = new IntSetting("Drop Delay", this, 1, 10, 1);
     private final IntSetting stealDelay = new IntSetting("Steal Delay", this, 1, 10, 1);

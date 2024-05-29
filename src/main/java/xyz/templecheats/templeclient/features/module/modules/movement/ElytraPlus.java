@@ -1,23 +1,23 @@
 package xyz.templecheats.templeclient.features.module.modules.movement;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
-import net.minecraft.network.play.client.CPacketEntityAction;
-import org.lwjgl.input.Keyboard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.play.client.CPacketEntityAction;
+import org.lwjgl.input.Keyboard;
 import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
 import xyz.templecheats.templeclient.event.events.player.MoveEvent;
 import xyz.templecheats.templeclient.features.module.Module;
+import xyz.templecheats.templeclient.util.math.MathUtil;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
-import xyz.templecheats.templeclient.util.math.MathUtil;
 
 public final class ElytraPlus extends Module {
-    /*
-     * Settings
-     */
-    public final EnumSetting < Mode > mode = new EnumSetting < > ("Mode", this, Mode.Control);
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
+    public final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.Control);
     public final DoubleSetting speed = new DoubleSetting("Speed", this, 1.0f, 5.0f, 0.1f);
     public final DoubleSetting speedX = new DoubleSetting("SpeedX", this, 1.0f, 5.0f, 0.1f);
     public final DoubleSetting speedYUp = new DoubleSetting("SpeedYUp", this, 1.0f, 5.0f, 0.1f);
@@ -43,6 +43,7 @@ public final class ElytraPlus extends Module {
             Minecraft.getMinecraft().player.capabilities.isFlying = false;
         }
     }
+
     @Listener
     public void move(MoveEvent event) {
         Minecraft mc = Minecraft.getMinecraft();

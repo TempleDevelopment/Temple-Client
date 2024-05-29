@@ -13,7 +13,6 @@ import org.lwjgl.opengl.GL11;
 import xyz.templecheats.templeclient.TempleClient;
 
 import java.util.HashMap;
-import java.util.List;
 
 import static xyz.templecheats.templeclient.util.Globals.mc;
 
@@ -22,6 +21,9 @@ public class ShaderHelper {
     public ShaderGroup shader;
     private boolean frameBuffersInitialized = false;
 
+    /****************************************************************
+     *                    Constructor
+     ****************************************************************/
     public ShaderHelper(ResourceLocation location, String... names) {
         if (!OpenGlHelper.shadersSupported)
             TempleClient.logger.warn("Shaders are unsupported by OpenGL!");
@@ -33,7 +35,7 @@ public class ShaderHelper {
         try {
             ShaderLinkHelper.setNewStaticShaderLinkHelper();
 
-            shader = new ShaderGroup(mc.getTextureManager(), mc.getResourceManager() , mc.getFramebuffer() , location);
+            shader = new ShaderGroup(mc.getTextureManager(), mc.getResourceManager(), mc.getFramebuffer(), location);
             shader.createBindFramebuffers(mc.displayWidth, mc.displayHeight);
 
         } catch (Exception e) {
@@ -47,9 +49,13 @@ public class ShaderHelper {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
+    /****************************************************************
+     *                    Event Handlers
+     ****************************************************************/
+
     @SubscribeEvent
     public void onTick0(TickEvent.ClientTickEvent event) {
-        if(shader == null) return;
+        if (shader == null) return;
         int w = 0;
         int h = 0;
         if (event.phase == TickEvent.Phase.START) {
@@ -71,10 +77,16 @@ public class ShaderHelper {
         }
     }
 
+    /****************************************************************
+     *                    Framebuffer Accessor
+     ****************************************************************/
     public Framebuffer getFrameBuffer(String name) {
         return frameBufferMap.get(name);
     }
 
+    /****************************************************************
+     *                    Utility Methods
+     ****************************************************************/
     private boolean isIntegrated() {
         return GlStateManager.glGetString(GL11.GL_VENDOR).contains("Intel");
     }

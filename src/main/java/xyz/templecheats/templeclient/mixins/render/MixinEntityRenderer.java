@@ -1,16 +1,25 @@
 package xyz.templecheats.templeclient.mixins.render;
 
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import org.lwjgl.util.glu.Project;
-import org.spongepowered.asm.mixin.*;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.templecheats.templeclient.features.module.modules.client.Colors;
-import xyz.templecheats.templeclient.features.module.modules.render.*;
+import xyz.templecheats.templeclient.features.module.modules.render.Ambience;
+import xyz.templecheats.templeclient.features.module.modules.render.Aspect;
+import xyz.templecheats.templeclient.features.module.modules.render.ViewClip;
 import xyz.templecheats.templeclient.features.module.modules.render.esp.sub.Hand;
 import xyz.templecheats.templeclient.features.module.modules.render.norender.sub.Player;
 import xyz.templecheats.templeclient.features.module.modules.render.norender.sub.World;
@@ -22,10 +31,16 @@ import static xyz.templecheats.templeclient.util.color.ColorUtil.vector3F;
 
 @Mixin(value = EntityRenderer.class)
 public abstract class MixinEntityRenderer {
-    @Shadow protected abstract void hurtCameraEffect(float partialTicks);
-    @Shadow private ItemStack itemActivationItem;
-    @Shadow @Final private int[] lightmapColors;
-    @Unique float aspect;
+    @Shadow
+    protected abstract void hurtCameraEffect(float partialTicks);
+
+    @Shadow
+    private ItemStack itemActivationItem;
+    @Shadow
+    @Final
+    private int[] lightmapColors;
+    @Unique
+    float aspect;
 
     @Inject(method = "renderWorldPass", at = @At("RETURN"))
     private void renderWorldPassPost(int pass, float partialTicks, long finishTimeNano, CallbackInfo ci) {
@@ -63,7 +78,7 @@ public abstract class MixinEntityRenderer {
         return original;
     }
 
-    @ModifyVariable(method={"orientCamera"}, ordinal=3, at=@At(value="STORE", ordinal=0), require=1)
+    @ModifyVariable(method = {"orientCamera"}, ordinal = 3, at = @At(value = "STORE", ordinal = 0), require = 1)
     public double changeCameraDistanceHook(double range) {
         if (ViewClip.INSTANCE.isEnabled()) {
             return ViewClip.INSTANCE.distance.doubleValue();
@@ -72,7 +87,7 @@ public abstract class MixinEntityRenderer {
         }
     }
 
-    @ModifyVariable(method={"orientCamera"}, ordinal=7, at=@At(value="STORE", ordinal=0), require=1)
+    @ModifyVariable(method = {"orientCamera"}, ordinal = 7, at = @At(value = "STORE", ordinal = 0), require = 1)
     public double orientCameraHook(double range) {
         if (ViewClip.INSTANCE.isEnabled()) {
             return ViewClip.INSTANCE.distance.doubleValue();
@@ -89,7 +104,7 @@ public abstract class MixinEntityRenderer {
 
     @Inject(method = "applyBobbing", at = @At("HEAD"), cancellable = true)
     private void noCameraBob(float partialTicks, CallbackInfo ci) {
-        if(Player.preventBobbing()) {
+        if (Player.preventBobbing()) {
             ci.cancel();
         }
     }

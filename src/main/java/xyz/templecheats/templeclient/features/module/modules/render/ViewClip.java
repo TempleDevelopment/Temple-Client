@@ -7,9 +7,9 @@ import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 
 public class ViewClip extends Module {
     public static ViewClip INSTANCE;
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     public final DoubleSetting distance = new DoubleSetting("Distance", this, 0.0, 50.0, 10.0);
 
     public ViewClip() {

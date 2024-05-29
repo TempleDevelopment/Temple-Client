@@ -1,12 +1,11 @@
 package xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 import xyz.templecheats.templeclient.features.gui.clickgui.csgo.CsgoGuiScreen;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
-import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 
 import java.awt.*;
@@ -16,14 +15,14 @@ import static xyz.templecheats.templeclient.features.gui.font.Fonts.font16;
 public class BooleanButton extends Button {
     private final Button parentButton;
     private final BooleanSetting setting;
-    
+
     public BooleanButton(BooleanSetting setting, Button parentButton) {
         super(setting.name);
         this.setting = setting;
         this.parentButton = parentButton;
         this.height = 12;
     }
-    
+
     @Override
     public void drawScreen(final int mouseX, final int mouseY, final float partialTicks) {
 
@@ -47,25 +46,25 @@ public class BooleanButton extends Button {
         GlStateManager.disableDepth();
         GlStateManager.popMatrix();
     }
-    
+
     @Override
     public void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) {
-        if(mouseButton == 0 && this.isHovering(mouseX, mouseY)) {
+        if (mouseButton == 0 && this.isHovering(mouseX, mouseY)) {
             this.toggle();
         }
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
-    
+
     @Override
     public void toggle() {
         setting.setBooleanValue(!setting.booleanValue());
     }
-    
+
     @Override
     public boolean getState() {
         return setting.booleanValue();
     }
-    
+
     @Override
     public CsgoGuiScreen getClientScreen() {
         return this.parentButton.getClientScreen();

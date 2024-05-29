@@ -14,9 +14,12 @@ import xyz.templecheats.templeclient.event.events.player.ModelEvent;
 import xyz.templecheats.templeclient.event.events.render.Render3DPostEvent;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.render.animation.Animation;
-import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
 import xyz.templecheats.templeclient.util.render.animation.Easing;
-import xyz.templecheats.templeclient.util.setting.impl.*;
+import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
+import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
+import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
+import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
+import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 
 import java.util.List;
 import java.util.Map;
@@ -26,21 +29,26 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import static org.lwjgl.opengl.GL11.*;
 
 public class PopChams extends Module {
-
-    private final BooleanSetting self = new BooleanSetting("Self" , this , false);
-    private final IntSetting duration = new IntSetting("Duration" , this , 50 , 5000 , 2000);
-    private final EnumSetting<Direction> direction = new EnumSetting<>("Direction" , this , Direction.NONE);
-    private final DoubleSetting movementHeight = new DoubleSetting("Height" , this , 2.0 , 10.0 , 4.5);
-    private final EnumSetting<Easing> easing = new EnumSetting<>("Easing" , this , Easing.Linear);
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
+    private final BooleanSetting self = new BooleanSetting("Self", this, false);
+    private final IntSetting duration = new IntSetting("Duration", this, 50, 5000, 2000);
+    private final EnumSetting<Direction> direction = new EnumSetting<>("Direction", this, Direction.NONE);
+    private final DoubleSetting movementHeight = new DoubleSetting("Height", this, 2.0, 10.0, 4.5);
+    private final EnumSetting<Easing> easing = new EnumSetting<>("Easing", this, Easing.Linear);
     private final IntSetting startAlpha = new IntSetting("Start Alpha", this, 0, 255, 200);
-    private final DoubleSetting outlineWidth = new DoubleSetting("Width" , this , 0.1 , 10.0 , 3.5);
+    private final DoubleSetting outlineWidth = new DoubleSetting("Width", this, 0.1, 10.0, 3.5);
 
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private final List<ModelInfo> chams = new CopyOnWriteArrayList<>();
     private final Map<EntityPlayer, ModelInfo> chamCache = new ConcurrentHashMap<>();
     public static boolean rendering;
 
     public PopChams() {
-        super("PopChams" , "Renders a totempop effect" , Keyboard.KEY_NONE , Category.Render);
+        super("PopChams", "Renders a totempop effect", Keyboard.KEY_NONE, Category.Render);
         registerSettings(self, duration, startAlpha, movementHeight, outlineWidth, direction, easing);
     }
 
@@ -60,7 +68,7 @@ public class PopChams extends Module {
         if (event.getPacket() instanceof SPacketEntityStatus) {
             final SPacketEntityStatus packet = (SPacketEntityStatus) event.getPacket();
             if (packet == null) return;
-                final Entity entity = packet.getEntity(mc.world);
+            final Entity entity = packet.getEntity(mc.world);
             if (entity instanceof EntityPlayer && packet.getOpCode() == 35 && entity.isEntityAlive()) {
                 invokeEntity((EntityPlayer) entity);
             }
@@ -78,13 +86,13 @@ public class PopChams extends Module {
         }
 
         chams.add(new ModelInfo(
-                cham.model ,
+                cham.model,
                 new EntityOtherPlayerMP(
-                        cham.entity.world ,
+                        cham.entity.world,
                         entity.getGameProfile()
                 ) {{
                     copyLocationAndAnglesFrom(cham.entity);
-                }} ,
+                }},
                 cham.limbSwing,
                 cham.limbSwingAmount,
                 cham.ageInTicks,

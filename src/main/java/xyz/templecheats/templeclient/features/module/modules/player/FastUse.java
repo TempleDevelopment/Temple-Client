@@ -1,35 +1,26 @@
 package xyz.templecheats.templeclient.features.module.modules.player;
 
 import net.minecraft.init.Items;
-import net.minecraft.network.play.client.CPacketPlayerTryUseItem;
-import net.minecraft.util.EnumHand;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.module.Module;
-import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
+import xyz.templecheats.templeclient.mixins.accessor.IMixinMinecraft;
+import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 
 public class FastUse extends Module {
-    /*
-     * Settings
-     */
-    private final IntSetting delay = new IntSetting("Delay", this, 1, 10, 1);
-
-    /*
-     * Variables
-     */
-    private int timer = 0;
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
+    private final BooleanSetting exp = new BooleanSetting("Exp", this, false);
 
     public FastUse() {
         super("FastUse", "Use items faster", Keyboard.KEY_NONE, Category.Player);
-        this.registerSettings(delay);
+        registerSettings(exp);
     }
-//TODO: modify mc.player itemusedelay instead of spamming packets
+
     @Override
     public void onUpdate() {
-        if (++timer >= delay.intValue()) {
-            timer = 0;
-            if (mc.player.getHeldItemMainhand().getItem().equals(Items.EXPERIENCE_BOTTLE) && mc.gameSettings.keyBindUseItem.isKeyDown()) {
-                mc.getConnection().sendPacket(new CPacketPlayerTryUseItem(EnumHand.MAIN_HAND));
-            }
+        if (exp.booleanValue() && (mc.player.getHeldItemMainhand().getItem() == Items.EXPERIENCE_BOTTLE || mc.player.getHeldItemOffhand().getItem() == Items.EXPERIENCE_BOTTLE)) {
+            ((IMixinMinecraft) mc).setRightClickDelayTimer(0);
         }
     }
 }

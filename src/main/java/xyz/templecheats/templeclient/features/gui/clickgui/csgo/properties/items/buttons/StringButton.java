@@ -3,14 +3,15 @@ package xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.item
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ChatAllowedCharacters;
 import xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.Item;
-import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.setting.impl.StringSetting;
 import xyz.templecheats.templeclient.util.time.TimerUtil;
 
 import java.awt.*;
 
-import static xyz.templecheats.templeclient.features.gui.font.Fonts.*;
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font12;
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font14;
 
 public class StringButton extends Item {
     private final StringSetting setting;
@@ -37,17 +38,17 @@ public class StringButton extends Item {
 
         GlStateManager.pushMatrix();
         font12.drawString(this.setting.getName(), this.x + 2.3, this.y + 3, -1, false);
-        if(this.typing) {
+        if (this.typing) {
             font14.drawString(this.currentString.getString() + typingIcon(), this.x + 5f, this.y + 10, -1, false);
         } else {
-            font14.drawString(this.setting.value(), this.x + 5f, this.y + 10, -1,false);
+            font14.drawString(this.setting.value(), this.x + 5f, this.y + 10, -1, false);
         }
         GlStateManager.popMatrix();
     }
 
     @Override
     public void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) {
-        if(this.isHovering(mouseX, mouseY) && mouseButton == 0) {
+        if (this.isHovering(mouseX, mouseY) && mouseButton == 0) {
             toggle();
             return;
         }
@@ -72,7 +73,7 @@ public class StringButton extends Item {
                     setString(removeLastChar(currentString.getString()));
                 }
             }
-            if ( ChatAllowedCharacters.isAllowedCharacter(typedChar)) {
+            if (ChatAllowedCharacters.isAllowedCharacter(typedChar)) {
                 setString(currentString.getString() + typedChar);
             }
         }
@@ -92,10 +93,10 @@ public class StringButton extends Item {
         this.currentString = new CurrentString(newString);
     }
 
-    public static String removeLastChar ( String str ) {
+    public static String removeLastChar(String str) {
         String output = "";
-        if ( str != null && !str.isEmpty()) {
-            output = str.substring ( 0 , str.length ( ) - 1 );
+        if (str != null && !str.isEmpty()) {
+            output = str.substring(0, str.length() - 1);
         }
         return output;
     }
@@ -122,13 +123,11 @@ public class StringButton extends Item {
     public static class CurrentString {
         private final String string;
 
-        public
-        CurrentString(String string) {
+        public CurrentString(String string) {
             this.string = string;
         }
 
-        public
-        String getString() {
+        public String getString() {
             return this.string;
         }
     }

@@ -9,9 +9,9 @@ import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import static xyz.templecheats.templeclient.features.gui.font.Fonts.font18;
 
 public class Coords extends HUD.HudElement {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final BooleanSetting dimensionCoords = new BooleanSetting("Dimension Coords", this, false);
 
     public Coords() {

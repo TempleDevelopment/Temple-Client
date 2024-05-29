@@ -16,6 +16,10 @@ import xyz.templecheats.templeclient.event.events.network.PacketEvent;
 import xyz.templecheats.templeclient.features.module.Module;
 
 public class NoMineAnimation extends Module {
+
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private boolean isMining;
     private BlockPos lastPos;
     private EnumFacing lastFacing;
@@ -23,6 +27,7 @@ public class NoMineAnimation extends Module {
     public NoMineAnimation() {
         super("NoMineAnimation", "Hides the mining progress of the blocks you mine", Keyboard.KEY_NONE, Category.World);
     }
+
     @Listener
     public void recp(PacketEvent.Receive event) {
         if (event.getPacket() instanceof CPacketPlayerDigging) {

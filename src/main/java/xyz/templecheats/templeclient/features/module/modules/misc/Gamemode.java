@@ -5,13 +5,14 @@ import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 
-import static xyz.templecheats.templeclient.features.module.modules.misc.Gamemode.ClientGameType.*;
+import static xyz.templecheats.templeclient.features.module.modules.misc.Gamemode.ClientGameType.CREATIVE;
 
 public class Gamemode extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final EnumSetting<ClientGameType> gameType = new EnumSetting<>("Gamemode", this, CREATIVE);
+
     public Gamemode() {
         super("Gamemode", "Change your gamemode client-side", Keyboard.KEY_NONE, Category.Misc);
         this.registerSettings(gameType);

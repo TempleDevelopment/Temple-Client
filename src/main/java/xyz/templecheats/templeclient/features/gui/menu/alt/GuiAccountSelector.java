@@ -1,10 +1,10 @@
 package xyz.templecheats.templeclient.features.gui.menu.alt;
 
-import xyz.templecheats.templeclient.manager.AltManager;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import org.lwjgl.input.Keyboard;
+import xyz.templecheats.templeclient.manager.AltManager;
 
 import java.awt.*;
 import java.io.IOException;

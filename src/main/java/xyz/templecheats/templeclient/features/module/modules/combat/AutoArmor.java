@@ -12,19 +12,20 @@ import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 
 import java.util.Arrays;
+
 public class AutoArmor extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final BooleanSetting pickupIfFull = new BooleanSetting("Pickup If Full", this, false);
     private final BooleanSetting preserve = new BooleanSetting("Preserve Damaged", this, false);
     private final BooleanSetting replace = new BooleanSetting("Replace Empty", this, false);
     private final IntSetting preserveDmg = new IntSetting("Damage %", this, 0, 100, 5);
     private final IntSetting delay = new IntSetting("Delay", this, 0, 20, 10);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private int[] bestArmorDamage;
     private int[] bestArmorSlots;
     private int timer;
@@ -75,7 +76,7 @@ public class AutoArmor extends Module {
                 final ItemArmor armor = (ItemArmor) itemStack.getItem();
                 if (this.preserve.booleanValue()) {
                     final float dmg = (itemStack.getMaxDamage() - (float) itemStack.getItemDamage()) / itemStack.getMaxDamage();
-                    final int percent = (int)(dmg * 100.0f);
+                    final int percent = (int) (dmg * 100.0f);
                     if (percent > this.preserveDmg.intValue()) {
                         this.bestArmorDamage[i] = armor.damageReduceAmount;
                     }

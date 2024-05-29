@@ -16,6 +16,7 @@ import static xyz.templecheats.templeclient.features.gui.font.Fonts.font18;
 public class Potion extends HUD.HudElement {
 
     public static Potion INSTANCE;
+
     public Potion() {
         super("Potion", "Shows active potion effects in the HUD");
         INSTANCE = this;
@@ -23,7 +24,7 @@ public class Potion extends HUD.HudElement {
 
     @Override
     public void renderElement(ScaledResolution sr) {
-        List < PotionEffect > effects = new ArrayList < > (Minecraft.getMinecraft().player.getActivePotionEffects());
+        List<PotionEffect> effects = new ArrayList<>(Minecraft.getMinecraft().player.getActivePotionEffects());
 
         effects.sort((PotionEffect effect1, PotionEffect effect2) -> {
             String combinedText1 = getEffectText(effect1);
@@ -36,7 +37,7 @@ public class Potion extends HUD.HudElement {
         double maxWidth = 0;
         double totalHeight = 0;
 
-        for (PotionEffect effect: effects) {
+        for (PotionEffect effect : effects) {
             String combinedText = getEffectText(effect);
 
             double width = font18.getStringWidth(combinedText) + 10;

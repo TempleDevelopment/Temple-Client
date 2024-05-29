@@ -1,8 +1,15 @@
 package xyz.templecheats.templeclient.event;
-public class EventCancellable extends EventStageable {
 
+public class EventCancellable extends EventStageable {
     private boolean canceled;
-    public EventCancellable() {}
+
+    public EventCancellable() {
+    }
+
+    /****************************************************************
+     *                      Getters and Setters
+     ****************************************************************/
+
     public boolean isCanceled() {
         return canceled;
     }

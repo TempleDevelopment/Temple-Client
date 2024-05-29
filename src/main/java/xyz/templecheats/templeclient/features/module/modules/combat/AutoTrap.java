@@ -21,8 +21,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.features.module.Module;
-import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
+import xyz.templecheats.templeclient.util.misc.Offsets;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
+import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
@@ -32,29 +33,22 @@ import java.util.Arrays;
 import java.util.List;
 
 public class AutoTrap extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final IntSetting blocksPerTick = new IntSetting("Blocks Per Tick", this, 1, 10, 1);
     private final BooleanSetting autoDisable = new BooleanSetting("Auto Disable", this, true);
     private final IntSetting range = new IntSetting("Range", this, 1, 6, 4);
     private final BooleanSetting render = new BooleanSetting("Render", this, true);
     private final BooleanSetting fill = new BooleanSetting("Box Fill", this, true);
     private final BooleanSetting outline = new BooleanSetting("Box Outline", this, true);
-    private final DoubleSetting opacity = new DoubleSetting("RenderOpacity", this, 0.0, 1, 0.5);
+    private final DoubleSetting opacity = new DoubleSetting("Opacity", this, 0.0, 1, 0.5);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private final List<Vec3d> positions = new ArrayList<>(Arrays.asList(
-            new Vec3d(0, -1, -1), new Vec3d(1, -1, 0),
-            new Vec3d(0, -1, 1), new Vec3d(-1, -1, 0),
-            new Vec3d(0, 0, -1), new Vec3d(1, 0, 0),
-            new Vec3d(0, 0, 1), new Vec3d(-1, 0, 0),
-            new Vec3d(0, 1, -1), new Vec3d(1, 1, 0),
-            new Vec3d(0, 1, 1), new Vec3d(-1, 1, 0),
-            new Vec3d(0, 2, -1), new Vec3d(0, 2, 1),
-            new Vec3d(0, 2, 0)));
+            Offsets.AUTO_TRAP));
     private boolean finished;
     private BlockPos currentBlock;
 

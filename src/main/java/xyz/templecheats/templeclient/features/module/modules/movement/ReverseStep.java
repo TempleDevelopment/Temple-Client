@@ -15,11 +15,11 @@ import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 import xyz.templecheats.templeclient.util.time.TimerUtil;
 
 public class ReverseStep extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     public final IntSetting fallSpeed = new IntSetting("Fall Speed", this, 1, 50, 2);
-    private final IntSetting height =new IntSetting("Height", this, 1, 20, 10);
+    private final IntSetting height = new IntSetting("Height", this, 1, 20, 10);
     private final TimerUtil flagTime = new TimerUtil();
 
     public ReverseStep() {
@@ -79,7 +79,7 @@ public class ReverseStep extends Module {
 
     private int traceDown() {
         int ret = 0;
-        int y = (int)Math.round(mc.player.posY) - 1;
+        int y = (int) Math.round(mc.player.posY) - 1;
         for (int tracey = y; tracey >= 0; tracey--) {
             RayTraceResult trace = mc.world.rayTraceBlocks(mc.player.getPositionVector(), new Vec3d(mc.player.posX, tracey, mc.player.posZ), false);
             if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)

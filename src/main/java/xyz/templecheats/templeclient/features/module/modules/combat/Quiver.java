@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class Quiver extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final IntSetting tickDelay = new IntSetting("Tick Delay", this, 0, 8, 3);
 
     public Quiver() {
@@ -30,7 +30,7 @@ public class Quiver extends Module {
     @Override
     public void onUpdate() {
         if (Quiver.mc.player != null) {
-            List < Integer > arrowSlots;
+            List<Integer> arrowSlots;
             if (Quiver.mc.player.inventory.getCurrentItem().getItem() instanceof ItemBow && Quiver.mc.player.isHandActive() && Quiver.mc.player.getItemInUseMaxCount() >= this.tickDelay.intValue()) {
                 Quiver.mc.player.connection.sendPacket((Packet) new CPacketPlayer.Rotation(Quiver.mc.player.cameraYaw, -90.0f, Quiver.mc.player.onGround));
                 Quiver.mc.playerController.onStoppedUsingItem((EntityPlayer) Quiver.mc.player);
@@ -40,19 +40,21 @@ public class Quiver extends Module {
             }
             int speedSlot = -1;
             int strengthSlot = -1;
-            for (Integer slot: arrowSlots) {
+            for (Integer slot : arrowSlots) {
                 if (PotionUtils.getPotionFromItem((ItemStack) Quiver.mc.player.inventory.getStackInSlot(slot.intValue())).getRegistryName().getPath().contains("swiftness")) {
                     speedSlot = slot;
                     continue;
                 }
-                if (!Objects.requireNonNull(PotionUtils.getPotionFromItem((ItemStack) Quiver.mc.player.inventory.getStackInSlot(slot.intValue())).getRegistryName()).getPath().contains("strength")) continue;
+                if (!Objects.requireNonNull(PotionUtils.getPotionFromItem((ItemStack) Quiver.mc.player.inventory.getStackInSlot(slot.intValue())).getRegistryName()).getPath().contains("strength"))
+                    continue;
                 strengthSlot = slot;
             }
         }
     }
 
     @Override
-    public void onEnable() {}
+    public void onEnable() {
+    }
 
     private int findBow() {
         return InventoryManager.getItemHotbar((Item) Items.BOW);

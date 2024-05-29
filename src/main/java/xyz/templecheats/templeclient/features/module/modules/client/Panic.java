@@ -10,9 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Panic extends Module {
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     public static boolean isPanic = false;
     private final Map<Module, Boolean> moduleStates = new HashMap<>();
 

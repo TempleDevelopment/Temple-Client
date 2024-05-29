@@ -1,19 +1,19 @@
 package xyz.templecheats.templeclient.mixins.gui;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
-import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
-import xyz.templecheats.templeclient.manager.CommandManager;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiTextField;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
+import xyz.templecheats.templeclient.manager.CommandManager;
 
-import static xyz.templecheats.templeclient.util.Globals.mc;
 import static org.lwjgl.opengl.GL11.*;
+import static xyz.templecheats.templeclient.util.Globals.mc;
 
 @Mixin(value = {
         GuiChat.class

@@ -5,11 +5,11 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.combat.AutoCrystal;
-import xyz.templecheats.templeclient.features.module.modules.render.esp.sub.Block;
 import xyz.templecheats.templeclient.features.module.modules.render.PopChams;
+import xyz.templecheats.templeclient.features.module.modules.render.esp.sub.Block;
 import xyz.templecheats.templeclient.features.module.modules.render.esp.sub.Shader;
-import xyz.templecheats.templeclient.util.render.shader.RainbowUtil;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
+import xyz.templecheats.templeclient.util.render.shader.RainbowUtil;
 import xyz.templecheats.templeclient.util.setting.impl.ColorSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
@@ -26,9 +26,10 @@ public class Colors extends Module {
         setToggled(true);
         this.registerSettings(staticColor, friendColor, gradientColor1, gradientColor2, fogColor, lightMapColor, step, speed);
     }
-    /*
-     * Settings
-     */
+
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     public final DoubleSetting step = new DoubleSetting("Step", this, 0.1, 5, 0.5);
     public final DoubleSetting speed = new DoubleSetting("Speed", this, 0, 5, 1);
     public final ColorSetting staticColor = new ColorSetting("Static", this, Color.CYAN);
@@ -58,6 +59,7 @@ public class Colors extends Module {
                 this.gradientColor2.getColor(),
         };
     }
+
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         doBindBlank();
@@ -67,6 +69,7 @@ public class Colors extends Module {
             gradientColor1 = staticColor;
         }
     }
+
     public void doBindBlank() { //fix items turning white
         if (!(Block.rendering && Shader.rendering && PopChams.rendering && AutoCrystal.rendering)) {
             RenderUtil.bindBlank();
@@ -80,10 +83,12 @@ public class Colors extends Module {
     public Color getLightMapColor() {
         return this.lightMapColor.getColor();
     }
+
     public Color getFriendColor() {
         return this.friendColor.getColor();
     }
-    public enum Mode{
+
+    public enum Mode {
         Gradient,
         Normal
     }

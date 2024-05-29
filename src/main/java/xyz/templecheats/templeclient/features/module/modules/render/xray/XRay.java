@@ -6,6 +6,9 @@ import xyz.templecheats.templeclient.features.module.modules.render.xray.sub.Ore
 public class XRay extends Module {
     public XRay() {
         super("XRay", "Allows you to filter what the world renders", 0, Category.Render);
+        /****************************************************************
+         *                      Sub Module Registration
+         ****************************************************************/
         submodules.add(new Ores());
     }
 

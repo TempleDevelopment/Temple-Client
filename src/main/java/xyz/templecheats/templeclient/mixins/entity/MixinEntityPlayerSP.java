@@ -58,7 +58,7 @@ public class MixinEntityPlayerSP extends MixinEntity {
     }
 
     @Inject(method = "pushOutOfBlocks", at = @At("HEAD"), cancellable = true)
-    public void pushOutOfBlocks(double x, double y, double z, CallbackInfoReturnable < Boolean > callback) {
+    public void pushOutOfBlocks(double x, double y, double z, CallbackInfoReturnable<Boolean> callback) {
         if (Minecraft.getMinecraft() != null && Minecraft.getMinecraft().player != null) {
             Freecam freecam = ModuleManager.getModule(Freecam.class);
 

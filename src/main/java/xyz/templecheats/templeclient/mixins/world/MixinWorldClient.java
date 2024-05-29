@@ -21,7 +21,7 @@ public class MixinWorldClient {
     }
 
     @Inject(method = "removeEntityFromWorld", at = @At("HEAD"))
-    public void removeEntityFromWorld(int entityID, CallbackInfoReturnable < Entity > callback) {
+    public void removeEntityFromWorld(int entityID, CallbackInfoReturnable<Entity> callback) {
         final Entity entity = WorldClient.class.cast(this).getEntityByID(entityID);
 
         if (entity != null) {

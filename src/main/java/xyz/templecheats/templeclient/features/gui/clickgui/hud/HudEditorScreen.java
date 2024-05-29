@@ -20,7 +20,7 @@ public class HudEditorScreen extends ClientGuiScreen {
         this.getPanels().add(new Panel("Hud Editor", 200, 100, true) {
             @Override
             public void setupItems() {
-                for (HUD.HudElement element: HUD.INSTANCE.getHudElements()) {
+                for (HUD.HudElement element : HUD.INSTANCE.getHudElements()) {
                     this.addButton(new HudElementButton(element));
                 }
             }

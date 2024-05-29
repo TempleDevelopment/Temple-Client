@@ -12,15 +12,15 @@ import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 import java.util.function.IntSupplier;
 
 public class AutoClicker extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final IntSetting cps = new IntSetting("CPS", this, 1, 100, 10);
-    private final EnumSetting <ClickType> clickType = new EnumSetting < > ("Type", this, ClickType.LeftClick);
+    private final EnumSetting<ClickType> clickType = new EnumSetting<>("Type", this, ClickType.LeftClick);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private long lastClick;
     private long hold;
     private double holdLength;
@@ -36,7 +36,7 @@ public class AutoClicker extends Module {
         RayTraceResult objectMouseOver = Minecraft.getMinecraft().objectMouseOver;
         if (Mouse.isButtonDown(clickType.value().button)) {
             if (objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK) {
-                return; //don't spam click if we're looking at a block (so we can break it)
+                return;
             }
             if (System.currentTimeMillis() - lastClick > (1d / cps.intValue()) * 1000) {
                 lastClick = System.currentTimeMillis();

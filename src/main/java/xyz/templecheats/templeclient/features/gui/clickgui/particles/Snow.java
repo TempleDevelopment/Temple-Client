@@ -2,7 +2,6 @@ package xyz.templecheats.templeclient.features.gui.clickgui.particles;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
-import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 
 import java.util.Random;
 

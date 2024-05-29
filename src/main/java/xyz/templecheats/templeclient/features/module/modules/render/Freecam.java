@@ -10,7 +10,7 @@ import xyz.templecheats.templeclient.event.events.player.MotionEvent;
 import xyz.templecheats.templeclient.event.events.player.MoveEvent;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.movement.*;
-import xyz.templecheats.templeclient.features.module.modules.movement.speed.*;
+import xyz.templecheats.templeclient.features.module.modules.movement.speed.Speed;
 import xyz.templecheats.templeclient.features.module.modules.movement.speed.sub.Bhop;
 import xyz.templecheats.templeclient.features.module.modules.movement.speed.sub.Strafe;
 import xyz.templecheats.templeclient.manager.ModuleManager;
@@ -18,16 +18,16 @@ import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 
 public class Freecam extends Module {
-    /*
-     * Settings
-     */
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final BooleanSetting disableMovement = new BooleanSetting("Disable Movement", this, true);
     private final DoubleSetting horizontalSpeed = new DoubleSetting("Horizontal Speed", this, 0.1, 5d, 1d);
     private final DoubleSetting verticalSpeed = new DoubleSetting("Vertical Speed", this, 0.1, 5d, 1d);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private EntityOtherPlayerMP fakePlayer;
     private float startYaw, startPitch;
     private boolean wasAutoWalkEnabled;

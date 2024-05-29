@@ -8,20 +8,19 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-
 import xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.Panel;
-import xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.ModuleButton;
 import xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.Item;
+import xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.ModuleButton;
 import xyz.templecheats.templeclient.features.gui.font.CFont;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.features.module.modules.client.FontSettings;
 import xyz.templecheats.templeclient.manager.ModuleManager;
-import xyz.templecheats.templeclient.util.render.animation.Easing;
+import xyz.templecheats.templeclient.util.math.Vec2d;
 import xyz.templecheats.templeclient.util.render.animation.Animation;
+import xyz.templecheats.templeclient.util.render.animation.Easing;
 import xyz.templecheats.templeclient.util.render.shader.impl.GaussianBlur;
 import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
-import xyz.templecheats.templeclient.util.math.Vec2d;
 
 import java.awt.*;
 import java.io.IOException;
@@ -35,7 +34,7 @@ import static xyz.templecheats.templeclient.util.render.StencilUtil.*;
 
 public class CsgoGuiScreen extends GuiScreen {
     private static final ResourceLocation LOGO = new ResourceLocation("textures/icons/logo.png");
-    private final Animation blurAnimation = new Animation(Easing.InOutCircle,600);
+    private final Animation blurAnimation = new Animation(Easing.InOutCircle, 600);
     private final Animation zoomAnimation = new Animation(Easing.OutQuint, 300);
     private final ArrayList<Panel> navs = new ArrayList<>();
     private boolean open = true;
@@ -65,19 +64,19 @@ public class CsgoGuiScreen extends GuiScreen {
         blurAnimation.reset();
         zoomAnimation.reset();
     }
-    
+
     public void load() {
         this.navs.forEach(nav -> nav.getItems().sort(Comparator.comparing(Item::getLabel)));
 
         this.getNavs().clear();
-        
+
         int y = this.y + 30;
-        for(final Module.Category category : Module.Category.values()) {
+        for (final Module.Category category : Module.Category.values()) {
             this.getNavs().add(new Panel(category.name(), this.x + 40, y += 25, false) {
                 @Override
                 public void setupItems() {
                     ModuleManager.getModules().forEach(module -> {
-                        if(module.getCategory() == category && !module.parent) {
+                        if (module.getCategory() == category && !module.parent) {
                             this.addButton(new ModuleButton(module));
                         }
                     });
@@ -96,13 +95,13 @@ public class CsgoGuiScreen extends GuiScreen {
         float bProgress = (float) blurAnimation.getProgress();
         float sProgress = (float) zoomAnimation.getProgress();
 
-        if(mc.currentScreen instanceof CsgoGuiScreen || open) {
+        if (mc.currentScreen instanceof CsgoGuiScreen || open) {
             blurAnimation.progress(1);
             zoomAnimation.progress(ClickGUI.INSTANCE.scale.doubleValue());
         }
         if (ClickGUI.INSTANCE.blur.booleanValue()) {
-            float radius = coerceIn(ClickGUI.INSTANCE.radius.floatValue() * bProgress, (float) ClickGUI.INSTANCE.radius.min , (float) ClickGUI.INSTANCE.radius.max);
-            float compression = coerceIn(ClickGUI.INSTANCE.compression.floatValue() * bProgress, (float) ClickGUI.INSTANCE.compression.min , (float) ClickGUI.INSTANCE.compression.max);
+            float radius = coerceIn(ClickGUI.INSTANCE.radius.floatValue() * bProgress, (float) ClickGUI.INSTANCE.radius.min, (float) ClickGUI.INSTANCE.radius.max);
+            float compression = coerceIn(ClickGUI.INSTANCE.compression.floatValue() * bProgress, (float) ClickGUI.INSTANCE.compression.min, (float) ClickGUI.INSTANCE.compression.max);
 
             GaussianBlur.startBlur();
             this.drawDefaultBackground();
@@ -123,23 +122,23 @@ public class CsgoGuiScreen extends GuiScreen {
         GlStateManager.depthFunc(GL11.GL_LEQUAL);
         GL11.glTranslated((1 - sProgress) * (sr.getScaledWidth_double() / 2D), (1 - sProgress) * (sr.getScaledHeight_double() / 2D), 0D);
         GL11.glScaled(ClickGUI.INSTANCE.scale.doubleValue() * sProgress, ClickGUI.INSTANCE.scale.doubleValue() * sProgress, ClickGUI.INSTANCE.scale.doubleValue() * sProgress);
-     
+
         final int scroll = Mouse.getDWheel();
         if (scroll > 0) {
-            if(y < this.absY) {
+            if (y < this.absY) {
                 y += 10;
             }
         } else if (scroll < 0) {
-            if(y+this.height > this.absY+this.minHeight) {
+            if (y + this.height > this.absY + this.minHeight) {
                 y -= 10;
             }
         }
 
-        if(this.y > this.absY) {
+        if (this.y > this.absY) {
             this.y = this.absY;
         }
-        if(this.y+this.height < this.absY+this.minHeight) {
-            this.y = this.absY+this.minHeight - this.height;
+        if (this.y + this.height < this.absY + this.minHeight) {
+            this.y = this.absY + this.minHeight - this.height;
         }
 
         new RectBuilder(new Vec2d(x, absY), new Vec2d(x + 118, absY + minHeight))
@@ -163,7 +162,7 @@ public class CsgoGuiScreen extends GuiScreen {
         Gui.drawScaledCustomSizeModalRect(x + 38, absY + 10, 0, 0, 32, 32, 32, 32, 32, 32);
         GlStateManager.popMatrix();
 
-        for (int i=0, y = this.absY + 80; i < this.navs.size(); i++, y+=30) {
+        for (int i = 0, y = this.absY + 80; i < this.navs.size(); i++, y += 30) {
             Panel nav = this.navs.get(i);
             nav.setPos(this.x, y);
 
@@ -181,13 +180,13 @@ public class CsgoGuiScreen extends GuiScreen {
         this.navs.forEach(nav -> nav.drawScreenPost(mouseX, mouseY));
         GlStateManager.popMatrix();
     }
-    
+
     @Override
     public void mouseClicked(int unscaledMouseX, int unscaledMouseY, int clickedButton) {
         final int mouseX = (int) (unscaledMouseX / ClickGUI.INSTANCE.scale.doubleValue());
         final int mouseY = (int) (unscaledMouseY / ClickGUI.INSTANCE.scale.doubleValue());
 
-        if(clickedButton == 1 && this.isHovering(mouseX, mouseY)) {
+        if (clickedButton == 1 && this.isHovering(mouseX, mouseY)) {
             this.oldX = this.x - mouseX;
             this.oldY = this.y - mouseY;
             this.oldAbsY = this.absY - mouseY;
@@ -203,36 +202,36 @@ public class CsgoGuiScreen extends GuiScreen {
         final int mouseX = (int) (unscaledMouseX / ClickGUI.INSTANCE.scale.doubleValue());
         final int mouseY = (int) (unscaledMouseY / ClickGUI.INSTANCE.scale.doubleValue());
 
-        if(releaseButton == 1) {
+        if (releaseButton == 1) {
             this.drag = false;
         }
 
         this.navs.forEach(nav -> nav.mouseReleased(mouseX, mouseY, releaseButton));
     }
-    
+
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
         try {
-            for(Panel nav : navs) {
+            for (Panel nav : navs) {
                 nav.keyTyped(typedChar, keyCode);
             }
             super.keyTyped(typedChar, keyCode);
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+
     @Override
     public boolean doesGuiPauseGame() {
         return false;
     }
-    
+
     public ArrayList<Panel> getNavs() {
         return this.navs;
     }
 
     private void drag(int mouseX, int mouseY) {
-        if(!this.drag) {
+        if (!this.drag) {
             return;
         }
         this.x = this.oldX + mouseX;
@@ -241,7 +240,7 @@ public class CsgoGuiScreen extends GuiScreen {
     }
 
     private boolean isHovering(int mouseX, int mouseY) {
-        return this.x+40 <= mouseX && mouseX <= this.x+this.width && this.y <= mouseY && mouseY <= this.y+this.height;
+        return this.x + 40 <= mouseX && mouseX <= this.x + this.width && this.y <= mouseY && mouseY <= this.y + this.height;
     }
 
     public static CsgoGuiScreen getInstance() {

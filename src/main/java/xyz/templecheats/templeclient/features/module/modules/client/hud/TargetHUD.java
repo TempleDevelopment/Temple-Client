@@ -8,12 +8,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RayTraceResult;
 import xyz.templecheats.templeclient.features.gui.clickgui.hud.HudEditorScreen;
-import xyz.templecheats.templeclient.features.module.modules.client.*;
-import xyz.templecheats.templeclient.features.module.modules.combat.*;
-import xyz.templecheats.templeclient.util.render.animation.Animation;
-import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
+import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
+import xyz.templecheats.templeclient.features.module.modules.client.HUD;
+import xyz.templecheats.templeclient.features.module.modules.combat.Aura;
+import xyz.templecheats.templeclient.features.module.modules.combat.AutoCrystal;
 import xyz.templecheats.templeclient.util.math.Vec2d;
+import xyz.templecheats.templeclient.util.render.animation.Animation;
 import xyz.templecheats.templeclient.util.render.animation.Easing;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 
 import java.awt.*;
 import java.util.Objects;
@@ -30,6 +32,9 @@ import static xyz.templecheats.templeclient.util.math.MathUtil.round;
 import static xyz.templecheats.templeclient.util.render.RenderUtil.drawHead;
 
 public class TargetHUD extends HUD.HudElement {
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private final Animation animation = new Animation(Easing.InOutCircle, 300);
     private TargetInfo info = TargetInfo.BLANK;
     private double healthProgress = 0.0;

@@ -2,14 +2,15 @@ package xyz.templecheats.templeclient.features.module.modules.movement;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
-
 import org.lwjgl.input.Keyboard;
-
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.movement.speed.sub.Strafe;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 
 public class TunnelSpeed extends Module {
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.Strict);
 
     public TunnelSpeed() {
@@ -50,6 +51,7 @@ public class TunnelSpeed extends Module {
             }
         }
     }
+
     private enum Mode {
         Strict,
         Normal

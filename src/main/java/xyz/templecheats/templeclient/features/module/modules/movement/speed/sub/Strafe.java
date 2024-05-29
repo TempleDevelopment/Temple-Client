@@ -16,10 +16,16 @@ import xyz.templecheats.templeclient.util.world.EntityUtil;
 public class Strafe extends Module {
     public static Strafe INSTANCE;
 
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final DoubleSetting speed = new DoubleSetting("Speed", this, 0, 10, 2.6);
     public BooleanSetting jump = new BooleanSetting("Jump", this, true);
     private final BooleanSetting liquid = new BooleanSetting("Liquid", this, true);
 
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private double moveSpeed = 0;
     private double lastDist = 0;
     private int stage = 4;

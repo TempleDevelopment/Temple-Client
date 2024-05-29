@@ -23,6 +23,9 @@ import static xyz.templecheats.templeclient.util.math.MathUtil.random;
 
 public class HitParticle extends Module {
 
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
     private final EnumSetting<TextureModifiers> textures = new EnumSetting<>("Texture", this, TextureModifiers.Text);
     private final DoubleSetting size = new DoubleSetting("Size", this, 0.1, 5.0, 1.0);
     private final IntSetting amount = new IntSetting("Amount", this, 3, 50, 25);
@@ -33,12 +36,16 @@ public class HitParticle extends Module {
     private final DoubleSetting inertia = new DoubleSetting("Inertia Amount", this, 0.0, 1.0, 0.8);
     private final DoubleSetting gravity = new DoubleSetting("Gravity Amount", this, 0.0, 1.0, 0.8);
 
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private final ArrayList<ParticleTickHandler> hitParticle = new ArrayList<>();
 
     public HitParticle() {
         super("HitParticle", "Spawn particle when entities hurt.", Keyboard.KEY_NONE, Category.Render, true);
         registerSettings(size, amount, maxAmount, duration, speedH, speedV, inertia, gravity, textures);
     }
+
     @Override
     public void onEnable() {
         hitParticle.clear();
@@ -50,7 +57,7 @@ public class HitParticle extends Module {
             return;
         }
         for (int i = 0; i < amount.intValue(); i++) {
-            Vec3d vec = event.getEntity().getPositionVector().add(random(-0.5f , 0.5f) , random(0.5f , event.getEntity().height) , random(-0.5f , 0.5f));
+            Vec3d vec = event.getEntity().getPositionVector().add(random(-0.5f, 0.5f), random(0.5f, event.getEntity().height), random(-0.5f, 0.5f));
 
             Random random = new Random();
 
@@ -58,7 +65,7 @@ public class HitParticle extends Module {
             double motionY = (random.nextDouble() - 0.5) * 0.2 * speedV.doubleValue();
             double motionZ = (random.nextDouble() - 0.5) * 0.2 * speedH.doubleValue();
 
-            Particle particle = new Particle(vec , motionX , motionY , motionZ , gravity.doubleValue() , inertia.doubleValue());
+            Particle particle = new Particle(vec, motionX, motionY, motionZ, gravity.doubleValue(), inertia.doubleValue());
             particle.maxTickLiving = (int) (duration.doubleValue() * 10.0 + random.nextDouble() * 40.0);
 
             hitParticle.add(particle);
@@ -71,7 +78,9 @@ public class HitParticle extends Module {
 
         hitParticle.forEach(ParticleTickHandler::tick);
         hitParticle.removeIf(it -> it.tickLiving > it.maxTickLiving);
-        while (hitParticle.size() > maxAmount.intValue()) {hitParticle.remove(0);}
+        while (hitParticle.size() > maxAmount.intValue()) {
+            hitParticle.remove(0);
+        }
     }
 
     @Override

@@ -5,8 +5,8 @@ import net.minecraft.client.gui.ScaledResolution;
 import xyz.templecheats.templeclient.features.gui.font.TempleIcon;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.features.module.modules.client.HUD;
-import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 import xyz.templecheats.templeclient.util.math.Vec2d;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
 
 import java.awt.*;
 import java.util.Objects;
@@ -30,13 +30,13 @@ public class Server extends HUD.HudElement {
         new RectBuilder(new Vec2d(getX(), getY()), new Vec2d(getX() + getWidth(), getY() + getHeight()))
                 .outlineColor(outlineColor.getColor())
                 .width(outline.booleanValue() ? outlineWidth.doubleValue() : 0)
-                .color(fill.booleanValue() ? color.getColor() : new Color(0,0,0,0))
+                .color(fill.booleanValue() ? color.getColor() : new Color(0, 0, 0, 0))
                 .radius(2.5)
                 .blur(blur.booleanValue() ? blurRadius.doubleValue() : 0)
                 .drawBlur()
                 .draw();
 
-        double iconOffset = (!this.isLeftOfCenter() ? this.getWidth() - icon26.getStringWidth(TempleIcon.SCREEN.getIcon()): -1);
+        double iconOffset = (!this.isLeftOfCenter() ? this.getWidth() - icon26.getStringWidth(TempleIcon.SCREEN.getIcon()) : -1);
         double textOffset = (!this.isLeftOfCenter() ? 1 : 15);
 
         if (HUD.INSTANCE.icon.booleanValue()) {

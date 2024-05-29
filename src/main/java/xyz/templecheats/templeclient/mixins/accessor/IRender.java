@@ -11,5 +11,6 @@ public interface IRender {
     @Accessor("renderOutlines")
     boolean getRenderOutlines();
 
-    @Invoker int callGetTeamColor(Entity entityIn);
+    @Invoker
+    int callGetTeamColor(Entity entityIn);
 }

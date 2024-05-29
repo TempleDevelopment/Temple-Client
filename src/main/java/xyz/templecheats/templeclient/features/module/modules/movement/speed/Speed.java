@@ -8,6 +8,9 @@ public class Speed extends Module {
 
     public Speed() {
         super("Speed", "Speeds up the player", Category.Movement, true);
+        /****************************************************************
+         *                      Sub Module Registration
+         ****************************************************************/
         submodules.add(new Strafe());
         submodules.add(new Bhop());
     }

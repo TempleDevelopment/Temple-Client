@@ -9,8 +9,7 @@ public interface Globals {
     Random random = new Random();
     char SECTIONSIGN = '\u00A7';
 
-    default public boolean nullCheck(){
+    default public boolean nullCheck() {
         return mc.player == null || mc.world == null;
     }
-
 }

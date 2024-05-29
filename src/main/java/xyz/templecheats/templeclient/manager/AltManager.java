@@ -13,12 +13,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AltManager {
+
     private List<String> alts = new ArrayList<>();
     private int selectedAltIndex = -1;
 
     public AltManager() {
         this.alts = TempleClient.configManager.loadAlts();
     }
+
+    /****************************************************************
+     *                      Getters and Setters
+     ****************************************************************/
 
     public List<String> getAlts() {
         return alts;
@@ -32,6 +37,10 @@ public class AltManager {
         this.selectedAltIndex = index;
     }
 
+    /****************************************************************
+     *                      Alt Management
+     ****************************************************************/
+
     public void addAlt(String alt) {
         alts.add(alt);
         TempleClient.configManager.saveAlts(alts);
@@ -44,6 +53,10 @@ public class AltManager {
             this.selectedAltIndex = -1;
         }
     }
+
+    /****************************************************************
+     *                      Alt Login
+     ****************************************************************/
 
     public void loginSelectedAlt() {
         if (selectedAltIndex >= 0) {

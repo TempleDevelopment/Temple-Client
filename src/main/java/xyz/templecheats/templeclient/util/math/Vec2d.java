@@ -1,6 +1,7 @@
 package xyz.templecheats.templeclient.util.math;
 
 import net.minecraft.util.math.Vec2f;
+
 public class Vec2d {
     public final double x;
     public final double y;
@@ -74,4 +75,3 @@ public class Vec2d {
 
     public static final Vec2d ZERO = new Vec2d(0.0, 0.0);
 }
-

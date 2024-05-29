@@ -19,7 +19,7 @@ public class MixinEntity {
     }
 
     @Inject(method = "isEntityInsideOpaqueBlock", at = @At("HEAD"), cancellable = true)
-    public void isEntityInsideOpaqueBlock(CallbackInfoReturnable < Boolean > callback) {
+    public void isEntityInsideOpaqueBlock(CallbackInfoReturnable<Boolean> callback) {
         if (Minecraft.getMinecraft() != null && Minecraft.getMinecraft().player != null) {
             Freecam freecam = ModuleManager.getModule(Freecam.class);
 

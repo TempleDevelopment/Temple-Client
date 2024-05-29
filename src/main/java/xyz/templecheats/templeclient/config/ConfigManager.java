@@ -20,9 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ConfigManager {
-
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-
     private final File mainDirectory;
     private final File configDirectory;
     private final File friendsDirectory;
@@ -30,6 +28,10 @@ public class ConfigManager {
     private final File altsFile;
     private final File defaultConfigFile;
     private final File baseFinderLogDirectory;
+
+    /****************************************************************
+     *                      Constructor
+     ****************************************************************/
 
     public ConfigManager() {
         this.mainDirectory = new File(System.getProperty("user.dir") + File.separator + "Temple Client");
@@ -58,9 +60,17 @@ public class ConfigManager {
         this.altsFile = new File(this.altsDirectory, "alt_accounts.json");
     }
 
+    /****************************************************************
+     *                      Directory Getters
+     ****************************************************************/
+
     public File getConfigDirectory() {
         return configDirectory;
     }
+
+    /****************************************************************
+     *                      Save and Load Methods
+     ****************************************************************/
 
     public void saveAll() {
         this.saveConfig(this.defaultConfigFile);
@@ -177,6 +187,10 @@ public class ConfigManager {
         }
     }
 
+    /****************************************************************
+     *                      Friend Management
+     ****************************************************************/
+
     private void saveFriends() {
         final File friendsFile = new File(this.friendsDirectory, "friends.json");
 
@@ -203,7 +217,8 @@ public class ConfigManager {
         try (FileReader fileReader = new FileReader(friendsFile);
              JsonReader jsonReader = GSON.newJsonReader(fileReader)) {
 
-            final List<String> friendNames = GSON.fromJson(jsonReader, new TypeToken<List<String>>() {}.getType());
+            final List<String> friendNames = GSON.fromJson(jsonReader, new TypeToken<List<String>>() {
+            }.getType());
 
             for (String name : friendNames) {
                 TempleClient.friendManager.addFriend(name);
@@ -214,16 +229,26 @@ public class ConfigManager {
         }
     }
 
+    /****************************************************************
+     *                      Alt Account Management
+     ****************************************************************/
+
     public List<String> loadAlts() {
         if (!altsFile.exists()) return new ArrayList<>();
         try (Reader reader = new FileReader(altsFile)) {
-            return GSON.fromJson(reader, new TypeToken<List<String>>() {}.getType());
+            return GSON.fromJson(reader, new TypeToken<List<String>>() {
+            }.getType());
         } catch (IOException e) {
             e.printStackTrace();
         }
         return new ArrayList<>();
     }
 
+    /**
+     * Saves alt accounts to a file.
+     *
+     * @param alts The list of alt accounts to save.
+     */
     public void saveAlts(List<String> alts) {
         try (Writer writer = new FileWriter(altsFile)) {
             GSON.toJson(alts, writer);
@@ -231,6 +256,10 @@ public class ConfigManager {
             e.printStackTrace();
         }
     }
+
+    /****************************************************************
+     *                      Base Finder Logging
+     ****************************************************************/
 
     public void setupBaseFinderLogging() {
         if (!baseFinderLogDirectory.exists()) {

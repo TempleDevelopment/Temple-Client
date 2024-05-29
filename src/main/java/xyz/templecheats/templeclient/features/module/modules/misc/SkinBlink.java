@@ -7,18 +7,17 @@ import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 
-import java.util.Arrays;
 import java.util.Random;
 
 public class SkinBlink extends Module {
-    /*
-     * Settings
-     */
-    public final EnumSetting < Mode > mode = new EnumSetting < > ("Mode", this, Mode.Horizontal);
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
+    public final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.Horizontal);
 
-    /*
-     * Variables
-     */
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private Random r;
     private int len = EnumPlayerModelParts.values().length;
     private int slowness = 2;
@@ -39,12 +38,12 @@ public class SkinBlink extends Module {
     }
 
     public enum Mode {
-        Horizontal(new EnumPlayerModelParts[] {
+        Horizontal(new EnumPlayerModelParts[]{
                 EnumPlayerModelParts.LEFT_SLEEVE, EnumPlayerModelParts.JACKET,
                 EnumPlayerModelParts.HAT, EnumPlayerModelParts.LEFT_PANTS_LEG, EnumPlayerModelParts.RIGHT_PANTS_LEG,
                 EnumPlayerModelParts.RIGHT_SLEEVE
         }),
-        Vertical(new EnumPlayerModelParts[] {
+        Vertical(new EnumPlayerModelParts[]{
                 EnumPlayerModelParts.HAT, EnumPlayerModelParts.JACKET,
                 EnumPlayerModelParts.LEFT_SLEEVE, EnumPlayerModelParts.RIGHT_SLEEVE,
                 EnumPlayerModelParts.LEFT_PANTS_LEG, EnumPlayerModelParts.RIGHT_PANTS_LEG

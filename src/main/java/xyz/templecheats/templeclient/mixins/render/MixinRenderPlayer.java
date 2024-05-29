@@ -17,7 +17,7 @@ public class MixinRenderPlayer implements Globals {
     private float renderPitch, renderYaw, renderHeadYaw, prevRenderHeadYaw, prevRenderPitch, prevRenderYawOffset, prevPrevRenderYawOffset;
 
     @Inject(method = "doRender", at = @At("HEAD"))
-    private void doRenderPre(AbstractClientPlayer entity , double x , double y , double z , float entityYaw , float partialTicks , CallbackInfo info) {
+    private void doRenderPre(AbstractClientPlayer entity, double x, double y, double z, float entityYaw, float partialTicks, CallbackInfo info) {
         if (mc.player.equals(entity)) {
             prevRenderHeadYaw = entity.prevRotationYawHead;
             prevRenderPitch = entity.prevRotationPitch;
@@ -44,7 +44,7 @@ public class MixinRenderPlayer implements Globals {
     }
 
     @Inject(method = "doRender", at = @At("RETURN"))
-    private void doRenderPost(AbstractClientPlayer entity , double x , double y , double z , float entityYaw , float partialTicks , CallbackInfo info) {
+    private void doRenderPost(AbstractClientPlayer entity, double x, double y, double z, float entityYaw, float partialTicks, CallbackInfo info) {
         if (mc.player.equals(entity)) {
             entity.rotationPitch = renderPitch;
             entity.rotationYaw = renderYaw;

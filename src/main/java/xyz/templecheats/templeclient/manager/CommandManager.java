@@ -5,17 +5,25 @@ import xyz.templecheats.templeclient.features.command.commands.*;
 
 import java.util.HashMap;
 import java.util.Map;
-
 public class CommandManager {
+
+    private final Map<String, Command> commands = new HashMap<>();
+
     public CommandManager() {
         commandInit();
     }
 
-    private final Map < String, Command > commands = new HashMap < > ();
+    /****************************************************************
+     *                      Command Registration
+     ****************************************************************/
 
     public void registerCommand(Command command) {
         commands.put(command.getName(), command);
     }
+
+    /****************************************************************
+     *                      Command Execution
+     ****************************************************************/
 
     public boolean executeCommand(String message) {
         String[] parts = message.split(" ");
@@ -26,6 +34,10 @@ public class CommandManager {
         }
         return false;
     }
+
+    /****************************************************************
+     *                      Command Initialization
+     ****************************************************************/
 
     public void commandInit() {
         registerCommand(new BindCommand());

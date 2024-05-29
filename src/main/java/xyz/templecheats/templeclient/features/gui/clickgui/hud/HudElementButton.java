@@ -9,10 +9,10 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import xyz.templecheats.templeclient.TempleClient;
-import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.buttons.Button;
 import xyz.templecheats.templeclient.features.gui.clickgui.basic.ClientGuiScreen;
-import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.Item;
 import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.Panel;
+import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.Item;
+import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.buttons.Button;
 import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.buttons.ColorButton;
 import xyz.templecheats.templeclient.features.module.modules.client.ClickGUI;
 import xyz.templecheats.templeclient.features.module.modules.client.HUD;
@@ -30,7 +30,7 @@ public class HudElementButton extends Button {
      * Variables
      */
     private final HUD.HudElement element;
-    private final List < Item > items = new ArrayList < > ();
+    private final List<Item> items = new ArrayList<>();
     private boolean subOpen;
     private long timeHovering;
     private double dragX;
@@ -74,7 +74,7 @@ public class HudElementButton extends Button {
 
             if (this.subOpen) {
                 float height = 1.0f;
-                for (Item item: items) {
+                for (Item item : items) {
                     item.setLocation(this.x + 1.0f, this.y + (height += 15.0f));
                     item.setHeight(15);
                     item.setWidth(this.width - 9);
@@ -138,7 +138,7 @@ public class HudElementButton extends Button {
                 Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             }
             if (this.subOpen) {
-                for (Item item: items) {
+                for (Item item : items) {
                     item.mouseClicked(mouseX, mouseY, mouseButton);
                 }
             }
@@ -155,7 +155,7 @@ public class HudElementButton extends Button {
     public void mouseReleased(int mouseX, int mouseY, int releaseButton) {
         super.mouseReleased(mouseX, mouseY, releaseButton);
         if (!items.isEmpty() && subOpen) {
-            for (Item item: items) {
+            for (Item item : items) {
                 item.mouseReleased(mouseX, mouseY, releaseButton);
             }
         }
@@ -169,7 +169,7 @@ public class HudElementButton extends Button {
     public void keyTyped(char typedChar, int keyCode) throws IOException {
         super.keyTyped(typedChar, keyCode);
         if (!items.isEmpty() && subOpen) {
-            for (Item item: items) {
+            for (Item item : items) {
                 item.keyTyped(typedChar, keyCode);
             }
         }
@@ -179,7 +179,7 @@ public class HudElementButton extends Button {
     public int getHeight() {
         if (this.subOpen) {
             int height = 14;
-            for (Item item: items) {
+            for (Item item : items) {
                 height += item.getHeight() + 1;
 
                 if (item instanceof ColorButton && ((ColorButton) item).getExtended()) {
@@ -207,11 +207,11 @@ public class HudElementButton extends Button {
     }
 
     private boolean isHoveringOnElement(int mouseX, int mouseY) {
-        for (Panel panel: this.getClientScreen().getPanels()) {
+        for (Panel panel : this.getClientScreen().getPanels()) {
             if (!panel.drag) continue;
             return false;
         }
-        for (HUD.HudElement element: HUD.INSTANCE.getHudElements()) {
+        for (HUD.HudElement element : HUD.INSTANCE.getHudElements()) {
             if (!element.isDragging()) continue;
             return false;
         }

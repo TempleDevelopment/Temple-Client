@@ -13,9 +13,11 @@ import xyz.templecheats.templeclient.util.Globals;
 import xyz.templecheats.templeclient.util.rotation.RotationUtil;
 
 public class RotationManager implements Globals {
-    /*
-     * Variable
-     */
+
+    /****************************************************************
+     *                  Rotation State Variables
+     ****************************************************************/
+
     private final RotationUtil serverRotation = new RotationUtil(Float.NaN, Float.NaN);
     private RotationUtil rotation = new RotationUtil(Float.NaN, Float.NaN);
     private long stay = 0;
@@ -23,6 +25,10 @@ public class RotationManager implements Globals {
     {
         MinecraftForge.EVENT_BUS.register(this);
     }
+
+    /****************************************************************
+     *                  Event Handlers
+     ****************************************************************/
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
@@ -66,7 +72,11 @@ public class RotationManager implements Globals {
         }
     }
 
-    public void setRotation(RotationUtil in ) {
+    /****************************************************************
+     *                  Rotation Management Methods
+     ****************************************************************/
+
+    public void setRotation(RotationUtil in) {
         rotation = in;
         stay = System.currentTimeMillis();
     }

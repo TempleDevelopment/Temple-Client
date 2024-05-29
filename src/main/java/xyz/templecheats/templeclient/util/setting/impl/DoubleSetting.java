@@ -7,9 +7,14 @@ import xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.items.bu
 import xyz.templecheats.templeclient.util.setting.Setting;
 import xyz.templecheats.templeclient.util.setting.SettingHolder;
 
-public class DoubleSetting extends Setting < Double > {
+public class DoubleSetting extends Setting<Double> {
+
     public final double min, max;
     private double value;
+
+    /****************************************************************
+     *                  Constructor
+     ****************************************************************/
 
     public DoubleSetting(String name, SettingHolder parent, double min, double max, double defaultValue) {
         super(name, parent);
@@ -17,6 +22,10 @@ public class DoubleSetting extends Setting < Double > {
         this.max = max;
         this.value = defaultValue;
     }
+
+    /****************************************************************
+     *                  Public Methods
+     ****************************************************************/
 
     public double doubleValue() {
         return this.value;
@@ -62,7 +71,8 @@ public class DoubleSetting extends Setting < Double > {
     }
 
     @Override
-    public xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.Item createCsgoButton(xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.Button parent) {
+    public xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.Item createCsgoButton(
+            xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.Button parent) {
         return new xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items.buttons.slider.DoubleSlider(this, parent);
     }
 }

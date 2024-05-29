@@ -16,62 +16,63 @@ import xyz.templecheats.templeclient.features.module.Module;
 import static xyz.templecheats.templeclient.util.sound.SoundUtils.playSound;
 
 public class Hitmarker extends Module {
-	/*
-	 * Variables
-	 */
-	private static final ResourceLocation hitmarkerTexture = new ResourceLocation("textures/icons/hitmarker.png");
-	private int hitmarkerDuration = 0;
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
+    private static final ResourceLocation hitmarkerTexture = new ResourceLocation("textures/icons/hitmarker.png");
+    private int hitmarkerDuration = 0;
 
-	public Hitmarker() {
-		super("Hitmarker", "Hitmarkers from Call of Duty", Keyboard.KEY_NONE, Category.Render);
-	}
+    public Hitmarker() {
+        super("Hitmarker", "Hitmarkers from Call of Duty", Keyboard.KEY_NONE, Category.Render);
+    }
 
-	@SubscribeEvent
-	public void onAttackEntity(AttackEntityEvent event) {
-		if (event.getEntityPlayer().equals(mc.player)) {
-			this.hitmarkerDuration = 5;
-			playSound(mc.player, "hitmarker", 1f, 1f);
+    @SubscribeEvent
+    public void onAttackEntity(AttackEntityEvent event) {
+        if (event.getEntityPlayer().equals(mc.player)) {
+            this.hitmarkerDuration = 5;
+            playSound(mc.player, "hitmarker", 1f, 1f);
         }
-	}
+    }
 
-	@SubscribeEvent
-	public void renderGameOverlay(RenderGameOverlayEvent.Post event) {
-		if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) {
-			return;
-		}
+    @SubscribeEvent
+    public void renderGameOverlay(RenderGameOverlayEvent.Post event) {
+        if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) {
+            return;
+        }
 
-		if (this.hitmarkerDuration--> 0) {
-			ScaledResolution scaledResolution = new ScaledResolution(mc);
-			int centerX = scaledResolution.getScaledWidth() / 2;
-			int centerY = scaledResolution.getScaledHeight() / 2;
-			int size = 16;
+        if (this.hitmarkerDuration-- > 0) {
+            ScaledResolution scaledResolution = new ScaledResolution(mc);
+            int centerX = scaledResolution.getScaledWidth() / 2;
+            int centerY = scaledResolution.getScaledHeight() / 2;
+            int size = 16;
 
-			GL11.glEnable(3042);
-			GL11.glBlendFunc(770, 771);
-			GL11.glPushMatrix();
-			mc.getTextureManager().bindTexture(hitmarkerTexture);
-			this.drawModalRectWithCustomSizedTexture(centerX - 7.5, centerY - 7.5, 0, 0, size, size, size, size);
-			GL11.glPopMatrix();
-			GL11.glDisable(3042);
-			GL11.glDepthFunc(515);
-			mc.getTextureManager().bindTexture(Gui.ICONS);
-		}
-	}
+            GL11.glEnable(3042);
+            GL11.glBlendFunc(770, 771);
+            GL11.glPushMatrix();
+            mc.getTextureManager().bindTexture(hitmarkerTexture);
+            this.drawModalRectWithCustomSizedTexture(centerX - 7.5, centerY - 7.5, 0, 0, size, size, size, size);
+            GL11.glPopMatrix();
+            GL11.glDisable(3042);
+            GL11.glDepthFunc(515);
+            mc.getTextureManager().bindTexture(Gui.ICONS);
+        }
+    }
 
-	@Override
-	public void onDisable() {
-		this.hitmarkerDuration = 0;
-	}
-	private void drawModalRectWithCustomSizedTexture(double x, double y, float u, float v, int width, int height, float textureWidth, float textureHeight) {
-		float f = 1.0F / textureWidth;
-		float f1 = 1.0F / textureHeight;
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder bufferbuilder = tessellator.getBuffer();
-		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-		bufferbuilder.pos(x, (y + height), 0.0D).tex((u * f), ((v + (float) height) * f1)).endVertex();
-		bufferbuilder.pos((x + width), (y + height), 0.0D).tex(((u + (float) width) * f), ((v + (float) height) * f1)).endVertex();
-		bufferbuilder.pos((x + width), y, 0.0D).tex(((u + (float) width) * f), (v * f1)).endVertex();
-		bufferbuilder.pos(x, y, 0.0D).tex((u * f), (v * f1)).endVertex();
-		tessellator.draw();
-	}
+    @Override
+    public void onDisable() {
+        this.hitmarkerDuration = 0;
+    }
+
+    private void drawModalRectWithCustomSizedTexture(double x, double y, float u, float v, int width, int height, float textureWidth, float textureHeight) {
+        float f = 1.0F / textureWidth;
+        float f1 = 1.0F / textureHeight;
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+        bufferbuilder.pos(x, (y + height), 0.0D).tex((u * f), ((v + (float) height) * f1)).endVertex();
+        bufferbuilder.pos((x + width), (y + height), 0.0D).tex(((u + (float) width) * f), ((v + (float) height) * f1)).endVertex();
+        bufferbuilder.pos((x + width), y, 0.0D).tex(((u + (float) width) * f), (v * f1)).endVertex();
+        bufferbuilder.pos(x, y, 0.0D).tex((u * f), (v * f1)).endVertex();
+        tessellator.draw();
+    }
 }

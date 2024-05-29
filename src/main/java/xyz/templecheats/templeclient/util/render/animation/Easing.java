@@ -8,6 +8,7 @@ import java.util.function.DoubleUnaryOperator;
 import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
 import static java.lang.StrictMath.pow;
+
 public enum Easing {
     Linear(x -> x),
     InSine(x -> 1 - Math.cos((x * Math.PI) / 2)),

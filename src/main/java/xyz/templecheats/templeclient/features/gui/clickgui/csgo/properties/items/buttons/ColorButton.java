@@ -8,11 +8,11 @@ import xyz.templecheats.templeclient.features.gui.clickgui.csgo.properties.items
 import xyz.templecheats.templeclient.features.module.modules.client.hud.notification.NotificationType;
 import xyz.templecheats.templeclient.features.module.modules.client.hud.notification.Notifications;
 import xyz.templecheats.templeclient.util.color.ColorUtil;
-import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
-import xyz.templecheats.templeclient.util.render.shader.impl.RoundedTexture;
 import xyz.templecheats.templeclient.util.math.Vec2d;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.render.StencilUtil;
+import xyz.templecheats.templeclient.util.render.shader.impl.RectBuilder;
+import xyz.templecheats.templeclient.util.render.shader.impl.RoundedTexture;
 import xyz.templecheats.templeclient.util.setting.impl.ColorSetting;
 
 import java.awt.*;
@@ -77,20 +77,19 @@ public class ColorButton extends Item {
                     Color.RGBtoHSB(setting.getColor().getRed(), setting.getColor().getGreen(), setting.getColor().getBlue(), null)[1],
                     Color.RGBtoHSB(setting.getColor().getRed(), setting.getColor().getGreen(), setting.getColor().getBlue(), null)[2]
             };
-        }
-        catch (Exception exception) {
-            Notifications.addMessage("Picker",  "Invalid color!", NotificationType.INFO);
+        } catch (Exception exception) {
+            Notifications.addMessage("Picker", "Invalid color!", NotificationType.INFO);
         }
         if (this.draggingRGBSlider) {
             position = Math.min(Math.max(pickerPosX, mouseX), pickerPosX + getWidth());
-            color[0] = (position - pickerPosX) / (float)getWidth();
+            color[0] = (position - pickerPosX) / (float) getWidth();
         } else if (this.draggingAlphaSlider) {
             position = ColorUtil.getAlphaFromPosition((int) (mouseX - pickerPosX), getWidth());
-            setting.setAlpha((int)position);
+            setting.setAlpha((int) position);
         } else if (this.draggingPickerBase) {
             position = Math.min(Math.max(pickerPosX, mouseX), pickerPosX + getWidth());
             float restrictedY = Math.min(Math.max(pickerPosY, mouseY), pickerPosY + 54f);
-            color[1] = (position - pickerPosX) / (float)getWidth();
+            color[1] = (position - pickerPosX) / (float) getWidth();
             color[2] = 1.0f - (restrictedY - pickerPosY) / 54f;
         }
         finalColor = getColor(new Color(Color.HSBtoRGB(color[0], color[1], color[2])), setting.getColor().getAlpha() / 255.f);
@@ -150,7 +149,7 @@ public class ColorButton extends Item {
 
     private void drawColorPickerRect(float left, float top, float right, float bottom, Color color) {
         new RectBuilder(new Vec2d(left, top), new Vec2d(right, bottom)).outlineColor(Color.BLACK).width(0.8).colorH(Color.WHITE, color).radius(1.5).draw();
-        new RectBuilder(new Vec2d(left, top), new Vec2d(right, bottom)).outlineColor(Color.BLACK).width(0.8).colorV(new Color(0,0,0,0), Color.BLACK).radius(1.5).draw();
+        new RectBuilder(new Vec2d(left, top), new Vec2d(right, bottom)).outlineColor(Color.BLACK).width(0.8).colorV(new Color(0, 0, 0, 0), Color.BLACK).radius(1.5).draw();
     }
 
     @Override
@@ -186,7 +185,7 @@ public class ColorButton extends Item {
         StringSelection selection = new StringSelection(hex);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(selection, selection);
-        Notifications.addMessage("Picker",  "Copied the color to your clipboard.", NotificationType.INFO);
+        Notifications.addMessage("Picker", "Copied the color to your clipboard.", NotificationType.INFO);
     }
 
     private void handlePasteAction() {
@@ -198,12 +197,12 @@ public class ColorButton extends Item {
                 } else {
                     handleRGBPaste(clipboardContent);
                 }
-                Notifications.addMessage("Picker",  "Color Pasted: " + clipboardContent + "!", NotificationType.INFO);
+                Notifications.addMessage("Picker", "Color Pasted: " + clipboardContent + "!", NotificationType.INFO);
             } else {
-                Notifications.addMessage("Picker",  "Invalid Color!", NotificationType.INFO);
+                Notifications.addMessage("Picker", "Invalid Color!", NotificationType.INFO);
             }
         } catch (NumberFormatException e) {
-            Notifications.addMessage("Picker",  "Invalid color format! Use Hex (#FFFFFFFF) or RGB (255,255,255)", NotificationType.INFO);
+            Notifications.addMessage("Picker", "Invalid color format! Use Hex (#FFFFFFFF) or RGB (255,255,255)", NotificationType.INFO);
         }
     }
 
@@ -221,7 +220,7 @@ public class ColorButton extends Item {
         if (color.length >= 3) {
             setting.setColor(new Color(Integer.parseInt(color[0]), Integer.parseInt(color[1]), Integer.parseInt(color[2])));
         } else {
-            Notifications.addMessage("Picker",  "Invalid RGB format!", NotificationType.INFO);
+            Notifications.addMessage("Picker", "Invalid RGB format!", NotificationType.INFO);
         }
     }
 
@@ -238,7 +237,7 @@ public class ColorButton extends Item {
         float pickerPosX = x;
         float pickerPosY = y + 15;
         return mouseX >= pickerPosX + getWidth() - 3 - font14.getStringWidth("paste") &&
-                mouseX <= (pickerPosX + getWidth() - font14.getStringWidth("paste")) + font14.getStringWidth("paste")&&
+                mouseX <= (pickerPosX + getWidth() - font14.getStringWidth("paste")) + font14.getStringWidth("paste") &&
                 mouseY >= pickerPosY + 82 &&
                 mouseY <= pickerPosY + 84 + font14.getFontHeight();
     }
@@ -276,9 +275,8 @@ public class ColorButton extends Item {
 
     public static String readClipboard() {
         try {
-            return (String)Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
-        }
-        catch (UnsupportedFlavorException | IOException exception) {
+            return (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+        } catch (UnsupportedFlavorException | IOException exception) {
             return null;
         }
     }

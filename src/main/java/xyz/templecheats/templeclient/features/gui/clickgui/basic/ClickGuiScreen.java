@@ -51,12 +51,12 @@ public class ClickGuiScreen extends ClientGuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         if (ClickGUI.INSTANCE.blur.booleanValue()) {
-            if(mc.currentScreen instanceof ClickGuiScreen || open) {
+            if (mc.currentScreen instanceof ClickGuiScreen || open) {
                 animation.progress(getScale());
             }
             float progress = (float) animation.getProgress();
-            float radius = coerceIn(ClickGUI.INSTANCE.radius.floatValue() * progress, (float) ClickGUI.INSTANCE.radius.min , (float) ClickGUI.INSTANCE.radius.max);
-            float compression = coerceIn(ClickGUI.INSTANCE.compression.floatValue() * progress, (float) ClickGUI.INSTANCE.compression.min , (float) ClickGUI.INSTANCE.compression.max);
+            float radius = coerceIn(ClickGUI.INSTANCE.radius.floatValue() * progress, (float) ClickGUI.INSTANCE.radius.min, (float) ClickGUI.INSTANCE.radius.max);
+            float compression = coerceIn(ClickGUI.INSTANCE.compression.floatValue() * progress, (float) ClickGUI.INSTANCE.compression.min, (float) ClickGUI.INSTANCE.compression.max);
 
             GaussianBlur.startBlur();
             this.drawDefaultBackground();

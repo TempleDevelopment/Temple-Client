@@ -17,10 +17,13 @@ import java.util.Random;
 
 import static java.lang.Math.min;
 import static xyz.templecheats.templeclient.util.color.ColorUtil.setAlpha;
-import static xyz.templecheats.templeclient.util.math.MathUtil.*;
+import static xyz.templecheats.templeclient.util.math.MathUtil.random;
 import static xyz.templecheats.templeclient.util.world.BlockUtil.air;
 
 public class FireFlies extends Module {
+    /****************************************************************
+     *                      Settings
+     ****************************************************************/
 
     private final EnumSetting<TextureModifiers> textures = new EnumSetting<>("Texture", this, TextureModifiers.Text);
     private final DoubleSetting size = new DoubleSetting("Size", this, 0.1, 5.0, 1.0);
@@ -32,6 +35,9 @@ public class FireFlies extends Module {
     private final DoubleSetting inertia = new DoubleSetting("Inertia Amount", this, 0.0, 1.0, 0.8);
     private final DoubleSetting gravity = new DoubleSetting("Gravity Amount", this, 0.0, 1.0, 0.8);
 
+    /****************************************************************
+     *                      Variables
+     ****************************************************************/
     private final ArrayList<ParticleTickHandler> fireFiles = new ArrayList<>();
 
     public FireFlies() {
@@ -46,7 +52,7 @@ public class FireFlies extends Module {
 
     @Override
     public void onUpdate() {
-        if(mc.player == null || mc.world == null) {
+        if (mc.player == null || mc.world == null) {
             return;
         }
 
@@ -74,7 +80,9 @@ public class FireFlies extends Module {
 
             fireFiles.add(fireFly);
         }
-        while (fireFiles.size() > maxAmount.intValue()) { fireFiles.remove(0); }
+        while (fireFiles.size() > maxAmount.intValue()) {
+            fireFiles.remove(0);
+        }
     }
 
     @Override
@@ -94,7 +102,7 @@ public class FireFlies extends Module {
 
         @Override
         public boolean tick() {
-            if ( mc.player.getDistanceSq(pos.x, pos.y, pos.z) == 100 ) {
+            if (mc.player.getDistanceSq(pos.x, pos.y, pos.z) == 100) {
                 tickLiving -= 4;
             } else {
                 tickLiving -= !air(new BlockPos(pos.x, pos.y, pos.z)) ? 8 : 1;
