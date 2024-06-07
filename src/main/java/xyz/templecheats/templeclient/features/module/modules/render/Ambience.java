@@ -7,6 +7,7 @@ import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.client.Colors;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
+import xyz.templecheats.templeclient.util.setting.impl.ColorSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 
@@ -20,12 +21,13 @@ public class Ambience extends Module {
 
     // LightMap
     public final BooleanSetting LightMapState = new BooleanSetting("LightMapState", this, false);
+    public final ColorSetting lightMapColor = new ColorSetting("LightMap Color", this, Color.WHITE);
 
     // Fog
     private final BooleanSetting fogState = new BooleanSetting("FogColorState", this, false);
+    public final ColorSetting fogColor = new ColorSetting("Fog Color", this, Color.WHITE);
 
     // Time
-    // TODO: Change to better name
     private final BooleanSetting timeState = new BooleanSetting("TimeState", this, false);
     private final EnumSetting<Time> time = new EnumSetting<>("Time", timeState.parent, Time.Midnight);
     private final DoubleSetting timeCustom = new DoubleSetting("TimeCustom", timeState.parent, 4.0, 24000.0, 600.0);
@@ -41,7 +43,7 @@ public class Ambience extends Module {
         super("Ambience", "Modify game environment", Keyboard.KEY_NONE, Category.Render);
         INSTANCE = this;
         registerSettings(
-                fogState, LightMapState, timeState, speedUp, speed, timeCustom, time
+                fogState, LightMapState, timeState, speedUp, speed, timeCustom, lightMapColor, fogColor, time
         );
     }
 
@@ -87,11 +89,19 @@ public class Ambience extends Module {
     @SubscribeEvent
     public void fogColor(EntityViewRenderEvent.FogColors event) {
         if (fogState.booleanValue()) {
-            Color fogColor = Colors.INSTANCE.getFogColor();
-            event.setRed(fogColor.getRed() / 255F);
-            event.setGreen(fogColor.getGreen() / 255F);
-            event.setBlue(fogColor.getBlue() / 255F);
+            Color fog = fogColor.getColor();
+            event.setRed(fog.getRed() / 255F);
+            event.setGreen(fog.getGreen() / 255F);
+            event.setBlue(fog.getBlue() / 255F);
         }
+    }
+
+    public Color getFogColor() {
+        return this.fogColor.getColor();
+    }
+
+    public Color getLightMapColor() {
+        return this.lightMapColor.getColor();
     }
 
     enum Time {

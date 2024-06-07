@@ -3,11 +3,11 @@
   "package": "xyz.templecheats.templeclient.mixins",
   "refmap": "refmap.templeclient.json",
   "mixins": [
-    "accessor.IMixinMinecraft",
     "accessor.ICPacketCloseWindow",
     "accessor.ICPacketPlayer",
     "accessor.ICPacketUseEntity",
     "accessor.IMixinCPacketPlayer",
+    "accessor.IMixinMinecraft",
     "accessor.IMixinSPacketEntityVelocity",
     "accessor.IMixinSPacketExplosion",
     "block.MixinBlock",
@@ -16,6 +16,7 @@
     "entity.MixinEntity",
     "entity.MixinEntityLivingBase",
     "entity.MixinEntityPlayer",
+    "gui.MixinSplashScreen",
     "network.MixinNetworkManager"
   ],
   "client": [
@@ -30,6 +31,8 @@
     "gui.MixinGuiChat",
     "gui.MixinGuiScreen",
     "gui.MixinPotionOverlay",
+    "gui.MixinSplashProgress",
+    "gui.MixinSplashScreen",
     "player.MixinAbstractClientPlayer",
     "player.MixinPlayerControllerMP",
     "render.MixinChunkRenderContainer",

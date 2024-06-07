@@ -24,7 +24,7 @@ public class Colors extends Module {
         super("Colors", "Configure various color settings", Keyboard.KEY_NONE, Category.Client);
         INSTANCE = this;
         setToggled(true);
-        this.registerSettings(staticColor, friendColor, gradientColor1, gradientColor2, fogColor, lightMapColor, step, speed);
+        this.registerSettings(staticColor, friendColor, gradientColor1, gradientColor2, step, speed);
     }
 
     /****************************************************************
@@ -32,12 +32,10 @@ public class Colors extends Module {
      ****************************************************************/
     public final DoubleSetting step = new DoubleSetting("Step", this, 0.1, 5, 0.5);
     public final DoubleSetting speed = new DoubleSetting("Speed", this, 0, 5, 1);
-    public final ColorSetting staticColor = new ColorSetting("Static", this, Color.CYAN);
+    public final ColorSetting staticColor = new ColorSetting("Global", this, Color.RED);
     public final ColorSetting friendColor = new ColorSetting("Friend", this, Color.GREEN);
     public ColorSetting gradientColor1 = new ColorSetting("Gradient 1", this, Color.BLUE);
     public ColorSetting gradientColor2 = new ColorSetting("Gradient 2", this, Color.CYAN);
-    public final ColorSetting fogColor = new ColorSetting("Fog", this, Color.RED);
-    public final ColorSetting lightMapColor = new ColorSetting("LightMap", this, Color.RED);
     public final EnumSetting<Mode> theme = new EnumSetting<>("Mode", this, Mode.Gradient);
 
     public Color getColor() {
@@ -74,14 +72,6 @@ public class Colors extends Module {
         if (!(Block.rendering && Shader.rendering && PopChams.rendering && AutoCrystal.rendering)) {
             RenderUtil.bindBlank();
         }
-    }
-
-    public Color getFogColor() {
-        return this.fogColor.getColor();
-    }
-
-    public Color getLightMapColor() {
-        return this.lightMapColor.getColor();
     }
 
     public Color getFriendColor() {

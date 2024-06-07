@@ -6,6 +6,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.features.gui.clickgui.basic.ClickGuiScreen;
 import xyz.templecheats.templeclient.features.gui.clickgui.basic.ClientGuiScreen;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static xyz.templecheats.templeclient.features.gui.clickgui.basic.panels.Panel.calculateRotation;
+import static xyz.templecheats.templeclient.features.gui.font.Fonts.font14;
 import static xyz.templecheats.templeclient.features.gui.font.Fonts.font18;
 
 public class ModuleButton extends Button implements IContainer {
@@ -29,11 +31,19 @@ public class ModuleButton extends Button implements IContainer {
     private boolean open;
     private long timeHovering;
     private int progress;
+    private String bindLabel;
 
     public ModuleButton(Module module) {
         super(module.getName());
         this.module = module;
         this.progress = 0;
+
+        int keyCode = module.getKey();
+        if (keyCode == 0) {
+            this.bindLabel = "";
+        } else {
+            this.bindLabel = " [" + Keyboard.getKeyName(keyCode) + "]";
+        }
 
         final List<Setting<?>> settings = TempleClient.settingsManager.getSettingsByMod(module);
         if (!module.parent) {
@@ -52,6 +62,16 @@ public class ModuleButton extends Button implements IContainer {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
+
+        String displayText = this.module.getName();
+        if (ClickGUI.INSTANCE.showKey.booleanValue() && !this.bindLabel.isEmpty()) {
+            font18.drawString(displayText, this.x + 2.0F, this.y + 4.0F, -1, false);
+            float keyBindY = this.y + 4.0F + (font18.getFontHeight() - font14.getFontHeight()) / 2.0F;
+            font14.drawString(this.bindLabel, this.x + 2.0F + font18.getStringWidth(displayText), keyBindY, -1, false);
+        } else {
+            font18.drawString(displayText, this.x + 2.0F, this.y + 4.0F, -1, false);
+        }
+
         if (!this.items.isEmpty()) {
             if (module.submodule) {
                 font18.drawString(!this.open ? "+" : "-", this.x - 1.0f + (float) getWidth() - 8.0f, this.y + 4.0f, -1, false);
@@ -89,20 +109,22 @@ public class ModuleButton extends Button implements IContainer {
         }
     }
 
+
     @Override
     public void drawScreenPost(int mouseX, int mouseY) {
-        if (this.isHovering(mouseX, mouseY)) {
+        if (ClickGUI.INSTANCE.description.booleanValue() && this.isHovering(mouseX, mouseY)) {
             final String description = module.getDescription();
             final float startX = mouseX + 7;
             final float startY = mouseY + 7;
             final float width = (float) font18.getStringWidth(description);
             final float height = (float) font18.getFontHeight();
-            int color = ClickGUI.INSTANCE.getEndColor().getRGB();
+            int color = ClickGUI.INSTANCE.getStartColor().getRGB();
             RenderUtil.drawOutlineRect(startX - 1, startY - 1, startX + width, startY + height, color);
             RenderUtil.drawRect(startX - 1, startY - 1, startX + width, startY + height, 0x88000000);
             font18.drawString(description, startX, startY, -1, false);
         }
     }
+
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
@@ -186,4 +208,3 @@ public class ModuleButton extends Button implements IContainer {
         this.items = items;
     }
 }
-

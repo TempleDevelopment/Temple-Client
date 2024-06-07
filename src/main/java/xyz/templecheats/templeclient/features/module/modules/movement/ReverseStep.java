@@ -11,6 +11,7 @@ import org.lwjgl.input.Keyboard;
 import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
 import xyz.templecheats.templeclient.event.events.network.PacketEvent;
 import xyz.templecheats.templeclient.features.module.Module;
+import xyz.templecheats.templeclient.features.module.modules.render.Freecam;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 import xyz.templecheats.templeclient.util.time.TimerUtil;
 
@@ -54,6 +55,9 @@ public class ReverseStep extends Module {
 
     @Override
     public void onUpdate() {
+        if (Freecam.isFreecamActive()) {
+            return;
+        }
         if (this.height.intValue() > 0 && this.traceDown() > this.height.intValue() ||
                 environmentCheck() ||
                 !flagTime.passedMs(1000) ||

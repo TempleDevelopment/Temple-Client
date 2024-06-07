@@ -15,7 +15,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import xyz.templecheats.templeclient.features.module.modules.combat.AutoCrystal;
 import xyz.templecheats.templeclient.manager.InventoryManager;
+import xyz.templecheats.templeclient.manager.ModuleManager;
 import xyz.templecheats.templeclient.util.world.BlockUtil;
 
 import java.lang.reflect.Field;
@@ -82,10 +84,21 @@ public class PlacementUtil {
             BlockUtil.faceVectorPacketInstant(hitVec, true);
         }
 
+        boolean stoppedAC = false;
+
+        if (ModuleManager.getModule(AutoCrystal.class).isEnabled()) {
+            AutoCrystal.stopAC = true;
+            stoppedAC = true;
+        }
+
         EnumActionResult action = playerController.processRightClickBlock(player, world, neighbour, opposite, hitVec, hand);
         if (!checkAction || action == EnumActionResult.SUCCESS) {
             player.swingArm(hand);
             setRightClickDelayTimer(4);
+        }
+
+        if (stoppedAC) {
+            AutoCrystal.stopAC = false;
         }
 
         return action == EnumActionResult.SUCCESS;

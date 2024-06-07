@@ -13,6 +13,7 @@ import xyz.templecheats.templeclient.event.EventStageable;
 import xyz.templecheats.templeclient.event.events.network.PacketEvent;
 import xyz.templecheats.templeclient.event.events.player.MotionEvent;
 import xyz.templecheats.templeclient.features.module.Module;
+import xyz.templecheats.templeclient.features.module.modules.render.Freecam;
 import xyz.templecheats.templeclient.util.math.MathUtil;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
@@ -57,6 +58,9 @@ public class Flight extends Module {
 
     @Listener
     public void onWalkingUpdate(MotionEvent event) {
+        if (Freecam.isFreecamActive()) {
+            return;
+        }
         if (event.getStage() == EventStageable.EventStage.PRE) {
             final Minecraft mc = Minecraft.getMinecraft();
 

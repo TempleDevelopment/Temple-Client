@@ -26,8 +26,6 @@ public class DeathCoordsCommand extends Command {
 
     @Override
     public void execute(String[] args) {
-        Minecraft mc = Minecraft.getMinecraft();
-
         if (lastDeathCoords == null) {
             sendMessage("No death coordinates recorded yet.", true);
         } else {
@@ -49,11 +47,9 @@ public class DeathCoordsCommand extends Command {
 
     @SubscribeEvent
     public void onPlayerDeath(LivingDeathEvent event) {
-        if (!event.getEntityLiving().world.isRemote) {
-            if (event.getEntityLiving() instanceof EntityPlayer && event.getEntityLiving() == Minecraft.getMinecraft().player) {
-                lastDeathCoords = event.getEntityLiving().getPosition();
-                sendMessage("Death coordinates logged.", false);
-            }
+        if (event.getEntityLiving() instanceof EntityPlayer && event.getEntityLiving() == Minecraft.getMinecraft().player) {
+            lastDeathCoords = event.getEntityLiving().getPosition();
+            sendMessage("Death coordinates logged.", false);
         }
     }
 }

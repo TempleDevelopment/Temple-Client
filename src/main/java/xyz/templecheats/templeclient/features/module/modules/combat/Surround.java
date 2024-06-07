@@ -1,10 +1,8 @@
 package xyz.templecheats.templeclient.features.module.modules.combat;
 
-import net.minecraft.block.BlockObsidian;
 import net.minecraft.block.BlockWeb;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.network.play.client.CPacketHeldItemChange;
 import net.minecraft.util.EnumHand;
@@ -14,6 +12,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import xyz.templecheats.templeclient.features.module.Module;
+import xyz.templecheats.templeclient.features.module.modules.render.Freecam;
 import xyz.templecheats.templeclient.manager.InventoryManager;
 import xyz.templecheats.templeclient.util.misc.Offsets;
 import xyz.templecheats.templeclient.util.player.PlacementUtil;
@@ -33,14 +32,13 @@ public class Surround extends Module {
      ****************************************************************/
     private final EnumSetting<JumpMode> jumpMode = new EnumSetting<>("Jump", this, JumpMode.Continue);
     private final EnumSetting<Pattern> offsetMode = new EnumSetting<>("Pattern", this, Pattern.Normal);
-    private final IntSetting delayTicks = new IntSetting("Tick Delay", this, 0, 10, 3);
-    private final IntSetting blocksPerTick = new IntSetting("Blocks Per Tick", this, 0, 8, 4);
+    private final EnumSetting<SwitchMode> switchMode = new EnumSetting<>("Switch", this, SwitchMode.Silent);
+    private final IntSetting delayTicks = new IntSetting("Tick Delay", this, 0, 10, 0);
+    private final IntSetting blocksPerTick = new IntSetting("Blocks Per Tick", this, 0, 8, 8);
     private final BooleanSetting rotate = new BooleanSetting("Rotate", this, true);
     private final BooleanSetting centerPlayer = new BooleanSetting("Center Player", this, false);
     private final BooleanSetting sneakOnly = new BooleanSetting("Sneak Only", this, false);
     private final BooleanSetting disableNoBlock = new BooleanSetting("Disable No Obby", this, true);
-    private final BooleanSetting offhandObby = new BooleanSetting("Offhand Obby", this, false);
-    private final BooleanSetting silent = new BooleanSetting("Silent Switch", this, false);
     private final BooleanSetting render = new BooleanSetting("Render", this, true);
     private final BooleanSetting fill = new BooleanSetting("Box Fill", this, true);
     private final BooleanSetting outline = new BooleanSetting("Box Outline", this, true);
@@ -54,17 +52,18 @@ public class Surround extends Module {
     private int oldSlot = -1;
     private int offsetSteps = 0;
     private boolean outOfTargetBlock = false;
-    private boolean activedOff = false;
     private boolean isSneaking = false;
     private BlockPos currentBlock;
+    private BlockPos lastPlacedBlock;
     private boolean finished;
 
     public Surround() {
         super("Surround", "Automatically surrounds your feet with obsidian", 0, Category.Combat);
         this.registerSettings(
-                rotate, centerPlayer, sneakOnly, disableNoBlock, offhandObby, silent,
+                rotate, centerPlayer, sneakOnly, disableNoBlock,
                 delayTicks, blocksPerTick,
-                jumpMode, offsetMode, render, fill, outline, opacity);
+                render, fill, outline, opacity,
+                switchMode, jumpMode, offsetMode);
     }
 
     @Override
@@ -100,20 +99,20 @@ public class Surround extends Module {
             isSneaking = false;
         }
 
-        if (offhandObby.booleanValue() && AutoTotem.isActive()) {
-            AutoTotem.removeObsidian();
-            activedOff = false;
-        }
-
         centeredBlock = Vec3d.ZERO;
         outOfTargetBlock = false;
         currentBlock = null;
+        lastPlacedBlock = null;
     }
 
     @Override
     public void onUpdate() {
         if (mc.player == null || mc.world == null) {
             disable();
+            return;
+        }
+
+        if (Freecam.isFreecamActive()) {
             return;
         }
 
@@ -133,12 +132,7 @@ public class Surround extends Module {
             }
         }
 
-        if (blocksPerTick.intValue() == blocksPerTick.intValue() && delayTicks.intValue() == 0) {
-            blocksPerTick.setValue(blocksPerTick.intValue() / 2);
-            delayTicks.setValue(1);
-        }
-
-        int targetBlockSlot = InventoryManager.findObsidianSlot(offhandObby.booleanValue(), activedOff);
+        int targetBlockSlot = InventoryManager.findObsidianSlot(false, false);
 
         if ((outOfTargetBlock || targetBlockSlot == -1) && disableNoBlock.booleanValue()) {
             outOfTargetBlock = true;
@@ -146,13 +140,11 @@ public class Surround extends Module {
             return;
         }
 
-        activedOff = true;
-
         if (centerPlayer.booleanValue() && centeredBlock != Vec3d.ZERO && mc.player.onGround) {
             PlayerUtil.centerPlayer(centeredBlock);
         }
 
-        while (delayTimer.getTimePassed() / 50L >= delayTicks.intValue()) {
+        if (delayTimer.getTimePassed() / 50L >= delayTicks.intValue()) {
             delayTimer.reset();
 
             int blocksPlaced = 0;
@@ -200,6 +192,7 @@ public class Surround extends Module {
                 if (tryPlacing && placeBlock(targetPos)) {
                     blocksPlaced++;
                     currentBlock = targetPos;
+                    lastPlacedBlock = targetPos;
                 }
 
                 offsetSteps++;
@@ -219,32 +212,25 @@ public class Surround extends Module {
     private boolean placeBlock(BlockPos pos) {
         EnumHand handSwing = EnumHand.MAIN_HAND;
 
-        int targetBlockSlot = InventoryManager.findObsidianSlot(offhandObby.booleanValue(), activedOff);
+        int targetBlockSlot = InventoryManager.findObsidianSlot(false, false);
 
         if (targetBlockSlot == -1) {
             outOfTargetBlock = true;
             return false;
         }
 
-        if (targetBlockSlot == 9) {
-            activedOff = true;
-            if (mc.player.getHeldItemOffhand().getItem() instanceof ItemBlock && ((ItemBlock) mc.player.getHeldItemOffhand().getItem()).getBlock() instanceof BlockObsidian) {
-                handSwing = EnumHand.OFF_HAND;
-            } else return false;
-        }
+        int currentSlot = mc.player.inventory.currentItem;
 
-        if (mc.player.inventory.currentItem != targetBlockSlot && targetBlockSlot != 9) {
-            if (silent.booleanValue()) {
-                mc.player.connection.sendPacket(new CPacketHeldItemChange(targetBlockSlot));
-            } else {
-                mc.player.inventory.currentItem = targetBlockSlot;
-            }
+        if (currentSlot != targetBlockSlot) {
+            mc.player.connection.sendPacket(new CPacketHeldItemChange(targetBlockSlot));
+            mc.player.inventory.currentItem = targetBlockSlot;
         }
 
         boolean placed = PlacementUtil.place(pos, handSwing, rotate.booleanValue(), true);
 
-        if (silent.booleanValue()) {
-            mc.player.connection.sendPacket(new CPacketHeldItemChange(mc.player.inventory.currentItem));
+        if (switchMode.value() == SwitchMode.Silent && currentSlot != targetBlockSlot) {
+            mc.player.connection.sendPacket(new CPacketHeldItemChange(currentSlot));
+            mc.player.inventory.currentItem = currentSlot;
         }
         return placed;
     }
@@ -256,12 +242,12 @@ public class Surround extends Module {
 
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
-        if (render.booleanValue() && currentBlock != null && !finished) {
+        if (render.booleanValue() && lastPlacedBlock != null) {
             GradientShader.setup((float) opacity.doubleValue());
             if (fill.booleanValue())
-                RenderUtil.boxShader(currentBlock);
+                RenderUtil.boxShader(lastPlacedBlock);
             if (outline.booleanValue())
-                RenderUtil.outlineShader(currentBlock);
+                RenderUtil.outlineShader(lastPlacedBlock);
             GradientShader.finish();
         }
     }
@@ -275,5 +261,10 @@ public class Surround extends Module {
     public enum Pattern {
         Normal,
         AntiCity
+    }
+
+    public enum SwitchMode {
+        Normal,
+        Silent
     }
 }

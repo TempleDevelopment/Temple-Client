@@ -1,79 +1,40 @@
 package xyz.templecheats.templeclient.manager;
 
-import com.mojang.authlib.Agent;
-import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
-import com.mojang.authlib.yggdrasil.YggdrasilUserAuthentication;
+import com.google.gson.JsonParser;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Session;
-import xyz.templecheats.templeclient.TempleClient;
+import org.apache.commons.io.IOUtils;
 
 import java.lang.reflect.Field;
-import java.net.Proxy;
-import java.util.ArrayList;
-import java.util.List;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 public class AltManager {
 
-    private List<String> alts = new ArrayList<>();
-    private int selectedAltIndex = -1;
-
-    public AltManager() {
-        this.alts = TempleClient.configManager.loadAlts();
-    }
-
     /****************************************************************
-     *                      Getters and Setters
+     *                      Login Method
      ****************************************************************/
-
-    public List<String> getAlts() {
-        return alts;
-    }
-
-    public int getSelectedAltIndex() {
-        return selectedAltIndex;
-    }
-
-    public void setSelectedAltIndex(int index) {
-        this.selectedAltIndex = index;
-    }
-
-    /****************************************************************
-     *                      Alt Management
-     ****************************************************************/
-
-    public void addAlt(String alt) {
-        alts.add(alt);
-        TempleClient.configManager.saveAlts(alts);
-    }
-
-    public void deleteAlt(int index) {
-        if (index >= 0 && index < alts.size()) {
-            alts.remove(index);
-            TempleClient.configManager.saveAlts(alts);
-            this.selectedAltIndex = -1;
-        }
-    }
-
-    /****************************************************************
-     *                      Alt Login
-     ****************************************************************/
-
-    public void loginSelectedAlt() {
-        if (selectedAltIndex >= 0) {
-            String username = alts.get(selectedAltIndex);
-            changeName(username);
-        }
-    }
-
-    private void changeName(String name) {
-        YggdrasilAuthenticationService service = new YggdrasilAuthenticationService(Proxy.NO_PROXY, "");
-        YggdrasilUserAuthentication auth = (YggdrasilUserAuthentication) service.createUserAuthentication(Agent.MINECRAFT);
-        auth.logOut();
-        Session session = new Session(name, name, "0", "legacy");
+    public static void login(String username, String token) {
         try {
-            Field sessionField = Minecraft.class.getDeclaredField("session");
-            sessionField.setAccessible(true);
-            sessionField.set(Minecraft.getMinecraft(), session);
+            String content = IOUtils.toString(new URL("https://api.mojang.com/users/profiles/minecraft/" + username), StandardCharsets.UTF_8);
+
+            String uuid = new JsonParser().parse(content).getAsJsonObject().get("id").getAsString();
+
+            Session session = new Session(
+                    username,
+                    UUID.fromString(uuid.replaceFirst(
+                            "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)",
+                            "$1-$2-$3-$4-$5"
+                    )).toString(),
+                    token,
+                    "mojang"
+            );
+
+            Field field = Minecraft.class.getDeclaredField("session");
+            field.setAccessible(true);
+            field.set(Minecraft.getMinecraft(), session);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

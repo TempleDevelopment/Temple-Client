@@ -3,6 +3,7 @@ package xyz.templecheats.templeclient.features.module.modules.misc;
 import net.minecraft.util.EnumHand;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.module.Module;
+import xyz.templecheats.templeclient.features.module.modules.render.Freecam;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 
@@ -29,6 +30,9 @@ public class AntiAFK extends Module {
 
     @Override
     public void onUpdate() {
+        if (Freecam.isFreecamActive()) {
+            return;
+        }
         if (tickCount >= delay.intValue() * 20) {
             if (jump.booleanValue()) {
                 mc.player.jump();

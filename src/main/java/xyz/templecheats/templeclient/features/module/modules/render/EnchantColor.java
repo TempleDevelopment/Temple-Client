@@ -12,7 +12,7 @@ public class EnchantColor extends Module {
     /****************************************************************
      *                      Settings
      ****************************************************************/
-    public final ColorSetting enchantColor = new ColorSetting("EnchantColor", this, Color.WHITE);
+    public final ColorSetting enchantColor = new ColorSetting("Enchant Color", this, Color.WHITE);
     public final BooleanSetting rainbow = new BooleanSetting("Rainbow", this, false);
 
     public EnchantColor() {

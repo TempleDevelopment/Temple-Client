@@ -57,7 +57,7 @@ public class HUD extends Module {
         this.hudElements.add(new ModuleList());
         this.hudElements.add(new Notifications());
         this.hudElements.add(new Ping());
-        this.hudElements.add(new PlayerView());
+        this.hudElements.add(new PlayerModel());
         this.hudElements.add(new PlayerName());
         this.hudElements.add(new Potion());
         this.hudElements.add(new Server());

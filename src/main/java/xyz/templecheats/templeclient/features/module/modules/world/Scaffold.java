@@ -25,6 +25,7 @@ import xyz.templecheats.templeclient.event.events.player.MotionEvent;
 import xyz.templecheats.templeclient.event.events.player.MoveEvent;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.movement.Safewalk;
+import xyz.templecheats.templeclient.features.module.modules.render.Freecam;
 import xyz.templecheats.templeclient.util.Globals;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
@@ -86,6 +87,9 @@ public class Scaffold extends Module {
 
     @Listener
     public void onMotionUpdate(MotionEvent event) {
+        if (Freecam.isFreecamActive()) {
+            return;
+        }
         if (getBlockCountHotbar() <= 0 || mc.player.posY > 257) {
             this.blockData = null;
             return;

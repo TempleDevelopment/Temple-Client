@@ -7,19 +7,17 @@ import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.event.ForgeEventManager;
 import xyz.templecheats.templeclient.event.events.render.Render3DPrePreEvent;
 import xyz.templecheats.templeclient.features.module.Module;
-import xyz.templecheats.templeclient.features.module.modules.client.Colors;
 import xyz.templecheats.templeclient.manager.HoleManager;
 import xyz.templecheats.templeclient.util.math.MathUtil;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
-import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
+import xyz.templecheats.templeclient.util.setting.impl.ColorSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 
 import java.awt.*;
 import java.util.ArrayList;
-
 
 public class Hole extends Module {
     /****************************************************************
@@ -30,7 +28,8 @@ public class Hole extends Module {
     private final IntSetting speed = new IntSetting("Speed", this, 1, 200, 50);
     private final DoubleSetting height = new DoubleSetting("Height", this, 0.0, 1.0, 0.05);
     private final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.Normal);
-    private final BooleanSetting slideAnimation = new BooleanSetting("Gradient", this, false);
+    private final ColorSetting obsidianColor = new ColorSetting("Obsidian Color", this, new Color(255, 0, 0));
+    private final ColorSetting bedrockColor = new ColorSetting("Bedrock Color", this, new Color(98, 255, 0));
 
     /****************************************************************
      *                      Variables
@@ -40,7 +39,7 @@ public class Hole extends Module {
     public Hole() {
         super("Hole", "Highlights holes", Keyboard.KEY_NONE, Category.Render, true);
 
-        registerSettings(slideAnimation, height, range, speed, mode);
+        registerSettings(height, range, speed, obsidianColor, bedrockColor,mode);
     }
 
     private boolean differentRenderType(final HoleManager.HolePos pos) {
@@ -88,32 +87,13 @@ public class Hole extends Module {
 
         public void render() {
             size = MathUtil.lerp(size, out ? 0.0f : 1.0f, (0.02f * ForgeEventManager.deltaTime * speed.intValue() / 100.0f));
-            final int index = holePos.isBedrock() ? 1 : 0;
-            final Color color = Colors.INSTANCE.getGradient()[index];
+            final Color color = holePos.isBedrock() ? bedrockColor.getColor() : obsidianColor.getColor();
             final AxisAlignedBB bb = new AxisAlignedBB(holePos.getPos());
-            if (mode.value() == Mode.Normal && !slideAnimation.booleanValue()) {
-                if (slideAnimation.booleanValue()) GradientShader.setup(0.5f);
-                if (holePos.isDouble()) {
-                    if (holePos.isWestDouble()) {
-                        RenderUtil.renderGradientLine(bb.minX - 1, bb.minY, bb.minZ, bb.maxX, bb.maxY - 1 + size, bb.maxZ, color);
-                        RenderUtil.renderGradientLine(bb.minX - 1, bb.minY, bb.minZ, bb.maxX, bb.maxY - 1 + size, bb.maxZ, color);
-                        RenderUtil.renderGradientLine(bb.minX - 1, bb.minY, bb.minZ, bb.maxX, bb.maxY - 1 + size, bb.maxZ, color);
-                        RenderUtil.boxShader(bb.minX - 1, bb.minY, bb.minZ, bb.maxX, bb.maxY - 1 + size, bb.maxZ, color);
-
-                    } else {
-                        RenderUtil.renderGradientLine(bb.minX, bb.minY, bb.minZ - 1, bb.maxX, bb.maxY - 1 + size, bb.maxZ, color);
-                        RenderUtil.renderGradientLine(bb.minX, bb.minY, bb.minZ - 1, bb.maxX, bb.maxY - 1 + size, bb.maxZ, color);
-                        RenderUtil.renderGradientLine(bb.minX, bb.minY, bb.minZ - 1, bb.maxX, bb.maxY - 1 + size, bb.maxZ, color);
-                        RenderUtil.boxShader(bb.minX, bb.minY, bb.minZ - 1, bb.maxX, bb.maxY - 1 + size, bb.maxZ, color);
-
-                    }
-                } else {
-                    RenderUtil.renderGradientLine(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY - 1 + size, bb.maxZ, color);
-                    RenderUtil.renderGradientLine(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY - 1 + size, bb.maxZ, color);
-                    RenderUtil.renderGradientLine(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY - 1 + size, bb.maxZ, color);
-                    RenderUtil.boxShader(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY - 1 + size, bb.maxZ, color);
-                }
-                if (slideAnimation.booleanValue()) GradientShader.finish();
+            if (mode.value() == Mode.Normal) {
+                RenderUtil.renderGradientLine(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY - 1 + size, bb.maxZ, color);
+                RenderUtil.renderGradientLine(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY - 1 + size, bb.maxZ, color);
+                RenderUtil.renderGradientLine(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY - 1 + size, bb.maxZ, color);
+                RenderUtil.boxShader(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY - 1 + size, bb.maxZ, color);
             } else {
                 GradientShader.setup(0.5f);
                 if (holePos.isDouble()) {

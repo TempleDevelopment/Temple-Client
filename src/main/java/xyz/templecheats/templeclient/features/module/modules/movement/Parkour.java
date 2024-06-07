@@ -5,6 +5,7 @@ import net.minecraft.block.BlockSlab;
 import net.minecraft.util.math.BlockPos;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.module.Module;
+import xyz.templecheats.templeclient.features.module.modules.render.Freecam;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 
 public class Parkour extends Module {
@@ -20,6 +21,9 @@ public class Parkour extends Module {
 
     @Override
     public void onUpdate() {
+        if (Freecam.isFreecamActive()) {
+            return;
+        }
         if (mc.player.onGround && !mc.player.isSneaking() && !mc.player.noClip) {
             BlockPos pos = new BlockPos(mc.player.posX, mc.player.posY - 1, mc.player.posZ);
             Block block = mc.world.getBlockState(pos).getBlock();

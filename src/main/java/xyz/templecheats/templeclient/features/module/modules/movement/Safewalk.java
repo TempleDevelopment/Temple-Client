@@ -5,6 +5,7 @@ import org.lwjgl.input.Keyboard;
 import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
 import xyz.templecheats.templeclient.event.events.player.MoveEvent;
 import xyz.templecheats.templeclient.features.module.Module;
+import xyz.templecheats.templeclient.features.module.modules.render.Freecam;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 
 public class Safewalk extends Module {
@@ -27,6 +28,9 @@ public class Safewalk extends Module {
 
     @Listener
     public void safeWalk(MoveEvent event) {
+        if (Freecam.isFreecamActive()) {
+            return;
+        }
 
         final double yOffset = slabs.booleanValue() ? -0.5D : -1D;
 

@@ -5,6 +5,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.math.BlockPos;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.module.Module;
+import xyz.templecheats.templeclient.features.module.modules.render.Freecam;
 
 public class AutoWalk extends Module {
     /****************************************************************
@@ -28,6 +29,9 @@ public class AutoWalk extends Module {
 
     @Override
     public void onUpdate() {
+        if (Freecam.isFreecamActive()) {
+            return;
+        }
         if (this.isEnabled()) {
             KeyBinding.setKeyBindState(mc.gameSettings.keyBindForward.getKeyCode(), true);
 

@@ -73,9 +73,9 @@ public class LogoutSpots extends Module {
         super("LogoutSpots", "Render player logout spots", Keyboard.KEY_NONE, Category.Render, true);
         registerSettings(
                 nameTags, fill, outline, sync, time, coords,
-                color, outlineColor,
                 range,
                 outlineWidth, roundRadius,
+                color, outlineColor,
                 notify
         );
     }

@@ -21,6 +21,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.module.Module;
+import xyz.templecheats.templeclient.features.module.modules.render.Freecam;
+import xyz.templecheats.templeclient.util.misc.Offsets;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
 import xyz.templecheats.templeclient.util.rotation.RotationUtil;
@@ -97,8 +99,11 @@ public class SelfTrap extends Module {
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
-
         if (mc.player == null) {
+            return;
+        }
+
+        if (Freecam.isFreecamActive()) {
             return;
         }
 
@@ -130,7 +135,7 @@ public class SelfTrap extends Module {
         }
 
         List<Vec3d> placeTargets = new ArrayList<>();
-        Collections.addAll(placeTargets, SelfTrap.Offsets.TRAPSIMPLE);
+        Collections.addAll(placeTargets, Offsets.TRAPSIMPLE);
 
         int blocksPlaced = 0;
 
@@ -251,22 +256,6 @@ public class SelfTrap extends Module {
                 closestTarget = target;
             }
         }
-    }
-
-    private static class Offsets {
-        private static final Vec3d[] TRAPSIMPLE = {
-                new Vec3d(-1, 0, 0),
-                new Vec3d(1, 0, 0),
-                new Vec3d(0, 0, -1),
-                new Vec3d(0, 0, 1),
-                new Vec3d(1, 1, 0),
-                new Vec3d(0, 1, -1),
-                new Vec3d(0, 1, 1),
-                new Vec3d(-1, 1, 0),
-                new Vec3d(-1, 2, 0),
-                new Vec3d(-1, 3, 0),
-                new Vec3d(0, 3, 0)
-        };
     }
 
     @SubscribeEvent

@@ -14,6 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import xyz.templecheats.templeclient.features.module.Module;
+import xyz.templecheats.templeclient.features.module.modules.render.Freecam;
 import xyz.templecheats.templeclient.manager.InventoryManager;
 import xyz.templecheats.templeclient.util.player.PlacementUtil;
 import xyz.templecheats.templeclient.util.player.PlayerUtil;
@@ -69,8 +70,8 @@ public class HoleFiller extends Module {
         this.registerSettings(
                 onlyPlayer, rotate, autoSwitch, offHandObby, disableOnFinish,
                 placeDelay, retryDelay, bpc, range, playerRange,
-                mode,
-                render, fill, outline, opacity);
+                render, fill, outline, opacity,
+                mode);
     }
 
     @Override
@@ -108,6 +109,10 @@ public class HoleFiller extends Module {
     public void onUpdate() {
         if (mc.player == null || mc.world == null) {
             disable();
+            return;
+        }
+
+        if (Freecam.isFreecamActive()) {
             return;
         }
 

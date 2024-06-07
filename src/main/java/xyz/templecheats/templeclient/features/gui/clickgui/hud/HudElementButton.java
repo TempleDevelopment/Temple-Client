@@ -109,23 +109,16 @@ public class HudElementButton extends Button {
 
     @Override
     public void drawScreenPost(int mouseX, int mouseY) {
-        if (this.isHovering(mouseX, mouseY)) {
-            if (this.timeHovering == 0) {
-                this.timeHovering = System.currentTimeMillis();
-            }
-
-            if (System.currentTimeMillis() - this.timeHovering > 500) {
-                final String description = element.getDescription();
-                final float startX = mouseX + 7;
-                final float startY = mouseY + 7;
-                final float width = (float) font18.getStringWidth(description);
-                final float height = (float) font18.getFontHeight();
-
-                RenderUtil.drawRect(startX - 1, startY - 1, startX + width, startY + height, 0x88000000);
-                font18.drawString(description, startX, startY, -1, false);
-            }
-        } else {
-            this.timeHovering = 0;
+        if (ClickGUI.INSTANCE.description.booleanValue() && this.isHovering(mouseX, mouseY)) {
+            final String description = element.getDescription();
+            final float startX = mouseX + 7;
+            final float startY = mouseY + 7;
+            final float width = (float) font18.getStringWidth(description);
+            final float height = (float) font18.getFontHeight();
+            int color = ClickGUI.INSTANCE.getStartColor().getRGB();
+            RenderUtil.drawOutlineRect(startX - 1, startY - 1, startX + width, startY + height, color);
+            RenderUtil.drawRect(startX - 1, startY - 1, startX + width, startY + height, 0x88000000);
+            font18.drawString(description, startX, startY, -1, false);
         }
     }
 

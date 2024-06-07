@@ -19,6 +19,7 @@ import xyz.templecheats.templeclient.event.events.network.PacketEvent;
 import xyz.templecheats.templeclient.event.events.player.MotionEvent;
 import xyz.templecheats.templeclient.event.events.world.LiquidCollisionEvent;
 import xyz.templecheats.templeclient.features.module.Module;
+import xyz.templecheats.templeclient.features.module.modules.render.Freecam;
 import xyz.templecheats.templeclient.mixins.accessor.IMixinCPacketPlayer;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 
@@ -48,6 +49,9 @@ public class Jesus extends Module {
 
     @Listener
     public void onMotion(MotionEvent event) {
+        if (Freecam.isFreecamActive()) {
+            return;
+        }
         if (event.getStage() != EventStageable.EventStage.PRE) {
             return;
         }

@@ -24,8 +24,6 @@ public class ConfigManager {
     private final File mainDirectory;
     private final File configDirectory;
     private final File friendsDirectory;
-    private final File altsDirectory;
-    private final File altsFile;
     private final File defaultConfigFile;
     private final File baseFinderLogDirectory;
 
@@ -37,7 +35,6 @@ public class ConfigManager {
         this.mainDirectory = new File(System.getProperty("user.dir") + File.separator + "Temple Client");
         this.configDirectory = new File(this.mainDirectory, "1.12.2" + File.separator + "Config");
         this.friendsDirectory = new File(this.mainDirectory, "1.12.2" + File.separator + "Friends");
-        this.altsDirectory = new File(this.mainDirectory, "1.12.2" + File.separator + "Alts");
         this.defaultConfigFile = new File(this.configDirectory, "config.cfg");
         this.baseFinderLogDirectory = new File(this.mainDirectory, "1.12.2" + File.separator + "Base Finder");
 
@@ -49,15 +46,9 @@ public class ConfigManager {
             this.friendsDirectory.mkdirs();
         }
 
-        if (!this.altsDirectory.exists()) {
-            this.altsDirectory.mkdirs();
-        }
-
         if (!this.baseFinderLogDirectory.exists()) {
             this.baseFinderLogDirectory.mkdirs();
         }
-
-        this.altsFile = new File(this.altsDirectory, "alt_accounts.json");
     }
 
     /****************************************************************
@@ -225,34 +216,6 @@ public class ConfigManager {
             }
         } catch (IOException e) {
             System.err.println("Could not load friends!");
-            e.printStackTrace();
-        }
-    }
-
-    /****************************************************************
-     *                      Alt Account Management
-     ****************************************************************/
-
-    public List<String> loadAlts() {
-        if (!altsFile.exists()) return new ArrayList<>();
-        try (Reader reader = new FileReader(altsFile)) {
-            return GSON.fromJson(reader, new TypeToken<List<String>>() {
-            }.getType());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new ArrayList<>();
-    }
-
-    /**
-     * Saves alt accounts to a file.
-     *
-     * @param alts The list of alt accounts to save.
-     */
-    public void saveAlts(List<String> alts) {
-        try (Writer writer = new FileWriter(altsFile)) {
-            GSON.toJson(alts, writer);
-        } catch (IOException e) {
             e.printStackTrace();
         }
     }

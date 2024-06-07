@@ -9,6 +9,7 @@ import team.stiff.pomelo.impl.annotated.handler.annotation.Listener;
 import xyz.templecheats.templeclient.event.events.network.PacketEvent;
 import xyz.templecheats.templeclient.event.events.player.MoveEvent;
 import xyz.templecheats.templeclient.features.module.Module;
+import xyz.templecheats.templeclient.features.module.modules.render.Freecam;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.DoubleSetting;
 import xyz.templecheats.templeclient.util.world.EntityUtil;
@@ -45,6 +46,9 @@ public class Strafe extends Module {
 
     @Listener
     public void onPlayerMove(MoveEvent event) {
+        if (Freecam.isFreecamActive()) {
+            return;
+        }
         if (EntityUtil.isMoving()) {
             if (mc.player.onGround) stage = 2;
         }

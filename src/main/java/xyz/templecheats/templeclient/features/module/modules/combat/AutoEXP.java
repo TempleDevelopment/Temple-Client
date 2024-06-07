@@ -10,9 +10,11 @@ import net.minecraft.network.play.client.CPacketPlayerTryUseItem;
 import net.minecraft.util.EnumHand;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.module.Module;
+import xyz.templecheats.templeclient.features.module.modules.render.Freecam;
 import xyz.templecheats.templeclient.mixins.accessor.IPlayerControllerMP;
 import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
+import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 
 import java.util.List;
 
@@ -22,10 +24,10 @@ public class AutoEXP extends Module {
      ****************************************************************/
     private final BooleanSetting sneakOnly = new BooleanSetting("Sneak Only", this, true);
     private final BooleanSetting noEntityCollision = new BooleanSetting("No Collision", this, true);
-    private final BooleanSetting silentSwitch = new BooleanSetting("Silent Switch", this, true);
     private final IntSetting minDamage = new IntSetting("Min Damage", this, 1, 100, 50);
     private final IntSetting maxHeal = new IntSetting("Repair To", this, 1, 100, 90);
     private final BooleanSetting predict = new BooleanSetting("Predict", this, false);
+    private final EnumSetting<SwitchMode> switchMode = new EnumSetting<>("Switch", this, SwitchMode.Silent);
 
     /****************************************************************
      *                      Variables
@@ -34,12 +36,16 @@ public class AutoEXP extends Module {
 
     public AutoEXP() {
         super("AutoEXP", "Automatically repair your armor", Keyboard.KEY_NONE, Category.Combat);
-        registerSettings(sneakOnly, noEntityCollision, silentSwitch, predict, minDamage, maxHeal);
+        registerSettings(sneakOnly, noEntityCollision, predict, minDamage, maxHeal, switchMode);
     }
 
     @Override
     public void onUpdate() {
         if (mc.player == null || mc.world == null || mc.player.ticksExisted < 10) {
+            return;
+        }
+
+        if (Freecam.isFreecamActive()) {
             return;
         }
 
@@ -74,15 +80,15 @@ public class AutoEXP extends Module {
                         .filter(entity -> entity.getDistanceSq(mc.player) <= 1)
                         .mapToInt(entity -> ((EntityXPOrb) entity).xpValue).sum();
                 if ((totalXp * 2) < sumOfDamage) {
-                    mendArmor(mc.player.inventory.currentItem);
+                    mendArmor();
                 }
             } else {
-                mendArmor(mc.player.inventory.currentItem);
+                mendArmor();
             }
         }
     }
 
-    private void mendArmor(int oldSlot) {
+    private void mendArmor() {
         if (noEntityCollision.booleanValue()) {
             for (EntityPlayer entityPlayer : mc.world.playerEntities) {
                 if (entityPlayer.getDistance(mc.player) < 1 && entityPlayer != mc.player) {
@@ -96,28 +102,19 @@ public class AutoEXP extends Module {
         }
 
         int newSlot = findXPSlot();
-
         if (newSlot == -1) {
             return;
         }
 
-        if (oldSlot != newSlot) {
-            if (silentSwitch.booleanValue()) {
-                mc.player.connection.sendPacket(new CPacketHeldItemChange(newSlot));
-            } else {
-                mc.player.inventory.currentItem = newSlot;
-            }
-            ((IPlayerControllerMP) mc.playerController).invokeSyncCurrentPlayItem();
-        }
+        int oldSlot = mc.player.inventory.currentItem;
 
-        mc.player.connection.sendPacket(new CPacketPlayer.Rotation(0, 90, true));
+        mc.player.connection.sendPacket(new CPacketHeldItemChange(newSlot));
+
+        mc.player.rotationPitch = 90;
+        mc.player.connection.sendPacket(new CPacketPlayer.Rotation(mc.player.rotationYaw, 90, true));
         mc.player.connection.sendPacket(new CPacketPlayerTryUseItem(EnumHand.MAIN_HAND));
-        if (silentSwitch.booleanValue()) {
-            mc.player.connection.sendPacket(new CPacketHeldItemChange(oldSlot));
-        } else {
-            mc.player.inventory.currentItem = oldSlot;
-        }
-        ((IPlayerControllerMP) mc.playerController).invokeSyncCurrentPlayItem();
+
+        mc.player.connection.sendPacket(new CPacketHeldItemChange(oldSlot));
     }
 
     private int findXPSlot() {
@@ -131,5 +128,9 @@ public class AutoEXP extends Module {
         }
 
         return slot;
+    }
+
+    public enum SwitchMode {
+        Silent
     }
 }

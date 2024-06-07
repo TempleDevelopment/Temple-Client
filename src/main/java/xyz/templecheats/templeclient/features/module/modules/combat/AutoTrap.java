@@ -21,6 +21,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.TempleClient;
 import xyz.templecheats.templeclient.features.module.Module;
+import xyz.templecheats.templeclient.features.module.modules.render.Freecam;
 import xyz.templecheats.templeclient.util.misc.Offsets;
 import xyz.templecheats.templeclient.util.render.RenderUtil;
 import xyz.templecheats.templeclient.util.render.shader.impl.GradientShader;
@@ -78,6 +79,10 @@ public class AutoTrap extends Module {
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
+        if (Freecam.isFreecamActive()) {
+            return;
+        }
+
         if (Minecraft.getMinecraft().player == null || Minecraft.getMinecraft().world == null)
             return;
 

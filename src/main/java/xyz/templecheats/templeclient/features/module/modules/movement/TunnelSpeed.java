@@ -5,6 +5,7 @@ import net.minecraft.util.math.BlockPos;
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.features.module.modules.movement.speed.sub.Strafe;
+import xyz.templecheats.templeclient.features.module.modules.render.Freecam;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
 
 public class TunnelSpeed extends Module {
@@ -20,6 +21,9 @@ public class TunnelSpeed extends Module {
 
     @Override
     public void onUpdate() {
+        if (Freecam.isFreecamActive()) {
+            return;
+        }
         BlockPos pos = new BlockPos(mc.player.posX, mc.player.posY + 2.0, mc.player.posZ);
         BlockPos pos2 = new BlockPos(mc.player.posX, mc.player.posY - 1.0, mc.player.posZ);
         if (mc.world.getBlockState(pos).getBlock() != Blocks.AIR

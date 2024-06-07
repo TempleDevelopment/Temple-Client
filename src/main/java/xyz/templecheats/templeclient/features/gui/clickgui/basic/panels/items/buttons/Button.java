@@ -29,7 +29,7 @@ public abstract class Button extends Item {
         Color c2 = ClickGUI.INSTANCE.getEndColor();
 
         switch (ClickGUI.INSTANCE.colorMode.value()) {
-            case Static:
+            case Animated:
                 c1 = new Color(ClickGUI.INSTANCE.getClientColor(10, (int) Panel.counter1[0]));
                 c2 = new Color(ClickGUI.INSTANCE.getClientColor(10, (int) (Panel.counter1[0] + 1)));
                 break;

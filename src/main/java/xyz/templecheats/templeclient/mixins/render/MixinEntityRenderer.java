@@ -145,7 +145,7 @@ public abstract class MixinEntityRenderer {
     private void updateLightMapHook(float partialTicks, CallbackInfo ci) {
         if (Ambience.INSTANCE.isEnabled() && Ambience.INSTANCE.LightMapState.booleanValue()) {
             for (int i = 0; i < this.lightmapColors.length; ++i) {
-                Color ambientColor = Colors.INSTANCE.getLightMapColor();
+                Color ambientColor = Ambience.INSTANCE.getLightMapColor();
                 Vector3f finalValues = vector3F(ambientColor, lightmapColors, i);
                 int red = (int) (finalValues.x * 255.0f);
                 int green = (int) (finalValues.y * 255.0f);

@@ -2,7 +2,6 @@ package xyz.templecheats.templeclient.features.module.modules.combat;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
@@ -15,18 +14,13 @@ import xyz.templecheats.templeclient.event.events.network.PacketEvent;
 import xyz.templecheats.templeclient.features.module.Module;
 import xyz.templecheats.templeclient.mixins.accessor.IMixinSPacketEntityVelocity;
 import xyz.templecheats.templeclient.mixins.accessor.IMixinSPacketExplosion;
-import xyz.templecheats.templeclient.util.setting.impl.BooleanSetting;
 import xyz.templecheats.templeclient.util.setting.impl.EnumSetting;
-import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 
 public final class Velocity extends Module {
     /****************************************************************
      *                      Settings
      ****************************************************************/
-    private final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.CancelPacket);
-    private final IntSetting horizontalVelocity = new IntSetting("Horizontal", this, 1, 100, 100);
-    private final IntSetting verticalVelocity = new IntSetting("Vertical", this, 1, 100, 100);
-    private final BooleanSetting explosions = new BooleanSetting("Explosions", this, true);
+    private final EnumSetting<Mode> mode = new EnumSetting<>("Mode", this, Mode.Packet);
     private boolean cancelVelocity = false;
 
     /****************************************************************
@@ -37,56 +31,45 @@ public final class Velocity extends Module {
 
     public Velocity() {
         super("Velocity", "Reduces knockback velocity", Keyboard.KEY_NONE, Category.Combat);
-        registerSettings(explosions, horizontalVelocity, verticalVelocity, mode);
+        registerSettings(mode);
     }
 
     @Listener
     public void onPacketReceive(PacketEvent.Receive event) {
         if (mc.player == null) return;
-        if (mode.value() == Mode.CancelPacket) {
-            if (event.getPacket() instanceof SPacketEntityVelocity && ((SPacketEntityVelocity) event.getPacket()).getEntityID() == this.mc.player.getEntityId() || event.getPacket() instanceof SPacketExplosion || event.getPacket() instanceof EntityFishHook) {
+
+        if (event.getPacket() instanceof SPacketEntityVelocity) {
+            SPacketEntityVelocity velocityPacket = (SPacketEntityVelocity) event.getPacket();
+            if (velocityPacket.getEntityID() == mc.player.getEntityId()) {
+                handleVelocityPacket(event, velocityPacket);
+            }
+        } else if (event.getPacket() instanceof SPacketExplosion) {
+            SPacketExplosion explosionPacket = (SPacketExplosion) event.getPacket();
+            handleExplosionPacket(event, explosionPacket);
+        }
+    }
+
+    private void handleVelocityPacket(PacketEvent.Receive event, SPacketEntityVelocity velocityPacket) {
+        switch (mode.value()) {
+            case Packet:
                 event.setCanceled(true);
-            }
-        } else {
-            if (event.getPacket() instanceof SPacketEntityVelocity) {
-                SPacketEntityVelocity velocityPacket = (SPacketEntityVelocity) event.getPacket();
-                if (velocityPacket.getEntityID() == mc.player.getEntityId()) {
-                    switch (mode.value()) {
-                        case Normal:
-                            if (this.horizontalVelocity.intValue() == 0 && this.verticalVelocity.intValue() == 0) {
-                                event.setCanceled(true);
-                            } else {
-                                ((IMixinSPacketEntityVelocity) velocityPacket).setMotionX(velocityPacket.getMotionX() / 100 * this.horizontalVelocity.intValue());
-                                ((IMixinSPacketEntityVelocity) velocityPacket).setMotionZ(velocityPacket.getMotionZ() / 100 * this.horizontalVelocity.intValue());
-                                ((IMixinSPacketEntityVelocity) velocityPacket).setMotionY(velocityPacket.getMotionY() / 100 * this.verticalVelocity.intValue());
-                            }
-                            break;
-                        case Grim:
-                            event.setCanceled(true);
-                            cancelVelocity = true;
-                            break;
-                    }
-                }
-            } else if (event.getPacket() instanceof SPacketExplosion && this.explosions.booleanValue()) {
-                SPacketExplosion explosionPacket = (SPacketExplosion) event.getPacket();
-                switch (mode.value()) {
-                    case Normal:
-                        if (this.horizontalVelocity.intValue() == 0 && this.verticalVelocity.intValue() == 0) {
-                            ((IMixinSPacketExplosion) explosionPacket).setMotionX(0);
-                            ((IMixinSPacketExplosion) explosionPacket).setMotionY(0);
-                            ((IMixinSPacketExplosion) explosionPacket).setMotionZ(0);
-                        } else {
-                            ((IMixinSPacketExplosion) explosionPacket).setMotionX(explosionPacket.getMotionX() / 100 * this.horizontalVelocity.intValue());
-                            ((IMixinSPacketExplosion) explosionPacket).setMotionY(explosionPacket.getMotionY() / 100 * this.verticalVelocity.intValue());
-                            ((IMixinSPacketExplosion) explosionPacket).setMotionZ(explosionPacket.getMotionZ() / 100 * this.horizontalVelocity.intValue());
-                        }
-                        break;
-                    case Grim:
-                        event.setCanceled(true);
-                        cancelVelocity = true;
-                        break;
-                }
-            }
+                break;
+            case Grim:
+                event.setCanceled(true);
+                cancelVelocity = true;
+                break;
+        }
+    }
+
+    private void handleExplosionPacket(PacketEvent.Receive event, SPacketExplosion explosionPacket) {
+        switch (mode.value()) {
+            case Packet:
+                event.setCanceled(true);
+                break;
+            case Grim:
+                event.setCanceled(true);
+                cancelVelocity = true;
+                break;
         }
     }
 
@@ -107,8 +90,7 @@ public final class Velocity extends Module {
     }
 
     public enum Mode {
-        Normal,
-        CancelPacket,
+        Packet,
         Grim
     }
 }

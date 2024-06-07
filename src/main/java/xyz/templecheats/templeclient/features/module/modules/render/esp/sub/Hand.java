@@ -29,7 +29,7 @@ public class Hand extends Module {
      *                      Settings
      ****************************************************************/
     private final BooleanSetting showHand = new BooleanSetting("Show origin", this, true);
-    private final ColorSetting outlineColor = new ColorSetting("Color", this, Color.RED);
+    private final ColorSetting outlineColor = new ColorSetting("Outline Color", this, Color.RED);
     private final DoubleSetting blurRadius = new DoubleSetting("Blur Radius", this, 0.0, 16.0, 1.0);
     private final DoubleSetting lineWidth = new DoubleSetting("LineWidth", this, 0.0, 5.0, 1);
     private final DoubleSetting opacity = new DoubleSetting("Opacity", this, 0.0, 1.0, 0.5);
@@ -44,7 +44,7 @@ public class Hand extends Module {
 
     public Hand() {
         super("Hand", "Highlights hand with shader", Keyboard.KEY_NONE, Category.Render, true);
-        registerSettings(showHand, outlineColor, blurRadius, lineWidth, opacity);
+        registerSettings(showHand, blurRadius, lineWidth, opacity, outlineColor);
         INSTANCE = this;
     }
 

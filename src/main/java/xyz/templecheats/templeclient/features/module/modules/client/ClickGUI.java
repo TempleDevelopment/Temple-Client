@@ -36,6 +36,8 @@ public class ClickGUI extends Module {
     public final IntSetting scrollSpeed = new IntSetting("Scroll Speed", this, 0, 100, 10);
     public final DoubleSetting scale = new DoubleSetting("Scale", this, 0.5, 2, 0.8);
     public final EnumSetting<Theme> theme = new EnumSetting<>("Theme", this, Theme.Default);
+    public final BooleanSetting showKey = new BooleanSetting("Show Bind", this, true);
+    public final BooleanSetting description = new BooleanSetting("Description", this, true);
 
     /****************************************************************
      *                      Variables
@@ -46,10 +48,13 @@ public class ClickGUI extends Module {
         super("ClickGUI", "Screen to configure modules", Keyboard.KEY_RSHIFT, Category.Client);
         INSTANCE = this;
 
-        this.registerSettings(gears, blur, radius, compression, particles, tint, scaledResolution,
-                endColor, startColor, scrollSpeed,
-                scale,
-                colorMode, way, theme);
+        this.registerSettings(
+                description, gears, particles, tint, blur, scaledResolution, showKey,
+                scrollSpeed,
+                radius, compression, scale,
+                startColor, endColor,
+                colorMode, way, theme
+        );
     }
 
     @Override
@@ -91,7 +96,7 @@ public class ClickGUI extends Module {
 
     public enum ColorMode {
         Default,
-        Static,
+        Animated,
         Gradient,
         Rainbow
     }

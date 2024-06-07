@@ -2,6 +2,7 @@ package xyz.templecheats.templeclient.features.module.modules.movement;
 
 import org.lwjgl.input.Keyboard;
 import xyz.templecheats.templeclient.features.module.Module;
+import xyz.templecheats.templeclient.features.module.modules.render.Freecam;
 import xyz.templecheats.templeclient.util.setting.impl.IntSetting;
 
 public class Step extends Module {
@@ -22,6 +23,9 @@ public class Step extends Module {
 
     @Override
     public void onUpdate() {
+        if (Freecam.isFreecamActive()) {
+            return;
+        }
         mc.player.stepHeight = height.intValue();
     }
 }
