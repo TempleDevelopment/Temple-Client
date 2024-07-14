@@ -6,7 +6,7 @@
   <a href="./releases">
     <img src="https://img.shields.io/github/downloads/TempleDevelopment/Temple-Client/total?color=white" alt="GitHub all releases">
   </a>
-  <a href="https://discord.gg/XZUGTpGCe8">
+  <a href="https://discord.gg/j6hTUB5GBx">
     <img src="https://img.shields.io/discord/1125838140456849418?color=skyblue&logo=discord&logoColor=white" alt="Discord">
   </a>
   <img src="https://img.shields.io/github/repo-size/TempleDevelopment/Temple-Client" alt="GitHub repo size">
