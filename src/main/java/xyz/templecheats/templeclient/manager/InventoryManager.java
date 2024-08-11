@@ -154,6 +154,40 @@ public class InventoryManager implements Globals {
         return mc.player.getHeldItemMainhand().getItem().equals(item) || mc.player.getHeldItemOffhand().getItem().equals(item);
     }
 
+    public static List<Integer> findAllItemSlots(Class<? extends Item> itemToFind) {
+        List<Integer> slots = new ArrayList<>();
+        List<ItemStack> mainInventory = mc.player.inventory.mainInventory;
+
+        for (int i = 0; i < 36; i++) {
+            ItemStack stack = mainInventory.get(i);
+
+            if (stack == ItemStack.EMPTY || !(itemToFind.isInstance(stack.getItem()))) {
+                continue;
+            }
+
+            slots.add(i);
+        }
+        return slots;
+    }
+
+    public static List<Integer> findAllBlockSlots(Class<? extends Block> blockToFind) {
+        List<Integer> slots = new ArrayList<>();
+        List<ItemStack> mainInventory = mc.player.inventory.mainInventory;
+
+        for (int i = 0; i < 36; i++) {
+            ItemStack stack = mainInventory.get(i);
+
+            if (stack == ItemStack.EMPTY || !(stack.getItem() instanceof ItemBlock)) {
+                continue;
+            }
+
+            if (blockToFind.isInstance(((ItemBlock) stack.getItem()).getBlock())) {
+                slots.add(i);
+            }
+        }
+        return slots;
+    }
+
     /****************************************************************
      *                      Inventory Enums
      ****************************************************************/

@@ -16,6 +16,9 @@
     "entity.MixinEntity",
     "entity.MixinEntityLivingBase",
     "entity.MixinEntityPlayer",
+    "entity.MixinEntityPig",
+    "entity.MixinAbstractHorse",
+    "entity.MixinEntityLlama",
     "gui.MixinSplashScreen",
     "network.MixinNetworkManager"
   ],

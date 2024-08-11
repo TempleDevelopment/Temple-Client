@@ -54,6 +54,7 @@ public class ModuleManager {
 
         // Combat
         addMod(new AutoDisconnect());
+        addMod(new Replenish());
         addMod(new AutoTrap());
         addMod(new SelfTrap());
         addMod(new TriggerBot());
@@ -94,6 +95,7 @@ public class ModuleManager {
         addMod(new HUD());
 
         // Movement
+        addMod(new EntityControl());
         addMod(new RotationLock());
         addMod(new ReverseStep());
         addMod(new GuiWalk());
