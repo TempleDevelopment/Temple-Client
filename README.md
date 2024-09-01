@@ -11,10 +11,11 @@
     <img src="https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white">
   </a>
   <img src="https://img.shields.io/badge/License-GPL--3.0-blue?style=for-the-badge">
-  <img src="https://img.shields.io/badge/Code%20Quality-A-green?style=for-the-badge">
+  <img src="https://img.shields.io/codeclimate/maintainability/TempleDevelopment/Temple-Client?style=for-the-badge">
   <img src="https://img.shields.io/badge/Temple%20Client%201.12.2-v1.9.6-orange?style=for-the-badge">
   <img src="https://img.shields.io/badge/Minecraft-1.12.2-brightgreen?style=for-the-badge&logo=minecraft">
 </p>
+
 
 
   
