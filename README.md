@@ -37,7 +37,7 @@
 ## Screenshots
 Normal GUI|CSGO GUI
 :-:|:-:
-<img src="./github/images/1.8.8.png">|<img src="./github/images/1.8.8-csgo.png">
+<img src="./github/images/gui.png">|<img src="./github/images/gui2.png">
 
 ## Credits
 - [FluorideHistorian](https://github.com/FluorideHistorian)
