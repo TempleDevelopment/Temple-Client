@@ -23,10 +23,12 @@
 
 ## FAQ
 
-|Minecraft Version|Forge 1.12.2|
-|-|-|
-|Default ClickGui keybind|<kbd>**Right Shift**</kbd>|
-|Default prefix|<kbd>**.**</kbd>|
+| Minecraft Version          | Forge 1.12.2                     |
+|----------------------------|----------------------------------|
+| Default ClickGui keybind    | <kbd>**Right Shift**</kbd>       |
+| Default prefix              | <kbd>**.**</kbd>                |
+| Default HUD keybind         | <kbd>**`**</kbd>                |
+
 
 ## Installation
 1. Install Minecraft 1.12.2
