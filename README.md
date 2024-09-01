@@ -4,17 +4,18 @@
   </a>
 </p> 
 <p align="center">
-  <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white">
-  <img src="https://img.shields.io/badge/Intellij%20Idea-000?logo=intellij-idea&style=for-the-badge">
-  <img src="https://img.shields.io/github/downloads/TempleDevelopment/Temple-Client/total?style=for-the-badge&label=Downloads">
-  <a href="https://discord.gg/j6hTUB5GBx">
+  <img src="https://img.shields.io/badge/Java-0055A4?style=for-the-badge&logo=openjdk&logoColor=white">
+  <img src="https://img.shields.io/badge/Intellij%20Idea-003366?logo=intellij-idea&style=for-the-badge&logoColor=white">
+  <img src="https://img.shields.io/github/downloads/TempleDevelopment/Temple-Client/total?style=for-the-badge&label=Downloads&color=007ACC">
+  <a href="https://discord.gg/j6hTUB5GBx" style="text-decoration: none;">
     <img src="https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white">
   </a>
-  <img src="https://img.shields.io/badge/License-GPL--3.0-blue?style=for-the-badge">
-  <img src="https://img.shields.io/codeclimate/maintainability/TempleDevelopment/Temple-Client?style=for-the-badge">
-  <img src="https://img.shields.io/badge/Temple%20Client%201.12.2-v1.9.6-orange?style=for-the-badge">
-  <img src="https://img.shields.io/badge/Minecraft-1.12.2-brightgreen?style=for-the-badge&logo=minecraft">
+  <img src="https://img.shields.io/badge/License-GPL--3.0-00509E?style=for-the-badge&logoColor=white">
+  <img src="https://img.shields.io/codeclimate/maintainability/TempleDevelopment/Temple-Client?style=for-the-badge&color=1E90FF">
+  <img src="https://img.shields.io/badge/Temple%20Client%201.12.2-v1.9.6-4682B4?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Minecraft-1.12.2-2A4D8B?style=for-the-badge&logo=minecraft&logoColor=white">
 </p>
+
 
 
 
