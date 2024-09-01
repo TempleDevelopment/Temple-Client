@@ -1,7 +1,20 @@
 <p align="center">
   <a href="https://templecheats.xyz">
-    <img src="github/images/logo.png" style="width: 45%" alt="logo">
+    <img src="github/images/logo.png">
   </a>
+</p> 
+<p align="center">
+  <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white">
+  <img src="https://img.shields.io/badge/Intellij%20Idea-000?logo=intellij-idea&style=for-the-badge">
+  <img src="https://img.shields.io/github/downloads/TempleDevelopment/Temple-Client/total?style=for-the-badge&label=Downloads">
+  <a href="https://discord.gg/j6hTUB5GBx">
+    <img src="https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white">
+  </a>
+</p>
+
+  
+  
+  
   <br>
   <a href="./releases">
     <img src="https://img.shields.io/github/downloads/TempleDevelopment/Temple-Client/total?color=white" alt="GitHub all releases">
