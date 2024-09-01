@@ -15,24 +15,10 @@
   <img src="https://img.shields.io/badge/Minecraft-1.12.2-2A4D8B?style=for-the-badge&logo=minecraft&logoColor=white">
 </p>
 
+---
+### Temple Client is a free and open-source utility mod that enhances the anarchy server experience. 
+---
 
-
-
-  
-  
-  
-  <br>
-  <a href="./releases">
-    <img src="https://img.shields.io/github/downloads/TempleDevelopment/Temple-Client/total?color=white" alt="GitHub all releases">
-  </a>
-  <a href="https://discord.gg/j6hTUB5GBx">
-    <img src="https://img.shields.io/discord/1125838140456849418?color=skyblue&logo=discord&logoColor=white" alt="Discord">
-  </a>
-  <img src="https://img.shields.io/github/repo-size/TempleDevelopment/Temple-Client" alt="GitHub repo size">
-  <p align="center">
-    Temple Client is a free and open-source utility mod that enhances the anarchy server experience. 
-  </p>
-</p>
 
 
 ## FAQ
