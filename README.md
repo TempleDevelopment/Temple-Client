@@ -26,13 +26,13 @@
 | Minecraft Version          | Forge 1.12.2                     |
 |----------------------------|----------------------------------|
 | Default ClickGui keybind    | <kbd>**Right Shift**</kbd>       |
-| Default prefix              | <kbd>**.**</kbd>                |
 | Default HUD keybind         | <kbd>**`**</kbd>                |
+| Default prefix              | <kbd>**.**</kbd>                |
 
 
 ## Installation
 1. Install Minecraft 1.12.2
-2. Install the latest Forge for 1.12.2 [(download)](https://files.minecraftforge.net/net/minecraftforge/forge/index_1.12.2.html)
+2. Install the latest Forge version for 1.12.2 [(download)](https://files.minecraftforge.net/net/minecraftforge/forge/index_1.12.2.html)
 3. Get the latest Temple Client version in the release tab.
 4. Put the file in your `.minecraft/mods` folder.
 
