@@ -11,7 +11,6 @@
     <img src="https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white">
   </a>
   <img src="https://img.shields.io/badge/License-GPL--3.0-00509E?style=for-the-badge&logoColor=white">
-  <img src="https://img.shields.io/codeclimate/maintainability/TempleDevelopment/Temple-Client?style=for-the-badge&color=1E90FF">
   <img src="https://img.shields.io/badge/Temple%20Client%201.12.2-v1.9.6-4682B4?style=for-the-badge">
   <img src="https://img.shields.io/badge/Minecraft-1.12.2-2A4D8B?style=for-the-badge&logo=minecraft&logoColor=white">
 </p>
