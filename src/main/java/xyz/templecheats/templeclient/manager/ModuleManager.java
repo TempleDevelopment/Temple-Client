@@ -93,6 +93,7 @@ public class ModuleManager {
         addMod(new Panic());
         addMod(new Colors());
         addMod(new HUD());
+        addMod(new RPC());
 
         // Movement
         addMod(new EntityControl());
@@ -105,6 +106,7 @@ public class ModuleManager {
         addMod(new Parkour());
         addMod(new NoSlow());
         addMod(new Safewalk());
+        addMod(new IceSpeed());
         addMod(new Sprint());
         addMod(new NoFall());
         addMod(new Flight());

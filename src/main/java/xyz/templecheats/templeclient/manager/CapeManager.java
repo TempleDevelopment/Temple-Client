@@ -23,8 +23,8 @@ public class CapeManager {
      *                      Constants
      ****************************************************************/
 
-    private static final String CAPE_UUIDS = "https://raw.githubusercontent.com/TempleDevelopment/Temple-Client/main/github/assets/capes.txt";
-    private static final String CAPE_DIR = "https://raw.githubusercontent.com/TempleDevelopment/Temple-Client/main/github/assets/%s.png";
+    private static final String CAPE_UUIDS = "https://raw.githubusercontent.com/TempleDevelopment/Temple-Client-Assets/main/assets/uuids/cape-uuids.txt";
+    private static final String CAPE_DIR = "https://raw.githubusercontent.com/TempleDevelopment/Temple-Client-Assets/main/assets/images/capes/%s.png";
 
     /****************************************************************
      *                      Fields

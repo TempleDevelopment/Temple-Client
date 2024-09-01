@@ -21,6 +21,7 @@ import xyz.templecheats.templeclient.config.ConfigManager;
 import xyz.templecheats.templeclient.event.ForgeEventManager;
 import xyz.templecheats.templeclient.features.gui.font.FontUtils;
 import xyz.templecheats.templeclient.features.gui.menu.GuiEventsListener;
+import xyz.templecheats.templeclient.features.module.modules.client.RPC;
 import xyz.templecheats.templeclient.manager.*;
 import xyz.templecheats.templeclient.util.friend.FriendManager;
 import xyz.templecheats.templeclient.util.keys.KeyUtil;
@@ -33,7 +34,7 @@ import java.lang.reflect.Field;
 public class TempleClient {
     public static final String MODID = "templeclient";
     public static final String NAME = "Temple Client";
-    public static final String VERSION = "1.9.6";
+    public static final String VERSION = "1.9.7";
     public static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
     public static String name = NAME + " " + VERSION;
     public static AnnotatedEventManager eventBus;
@@ -106,8 +107,19 @@ public class TempleClient {
         configManager.loadAll();
         logger.info("Configurations loaded.");
 
-        Runtime.getRuntime().addShutdownHook(new Thread(configManager::saveAll));
-        logger.info("Shutdown hook added for saving configurations.");
+        if (moduleManager.getModule(RPC.class).isEnabled()) {
+            RPC.INSTANCE.onEnable();
+            logger.info("RPC module enabled and Discord Presence started.");
+        }
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            configManager.saveAll();
+            if (RPC.INSTANCE.isEnabled()) {
+                RPC.INSTANCE.onDisable();
+                logger.info("RPC module disabled and Discord Presence stopped.");
+            }
+        }));
+        logger.info("Shutdown hook added for saving configurations and stopping Discord Presence.");
     }
 
     @SubscribeEvent
