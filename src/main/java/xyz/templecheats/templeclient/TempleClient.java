@@ -21,7 +21,6 @@ import xyz.templecheats.templeclient.config.ConfigManager;
 import xyz.templecheats.templeclient.event.ForgeEventManager;
 import xyz.templecheats.templeclient.features.gui.font.FontUtils;
 import xyz.templecheats.templeclient.features.gui.menu.GuiEventsListener;
-import xyz.templecheats.templeclient.features.module.modules.client.RPC;
 import xyz.templecheats.templeclient.manager.*;
 import xyz.templecheats.templeclient.util.friend.FriendManager;
 import xyz.templecheats.templeclient.util.keys.KeyUtil;
@@ -107,17 +106,9 @@ public class TempleClient {
         configManager.loadAll();
         logger.info("Configurations loaded.");
 
-        if (moduleManager.getModule(RPC.class).isEnabled()) {
-            RPC.INSTANCE.onEnable();
-            logger.info("RPC module enabled and Discord Presence started.");
-        }
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             configManager.saveAll();
-            if (RPC.INSTANCE.isEnabled()) {
-                RPC.INSTANCE.onDisable();
-                logger.info("RPC module disabled and Discord Presence stopped.");
-            }
         }));
         logger.info("Shutdown hook added for saving configurations and stopping Discord Presence.");
     }

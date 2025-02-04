@@ -32,20 +32,27 @@ public class ConfigManager {
      ****************************************************************/
 
     public ConfigManager() {
-        this.mainDirectory = new File(System.getProperty("user.dir") + File.separator + "Temple Client");
-        this.configDirectory = new File(this.mainDirectory, "1.12.2" + File.separator + "Config");
-        this.friendsDirectory = new File(this.mainDirectory, "1.12.2" + File.separator + "Friends");
-        this.defaultConfigFile = new File(this.configDirectory, "config.cfg");
-        this.baseFinderLogDirectory = new File(this.mainDirectory, "1.12.2" + File.separator + "Base Finder");
+        String userHome = System.getProperty("user.home");
+        this.mainDirectory = new File(userHome, ".templeclient");
+        File versionDirectory = new File(this.mainDirectory, "1.12.2");
 
+        this.configDirectory = new File(versionDirectory, "Config");
+        this.friendsDirectory = new File(versionDirectory, "Friends");
+        this.defaultConfigFile = new File(this.configDirectory, "config.cfg");
+        this.baseFinderLogDirectory = new File(versionDirectory, "Base Finder");
+
+        if (!this.mainDirectory.exists()) {
+            this.mainDirectory.mkdirs();
+        }
+        if (!versionDirectory.exists()) {
+            versionDirectory.mkdirs();
+        }
         if (!this.configDirectory.exists()) {
             this.configDirectory.mkdirs();
         }
-
         if (!this.friendsDirectory.exists()) {
             this.friendsDirectory.mkdirs();
         }
-
         if (!this.baseFinderLogDirectory.exists()) {
             this.baseFinderLogDirectory.mkdirs();
         }
@@ -208,8 +215,7 @@ public class ConfigManager {
         try (FileReader fileReader = new FileReader(friendsFile);
              JsonReader jsonReader = GSON.newJsonReader(fileReader)) {
 
-            final List<String> friendNames = GSON.fromJson(jsonReader, new TypeToken<List<String>>() {
-            }.getType());
+            final List<String> friendNames = GSON.fromJson(jsonReader, new TypeToken<List<String>>() {}.getType());
 
             for (String name : friendNames) {
                 TempleClient.friendManager.addFriend(name);
